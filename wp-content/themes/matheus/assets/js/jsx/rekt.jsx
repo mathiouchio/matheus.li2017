@@ -154,11 +154,11 @@ var rekt = {
         gallery: function(v, i){
           var that = this;
           if (!v.gallery){
-            console.log(v);
-            console.log(i);
+            // console.log(v);
+            // console.log(i);
             var gallery_path = wplocal.basePathURL+'/wp-json/wp/v2/media?parent='+v.id; 
             
-            console.log(gallery_path);
+            // console.log(gallery_path);
 
             REST.get(gallery_path).success( function(data){
               // console.log(data);
@@ -245,7 +245,6 @@ var rekt = {
           // console.log('did update blog');
           // console.log(this.metas.counter);
           // console.log(this.state.currentslide);
-
         },
         remoteActivate: function(){
           this.setState({ remote: '' });
@@ -442,30 +441,14 @@ var popup = {
     var data    = rektComp.state.posts[index],
         catName = wp_REST.category.checker(data.categories);
 
-    // alias
-    let postType;
-    switch (catName){
-      case 'photoblog':
-        postType = 'image';
-        break;
-      case 'gallery':
-        postType = 'image';
-        break;
-      case 'article':
-        postType = catName;
-        break;
-      case 'video':
-        postType = catName;
-    }
-    // console.log(postType);
+    // console.log(data);
+    // console.log(catName);
 
-    that.populate()
-
+    // that.populate();
 
     // Switching between postType
-    if (postType=='image'){
+    if (catName=='gallery' || catName=='photoblog'){
       // gallery
-
       var gallery_path = wplocal.basePathURL+'/wp-json/wp/v2/media?parent='+rektComp.state.posts[index].id;
       
       REST.get(gallery_path)
@@ -475,7 +458,7 @@ var popup = {
             // console.log(rektComp.state.posts[index].gallery);
             that.populate(data, 'image');
       });
-    } else if (postType=='video'){
+    } else if (catName=='video'){
       // video
     } else {
       // article 
