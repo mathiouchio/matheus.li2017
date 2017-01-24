@@ -1,0 +1,10 @@
+$font-stack: 'Simplifica', helvetica, arial, sans-serif;
+$font-stack-hero: 'Questrial', helvetica, arial, sans-serif;
+
+@include font-face('Simplifica',
+         font-files(
+          'simplifica_typeface.woff',
+          'simplifica_typeface.woff2',
+          'simplifica_typeface.ttf',
+          'simplifica_typeface.otf'
+         ), 'simplifica_typeface.eot', normal, normal);
