@@ -1,13 +1,16 @@
 @import url(http://fonts.googleapis.com/css?family=Questrial);
 @import "compass/reset";
-@import "partials/reset";
 @import "compass/css3";
+@import "partials/reset";
 @import "partials/extend";
 @import "partials/keyframe";
 @import "partials/fontface";
 @import "partials/slick";
 
-::selection { background:#333; color:#efefef; }
+::selection {
+  background: #333;
+  color: #efefef;
+}
 
 body::-webkit-scrollbar { display: none; }
 body, html { min-height:100%; }
@@ -158,10 +161,10 @@ nav {
     @extend .anim;
     left: 9px; z-index:12; opacity:0;
     width:20px; height:20px;
-    content:url('../assets/images/svg/hamburger.svg');
+    content:url('../images/svg/hamburger.svg');
   }
   li:after {
-    content:url('../assets/images/activenav.jpg');
+    content:url('../images/activenav.jpg');
     
     z-index:11;
     left: -70px; top: -29px;
@@ -212,9 +215,6 @@ nav {
   
   span {
     margin: 10px 0 0 0px;
-    // width: 0px;
-    // overflow: hidden;
-    // text-indent: -10px;
     opacity: 0;
   }
 }
@@ -397,14 +397,6 @@ main {
     .wrapper.controller {
       min-height: 0;
 
-      // &[data-control="next"] {
-      //   a:nth-child(3) {
-      //     display: block;
-      //   }
-      //   a {
-      //     display: none;
-      //   }
-      // }
       &[data-control] {
         .extend a { display: block; }
         .expand > a { display: none; }

@@ -8,8 +8,8 @@ function twentysixteen_scripts() {
   $templateURL = get_template_directory_uri();
 
   wp_enqueue_style(
-    'matheus-twentysixteen-style',
-    $templateURL.'/css/style.css'
+    'matheus-twentyseventeen',
+    $templateURL.'/style.css'
   );
 
   // deregister
@@ -19,7 +19,7 @@ function twentysixteen_scripts() {
   wp_enqueue_script(
     'matheus-twentysixteen-script',
     // $templateURL.'/js/min/scripts.min.js',
-    $templateURL.'/js/min/scripts-debug.js',
+    $templateURL.'/js/scripts-debug.js',
     array(),
     '1.0.0',
     true

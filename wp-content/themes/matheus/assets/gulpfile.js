@@ -13,7 +13,7 @@ var paths = {
   jsx:      'js/jsx/*.jsx',
   js:       '../js',
   jsMin:    '../js/min',
-  css:      '../css',
+  css:      'css',
   sass:     'scss/*.scss',
   jsConcat: ['js/libs/*.js','js/contrib/*.js','js/*.js','js/jsx/*.js']
 }
@@ -21,6 +21,15 @@ var paths = {
 gulp.task('concat', function(){
   gulp.src(paths.jsConcat)
       .pipe(concat('scripts.js'))
+      .pipe(minify({
+        ext:{
+          src: '-debug.js',
+          min: '.min.js'
+        },
+        output: {
+          beautify: false
+        }
+      }))
       .pipe(gulp.dest(paths.js));
       // .pipe(livereload());
 });
@@ -53,7 +62,7 @@ gulp.task('compass', function() {
   gulp.src(paths.sass)
       .pipe( sass({
         importer: compass,
-        outputStyle: 'compressed' })
+        outputStyle: 'expanded' })
         .on('error', sass.logError))
       .pipe(gulp.dest(paths.css))
       .pipe(livereload());
@@ -75,7 +84,7 @@ gulp.task('watch', function() {
   // detect when to concat
   gulp.watch(paths.jsConcat, ['concat']);
   // detect when to minify
-  gulp.watch(paths.js+'/*.js', ['minify']);
+  // gulp.watch(paths.js+'/*.js', ['minify']);
   // detect when to compass
   gulp.watch(['scss/*.scss','scss/partials/*.scss'], ['compass']);
 });
