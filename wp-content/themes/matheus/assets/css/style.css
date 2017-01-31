@@ -185,8 +185,8 @@ section,
 
 @font-face {
   font-family: "Simplifica";
-  src: font-url("../fonts/simplifica_typeface.eot");
-  src: font-url(../fonts/simplifica_typeface.eot?#iefix) format('eot'), font-files("../fonts/simplifica_typeface.woff", "../fonts/simplifica_typeface.woff2", "../fonts/simplifica_typeface.ttf", "../fonts/simplifica_typeface.otf");
+  src: font-url("assets/fonts/simplifica_typeface.eot");
+  src: font-url(assets/fonts/simplifica_typeface.eot?#iefix) format('eot'), font-files("assets/fonts/simplifica_typeface.woff", "assets/fonts/simplifica_typeface.woff2", "assets/fonts/simplifica_typeface.ttf", "assets/fonts/simplifica_typeface.otf");
   font-weight: normal;
   font-style: normal;
 }

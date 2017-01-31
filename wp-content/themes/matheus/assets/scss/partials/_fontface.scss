@@ -3,11 +3,11 @@ $font-stack-hero: 'Questrial', helvetica, arial, sans-serif;
 
 @include font-face( 'Simplifica',
          font-files(
-          '../fonts/simplifica_typeface.woff',
-          '../fonts/simplifica_typeface.woff2',
-          '../fonts/simplifica_typeface.ttf',
-          '../fonts/simplifica_typeface.otf'
+          'assets/fonts/simplifica_typeface.woff',
+          'assets/fonts/simplifica_typeface.woff2',
+          'assets/fonts/simplifica_typeface.ttf',
+          'assets/fonts/simplifica_typeface.otf'
          ),
-         '../fonts/simplifica_typeface.eot',
+         'assets/fonts/simplifica_typeface.eot',
          normal,
          normal );
