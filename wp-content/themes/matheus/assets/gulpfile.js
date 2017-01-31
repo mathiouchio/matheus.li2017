@@ -3,7 +3,7 @@ const gulp    = require('gulp'),
       minify  = require('gulp-minify'),
       jshint  = require('gulp-jshint'),
       stylish = require('jshint-stylish'),
-      compass = require('compass-importer'),
+      compass = require('gulp-compass'),
       livereload = require('gulp-livereload'),
       concat  = require('gulp-concat'),
       babel   = require('gulp-babel');
@@ -31,22 +31,6 @@ gulp.task('concat', function(){
         }
       }))
       .pipe(gulp.dest(paths.js));
-      // .pipe(livereload());
-});
-
-gulp.task('minify', function(){
-  gulp.src(paths.js+'/*.js')
-      .pipe(minify({
-        ext:{
-          src: '-debug.js',
-          min: '.min.js'
-        },
-        output: {
-          beautify: false
-        }
-      }))
-      .pipe(gulp.dest(paths.jsMin))
-      .pipe(livereload());
 });
 
 gulp.task('babel', function() {
@@ -60,10 +44,16 @@ gulp.task('babel', function() {
 
 gulp.task('compass', function() {
   gulp.src(paths.sass)
-      .pipe( sass({
-        importer: compass,
-        outputStyle: 'expanded' })
-        .on('error', sass.logError))
+      .pipe(compass({
+        style: 'expanded',
+        css: 'css',
+        sass: 'scss',
+        comments: true
+      }))
+      .on('error', function(error) {
+        console.log(error);
+        this.emit('end');
+      })
       .pipe(gulp.dest(paths.css))
       .pipe(livereload());
 });
