@@ -18,8 +18,8 @@ function twentysixteen_scripts() {
   // concatenated all scripts
   wp_enqueue_script(
     'matheus-twentysixteen-script',
-    $templateURL.'/js/scripts.min.js',
-    // $templateURL.'/js/scripts-debug.js',
+    // $templateURL.'/js/scripts.min.js',
+    $templateURL.'/js/scripts-debug.js',
     array(),
     '1.0.0',
     true
