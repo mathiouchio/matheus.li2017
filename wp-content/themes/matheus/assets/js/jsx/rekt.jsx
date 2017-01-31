@@ -577,7 +577,6 @@ var popup = {
 
         var popup = <div className="slider" data-fetching={this.state.fetching}>
           <div className="content">
-            <Article />
             <GalleryComponent />
           </div>
           <Ctrldom />

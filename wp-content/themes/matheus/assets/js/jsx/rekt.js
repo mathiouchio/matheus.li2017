@@ -672,7 +672,7 @@ var popup = {
         // console.log(this);
         // if(React.isValidElement(obj)){
         var GalleryComponent = that.gallery(obj, this),
-            // Article = that.article('hello article', this),
+            Article = that.article('hello article', this),
             Ctrldom = that.controller.dom(this);
         // console.log(Ctrldom);
 
@@ -682,7 +682,6 @@ var popup = {
           React.createElement(
             'div',
             { className: 'content' },
-            React.createElement(Article, null),
             React.createElement(GalleryComponent, null)
           ),
           React.createElement(Ctrldom, null),
