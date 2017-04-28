@@ -470,10 +470,7 @@ var rekt = {
 var popup = {
   popupdom: document.createElement('div'),
   init: function init(json_data) {
-    // console.log('popup init');
     this.popupdom.id = "popup";
-    // this.popupdom.innerHTML =  '<div class="content"></div>';
-    // this.popupdom.innerHTML += '<div class="controller"></div>';
 
     document.body.appendChild(this.popupdom);
     $popup = document.getElementById('popup');
@@ -502,8 +499,7 @@ var popup = {
         return null;
       },
       componentDidMount: function componentDidMount() {
-        console.log('did mount');
-        console.log(this);
+        // console.log(this);
         if (that.state.datatype == 'video') plyr.setup();
       },
       slide: function slide(v, i) {
