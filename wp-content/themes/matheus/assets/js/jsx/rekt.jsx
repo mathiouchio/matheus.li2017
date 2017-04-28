@@ -1,5 +1,4 @@
 /*! react you wot */
-
 if(window.location.hostname != 'localhost') {
   wplocal.basePathURL = window.location.origin;
 }
@@ -40,7 +39,6 @@ var scrollspy = {
        * value of positions changed
        */
       if(index != scrollspy.index) {
-        // console.log('changed');
         scrollspy.index = index;
         scrollspy.nav(scrollspy.index);
         scrollspy.brand(scrollspy.index);
@@ -69,10 +67,8 @@ var REST = {
   },
   store: function(data, type) {
     REST.json[type] = [];
-    // console.log(data);
     if(data.constructor === Array) {
       data.map( function(currentValue, index){
-        // console.log(currentValue);
         // push data to parent object
         REST.json[type].push(currentValue);
       });
@@ -124,7 +120,6 @@ var rekt = {
     projects: function(url){
       return React.createClass({
         getInitialState: function(){
-          // console.log('init');
           return null;
         },
         componentWillMount: function(){
@@ -132,18 +127,11 @@ var rekt = {
           var that = this;
           REST.get(url)
               .success( function(data){
+                console.log(data);
                 that.setState({ posts: data });
               });
         },
-        componentDidMount: function(){
-          // console.log('did mount');
-        },
-        componentWillUpdate: function(){
-          // console.log('will update');
-          // console.log(this.state);
-        },
         componentDidUpdate: function(){
-          // console.log('did update');
           // adding gallery
           if(this.state.posts.length) {
             this.state.posts.map(this.gallery);
@@ -159,32 +147,28 @@ var rekt = {
             var gallery_path = wplocal.basePathURL+'/wp-json/wp/v2/media?parent='+v.id; 
             
             // console.log(gallery_path);
-
             REST.get(gallery_path).success( function(data){
               // console.log(data);
               that.state.posts[i].gallery = data;
             });
           }
         },
-        componentWillReceiveProps: function(){
-          console.log('componentWillReceiveProps');
-        },
         handleClick: function(i,e){
-          /* Preventing preventDefault on new tab click
-           */
+          /* Preventing preventDefault on new tab click */
           if (e.ctrlKey || e.shiftKey || e.metaKey || (e.button && e.button == 1)){
             
           } else {
+            console.log(this.state.posts[i]); 
             var galleryJSON = this.state.posts[i].gallery;
-            popup.populate(this.state.posts[i].gallery, 'image');
+            console.log(this);
+            popup.run(this, i);
+            // popup.populate(this.state.posts[i].gallery, this.state.posts[i].format);
 
             e.preventDefault();
             e.stopPropagation();
           }
         },
         render: function(){
-          // console.log(this.state);
-
           var that = this;
           var slide = function(v,i){
             var boundClick = that.handleClick.bind(that, i);
@@ -209,7 +193,6 @@ var rekt = {
           };
 
           if (this.state) {
-            // console.log('render stuff');
             return (
               <div className="slider noslide">
                 <div className="slides">
@@ -217,9 +200,7 @@ var rekt = {
                 </div>
               </div>
             );
-          }
-          else {
-            // console.log('render null');
+          } else {
             return null;
           }
         }
@@ -230,21 +211,12 @@ var rekt = {
         getInitialState: function(){
           return null;
         },
-        handleResponsive: function(){
-          // console.log(window.width);
-        },
         componentWillMount: function(){
-          // console.log('will mount');
           var that = this;
           REST.get(url)
               .success( function(data){
                 that.setState({ posts: data, currentslide: 0 });
               });
-        },
-        componentDidUpdate: function(){
-          // console.log('did update blog');
-          // console.log(this.metas.counter);
-          // console.log(this.state.currentslide);
         },
         remoteActivate: function(){
           this.setState({ remote: '' });
@@ -253,16 +225,11 @@ var rekt = {
           this.setState({ remote: null });
         },
         handleClick: function(i,e){
-          /* Preventing preventDefault on new tab click
-           */
+          /* Preventing preventDefault on new tab click */
           if (e.ctrlKey || e.shiftKey || e.metaKey || (e.button && e.button == 1)){
             
           } else {
-            var that = this;
-            // console.log(i);
-            // console.log(e);
             popup.run(this, i);
-            
             e.preventDefault();
             e.stopPropagation();
           }
@@ -431,40 +398,6 @@ var popup = {
     document.body.appendChild(this.popupdom);
     $popup = document.getElementById('popup');
   },
-  run: function(rektComp, index){
-    // console.log(index);
-    // console.log(rektComp);
-    var that = this;
-    // console.log(this);
-    // console.log(rektComp.state.posts[index].categories);
-
-    var data    = rektComp.state.posts[index],
-        catName = wp_REST.category.checker(data.categories);
-
-    // console.log(data);
-    // console.log(catName);
-
-    // that.populate();
-
-    // Switching between postType
-    if (catName=='gallery' || catName=='photoblog'){
-      // gallery
-      var gallery_path = wplocal.basePathURL+'/wp-json/wp/v2/media?parent='+rektComp.state.posts[index].id;
-      
-      REST.get(gallery_path)
-          .success( function(data){
-            // console.log(data);
-            rektComp.state.posts[index].gallery = data;
-            // console.log(rektComp.state.posts[index].gallery);
-            that.populate(data, 'image');
-      });
-    } else if (catName=='video'){
-      // video
-    } else {
-      // article 
-      // that.populate(data, 'article');
-    }
-  },
   article: function(content, that){
     // console.log(json_data);
     // console.log(that);
@@ -477,44 +410,35 @@ var popup = {
     that.show();
   },
   gallery: function(json_data, that){
-    // console.log(json_data);
+    console.log(json_data);
+
     return React.createClass({
-      getInitialState: function(){
-        return null
-      },
-      handleResponsive: function(){
-        // console.log('responsiveness');
-      },
-      handleResize: function(e){
-        // console.log('resize');
-        // var responsiveness = this.handleResponsive,
-        //     delayedResponsive; 
-        
-        // window.addEventListener('resize', function(){
-        //   clearTimeout(delayedResponsive); 
-        //   delayedResponsive = setTimeout(responsiveness, 200); 
-        //   console.log(window.innerWidth);
-        // });
-      },
-      componentDidMount: function(){
-        // console.log('gallery did mount');
-        // this.handleResponsive();
-        // this.handleResize();
-      },
-      componentWillMount: function(){
-        // console.log('will mount');
-        // console.log(this);
-      },
+      getInitialState: function(){ return null },
       slide: function(v,i){
-        // console.log(v);
-        // console.log(i);
-        if (v.media_details){
-          var portrait  = v.media_details.height > v.media_details.width,
-              slidenum  = that.state.currentslide;
+        console.log(v);
+        console.log(i);
+
+        var slidenum = that.state.currentslide;
+
+        if (v.media_details) { 
+          var portrait = v.media_details.height > v.media_details.width; 
 
           return <li data-show={i==slidenum ? '' : null} data-transitioning={i==that.state.previouslide ? "" : null} className={portrait ? 'portrait' : null} key={'popup'+i}>
-              <img src={v.source_url} width={v.media_details.width} height={v.media_details.height} />
+              <img src={v.source_url} width={v.media_details.width} height={v.media_details.height} />;
             </li>;
+        } else if(v.youtube_id || v.vimeo_id){
+          var youmeo = (v.youtube_id) ? 'youtube' : 'vimeo',
+              vid    = (youmeo) ? v.youtube_id : v.vimeo_id;
+
+          return <li data-show={i==slidenum ? '' : null} data-transitioning={i==that.state.previouslide ? "" : null} key={'popup'+i}>
+              <div data-type={youmeo} data-video-id={vid}></div>
+            </li>;
+        } else if(v.video_url){ 
+          return <li data-show={i==slidenum ? '' : null} data-transitioning={i==that.state.previouslide ? "" : null} key={'popup'+i}>
+                   <video controls>
+                     <source src={v.video_url} type="video/mp4" />
+                   </video>;
+                 </li>
         }
       },
       render: function(){
@@ -546,15 +470,38 @@ var popup = {
       );
     }
   }),
+  run: function(rektComp, index){
+
+    let that    = this,
+        post    = rektComp.state.posts[index],
+        format  = post.format;
+
+    // Switching between postType
+    if (format=='gallery'){
+      var gallery_path = wplocal.basePathURL+'/wp-json/wp/v2/media?parent='+rektComp.state.posts[index].id;
+      
+      REST.get(gallery_path)
+          .success( function(data){
+            rektComp.state.posts[index].gallery = data;
+            that.populate(data, 'gallery');
+      });
+    } else if (format=='video'){
+      // console.log(rektComp.state.posts[index]);
+      that.populate(rektComp.state.posts[index].fields, 'video');
+    } else {
+      // article 
+      // that.populate(data, 'article');
+    }
+    
+  },
   populate: function(obj, type){
-    console.log(obj);
-    type = type || 'fill this';
+    if(type=='video') obj = obj.videos;
+
     var that = this,
         Spinner = this.spinner;
 
     var Component = React.createClass({
       getInitialState: function(){
-        // console.log(obj.length);
         return {
           currentslide: 0,
           previouslide: 0,
@@ -564,16 +511,11 @@ var popup = {
         }
       },
       componentDidMount: function() {
-        // console.log('populate did mount');
         nav.static();
       },
       render: function(){
-        // console.log(this);
-        // if(React.isValidElement(obj)){
         var GalleryComponent = that.gallery(obj, this),
-            Article = that.article('hello article', this),
             Ctrldom = that.controller.dom(this);
-        // console.log(Ctrldom);
 
         var popup = <div className="slider" data-fetching={this.state.fetching}>
           <div className="content">
@@ -619,8 +561,7 @@ var popup = {
                 total--;
             // console.log(this);
             // console.log(ReactDOM.findDOMNode(that));
-            // var dom = ReactDOM.findDOMNode($popup),
-            //     $slides = $(dom).find('.content li');
+
             if (i < total) {
               i++;
               that.setState({currentslide: i, previouslide: that.state.currentslide});

@@ -30,7 +30,8 @@ gulp.task('concat', function(){
           beautify: false
         }
       }))
-      .pipe(gulp.dest(paths.js));
+      .pipe(gulp.dest(paths.js))
+      .pipe(livereload());
 });
 
 gulp.task('babel', function() {

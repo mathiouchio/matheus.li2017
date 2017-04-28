@@ -271,7 +271,6 @@ jQuery(function(){
 'use strict';
 
 /*! react you wot */
-
 if (window.location.hostname != 'localhost') {
   wplocal.basePathURL = window.location.origin;
 }
@@ -312,7 +311,6 @@ var scrollspy = {
        * value of positions changed
        */
       if (index != scrollspy.index) {
-        // console.log('changed');
         scrollspy.index = index;
         scrollspy.nav(scrollspy.index);
         scrollspy.brand(scrollspy.index);
@@ -341,10 +339,8 @@ var REST = {
   },
   store: function store(data, type) {
     REST.json[type] = [];
-    // console.log(data);
     if (data.constructor === Array) {
       data.map(function (currentValue, index) {
-        // console.log(currentValue);
         // push data to parent object
         REST.json[type].push(currentValue);
       });
@@ -395,25 +391,17 @@ var rekt = {
     projects: function projects(url) {
       return React.createClass({
         getInitialState: function getInitialState() {
-          // console.log('init');
           return null;
         },
         componentWillMount: function componentWillMount() {
           // console.log('will mount');
           var that = this;
           REST.get(url).success(function (data) {
+            console.log(data);
             that.setState({ posts: data });
           });
         },
-        componentDidMount: function componentDidMount() {
-          // console.log('did mount');
-        },
-        componentWillUpdate: function componentWillUpdate() {
-          // console.log('will update');
-          // console.log(this.state);
-        },
         componentDidUpdate: function componentDidUpdate() {
-          // console.log('did update');
           // adding gallery
           if (this.state.posts.length) {
             this.state.posts.map(this.gallery);
@@ -429,30 +417,26 @@ var rekt = {
             var gallery_path = wplocal.basePathURL + '/wp-json/wp/v2/media?parent=' + v.id;
 
             // console.log(gallery_path);
-
             REST.get(gallery_path).success(function (data) {
               // console.log(data);
               that.state.posts[i].gallery = data;
             });
           }
         },
-        componentWillReceiveProps: function componentWillReceiveProps() {
-          console.log('componentWillReceiveProps');
-        },
         handleClick: function handleClick(i, e) {
-          /* Preventing preventDefault on new tab click
-           */
+          /* Preventing preventDefault on new tab click */
           if (e.ctrlKey || e.shiftKey || e.metaKey || e.button && e.button == 1) {} else {
+            console.log(this.state.posts[i]);
             var galleryJSON = this.state.posts[i].gallery;
-            popup.populate(this.state.posts[i].gallery, 'image');
+            console.log(this);
+            popup.run(this, i);
+            // popup.populate(this.state.posts[i].gallery, this.state.posts[i].format);
 
             e.preventDefault();
             e.stopPropagation();
           }
         },
         render: function render() {
-          // console.log(this.state);
-
           var that = this;
           var slide = function slide(v, i) {
             var boundClick = that.handleClick.bind(that, i);
@@ -493,7 +477,6 @@ var rekt = {
           };
 
           if (this.state) {
-            // console.log('render stuff');
             return React.createElement(
               'div',
               { className: 'slider noslide' },
@@ -504,7 +487,6 @@ var rekt = {
               )
             );
           } else {
-            // console.log('render null');
             return null;
           }
         }
@@ -515,20 +497,11 @@ var rekt = {
         getInitialState: function getInitialState() {
           return null;
         },
-        handleResponsive: function handleResponsive() {
-          // console.log(window.width);
-        },
         componentWillMount: function componentWillMount() {
-          // console.log('will mount');
           var that = this;
           REST.get(url).success(function (data) {
             that.setState({ posts: data, currentslide: 0 });
           });
-        },
-        componentDidUpdate: function componentDidUpdate() {
-          // console.log('did update blog');
-          // console.log(this.metas.counter);
-          // console.log(this.state.currentslide);
         },
         remoteActivate: function remoteActivate() {
           this.setState({ remote: '' });
@@ -537,14 +510,9 @@ var rekt = {
           this.setState({ remote: null });
         },
         handleClick: function handleClick(i, e) {
-          /* Preventing preventDefault on new tab click
-           */
+          /* Preventing preventDefault on new tab click */
           if (e.ctrlKey || e.shiftKey || e.metaKey || e.button && e.button == 1) {} else {
-            var that = this;
-            // console.log(i);
-            // console.log(e);
             popup.run(this, i);
-
             e.preventDefault();
             e.stopPropagation();
           }
@@ -777,39 +745,6 @@ var popup = {
     document.body.appendChild(this.popupdom);
     $popup = document.getElementById('popup');
   },
-  run: function run(rektComp, index) {
-    // console.log(index);
-    // console.log(rektComp);
-    var that = this;
-    // console.log(this);
-    // console.log(rektComp.state.posts[index].categories);
-
-    var data = rektComp.state.posts[index],
-        catName = wp_REST.category.checker(data.categories);
-
-    // console.log(data);
-    // console.log(catName);
-
-    // that.populate();
-
-    // Switching between postType
-    if (catName == 'gallery' || catName == 'photoblog') {
-      // gallery
-      var gallery_path = wplocal.basePathURL + '/wp-json/wp/v2/media?parent=' + rektComp.state.posts[index].id;
-
-      REST.get(gallery_path).success(function (data) {
-        // console.log(data);
-        rektComp.state.posts[index].gallery = data;
-        // console.log(rektComp.state.posts[index].gallery);
-        that.populate(data, 'image');
-      });
-    } else if (catName == 'video') {
-      // video
-    } else {
-        // article 
-        // that.populate(data, 'article');
-      }
-  },
   article: function article(content, that) {
     // console.log(json_data);
     // console.log(that);
@@ -826,45 +761,46 @@ var popup = {
     that.show();
   },
   gallery: function gallery(json_data, that) {
-    // console.log(json_data);
+    console.log(json_data);
+
     return React.createClass({
       getInitialState: function getInitialState() {
         return null;
       },
-      handleResponsive: function handleResponsive() {
-        // console.log('responsiveness');
-      },
-      handleResize: function handleResize(e) {
-        // console.log('resize');
-        // var responsiveness = this.handleResponsive,
-        //     delayedResponsive; 
-
-        // window.addEventListener('resize', function(){
-        //   clearTimeout(delayedResponsive); 
-        //   delayedResponsive = setTimeout(responsiveness, 200); 
-        //   console.log(window.innerWidth);
-        // });
-      },
-      componentDidMount: function componentDidMount() {
-        // console.log('gallery did mount');
-        // this.handleResponsive();
-        // this.handleResize();
-      },
-      componentWillMount: function componentWillMount() {
-        // console.log('will mount');
-        // console.log(this);
-      },
       slide: function slide(v, i) {
-        // console.log(v);
-        // console.log(i);
+        console.log(v);
+        console.log(i);
+
+        var slidenum = that.state.currentslide;
+
         if (v.media_details) {
-          var portrait = v.media_details.height > v.media_details.width,
-              slidenum = that.state.currentslide;
+          var portrait = v.media_details.height > v.media_details.width;
 
           return React.createElement(
             'li',
             { 'data-show': i == slidenum ? '' : null, 'data-transitioning': i == that.state.previouslide ? "" : null, className: portrait ? 'portrait' : null, key: 'popup' + i },
-            React.createElement('img', { src: v.source_url, width: v.media_details.width, height: v.media_details.height })
+            React.createElement('img', { src: v.source_url, width: v.media_details.width, height: v.media_details.height }),
+            ';'
+          );
+        } else if (v.youtube_id || v.vimeo_id) {
+          var youmeo = v.youtube_id ? 'youtube' : 'vimeo',
+              vid = youmeo ? v.youtube_id : v.vimeo_id;
+
+          return React.createElement(
+            'li',
+            { 'data-show': i == slidenum ? '' : null, 'data-transitioning': i == that.state.previouslide ? "" : null, key: 'popup' + i },
+            React.createElement('div', { 'data-type': youmeo, 'data-video-id': vid })
+          );
+        } else if (v.video_url) {
+          return React.createElement(
+            'li',
+            { 'data-show': i == slidenum ? '' : null, 'data-transitioning': i == that.state.previouslide ? "" : null, key: 'popup' + i },
+            React.createElement(
+              'video',
+              { controls: true },
+              React.createElement('source', { src: v.video_url, type: 'video/mp4' })
+            ),
+            ';'
           );
         }
       },
@@ -915,9 +851,31 @@ var popup = {
       );
     }
   }),
+  run: function run(rektComp, index) {
+
+    var that = this,
+        post = rektComp.state.posts[index],
+        format = post.format;
+
+    // Switching between postType
+    if (format == 'gallery') {
+      var gallery_path = wplocal.basePathURL + '/wp-json/wp/v2/media?parent=' + rektComp.state.posts[index].id;
+
+      REST.get(gallery_path).success(function (data) {
+        rektComp.state.posts[index].gallery = data;
+        that.populate(data, 'gallery');
+      });
+    } else if (format == 'video') {
+      // console.log(rektComp.state.posts[index]);
+      that.populate(rektComp.state.posts[index].fields, 'video');
+    } else {
+      // article 
+      // that.populate(data, 'article');
+    }
+  },
   populate: function populate(obj, type) {
-    console.log(obj);
-    type = type || 'fill this';
+    if (type == 'video') obj = obj.videos;
+
     var that = this,
         Spinner = this.spinner;
 
@@ -925,7 +883,6 @@ var popup = {
       displayName: 'Component',
 
       getInitialState: function getInitialState() {
-        // console.log(obj.length);
         return {
           currentslide: 0,
           previouslide: 0,
@@ -935,16 +892,11 @@ var popup = {
         };
       },
       componentDidMount: function componentDidMount() {
-        // console.log('populate did mount');
         nav.static();
       },
       render: function render() {
-        // console.log(this);
-        // if(React.isValidElement(obj)){
         var GalleryComponent = that.gallery(obj, this),
-            Article = that.article('hello article', this),
             Ctrldom = that.controller.dom(this);
-        // console.log(Ctrldom);
 
         var popup = React.createElement(
           'div',
@@ -994,8 +946,7 @@ var popup = {
             total--;
             // console.log(this);
             // console.log(ReactDOM.findDOMNode(that));
-            // var dom = ReactDOM.findDOMNode($popup),
-            //     $slides = $(dom).find('.content li');
+
             if (i < total) {
               i++;
               that.setState({ currentslide: i, previouslide: that.state.currentslide });

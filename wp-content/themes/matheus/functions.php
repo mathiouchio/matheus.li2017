@@ -1,9 +1,11 @@
 <?php
 /**
  * Enqueues scripts and styles.
- *
  * @since Twenty Sixteen 1.0
  */
+
+add_theme_support( 'post-thumbnails' );
+
 function twentysixteen_scripts() {
   $templateURL = get_template_directory_uri();
 
@@ -18,8 +20,8 @@ function twentysixteen_scripts() {
   // concatenated all scripts
   wp_enqueue_script(
     'matheus-twentysixteen-script',
-    $templateURL.'/js/scripts.min.js',
-    // $templateURL.'/js/scripts-debug.js',
+    // $templateURL.'/js/scripts.min.js',
+    $templateURL.'/js/scripts-debug.js',
     array(),
     '1.0.0',
     true
@@ -37,7 +39,7 @@ function twentysixteen_scripts() {
 }
 add_action( 'wp_enqueue_scripts', 'twentysixteen_scripts' );
 
-// custom post type
+// PORTFOLIO custom post type
 add_action( 'init', 'create_post_type' );
 function create_post_type() {
   register_post_type( 'portfolio',
@@ -66,22 +68,51 @@ function create_post_type() {
   );
 }
 
+/* show acf fields on wp rest api @davidmaneuver:
+ * https://gist.github.com/rileypaulsen/9b4505cdd0ac88d5ef51
+ * reference: http://v2.wp-api.org/extending/modifying/
+ */
+function wp_rest_api_alter() {
+  register_api_field( 'portfolio',
+      'fields',
+      array(
+        'get_callback'    => function($data, $field, $request, $type){
+          if (function_exists('get_fields')) {
+            return get_fields($data['id']);
+          }
+          return [];
+        },
+        'update_callback' => null,
+        'schema'          => null,
+      )
+  );
+  register_api_field( 'post',
+      'fields',
+      array(
+        'get_callback'    => function($data, $field, $request, $type){
+          if (function_exists('get_fields')) {
+            return get_fields($data['id']);
+          }
+          return [];
+        },
+        'update_callback' => null,
+        'schema'          => null,
+      )
+  );
+}
+add_action( 'rest_api_init', 'wp_rest_api_alter');
+
+/* Redirect 404 to homepage */
 add_action( 'pre_get_posts', 'wpse44983_single_post_404' );
 function wpse44983_single_post_404( $query ) {
-    $home_url = get_home_url();
-    if ( $query->is_main_query() && $query->is_single() ) {
-      $query->is_404 = true;
-      // $query->is_page = 'home';
-      // wp_redirect( home_url(), 301 );
-      // exit;
-    }
+  if ( $query->is_main_query() && $query->is_single() ) {
+    $query->is_404 = true;
+  }
 }
 
-
-require_once 'class-tgm-plugin-activation.php';
-
-add_action( 'tgmpa_register', 'matheusli_register_required_plugins' );
-
+/* Adding post format support to custom-post-type */
+add_theme_support('post-formats', array('video','gallery'));
+add_post_type_support( 'portfolio', 'post-formats' );
 
 /**
  * Register the required plugins for this theme.
@@ -100,10 +131,11 @@ add_action( 'tgmpa_register', 'matheusli_register_required_plugins' );
  *
  * This function is hooked into `tgmpa_register`, which is fired on the WP `init` action on priority 10.
  */
-function matheusli_register_required_plugins() {
+require_once 'class-tgm-plugin-activation.php';
+add_action( 'tgmpa_register', 'matheusli_register_required_plugins' );
 
+function matheusli_register_required_plugins() {
   $plugins = array(
-    // This is an example of how to include a plugin from the WordPress Plugin Repository.
     array(
       'name'      => 'WP REST API',
       'slug'      => 'rest-api',
@@ -116,26 +148,17 @@ function matheusli_register_required_plugins() {
     )
   );
 
-  /*
-   * Array of configuration settings. Amend each line as needed.
-   *
-   * TGMPA will start providing localized text strings soon. If you already have translations of our standard
-   * strings available, please help us make TGMPA even better by giving us access to these translations or by
-   * sending in a pull-request with .po file(s) with the translations.
-   *
-   * Only uncomment the strings in the config array if you want to customize the strings.
-   */
   $config = array(
-    'id'           => 'matheusli',                 // Unique ID for hashing notices for multiple instances of TGMPA.
-    'default_path' => '',                      // Default absolute path to bundled plugins.
-    'menu'         => 'tgmpa-install-plugins', // Menu slug.
-    'parent_slug'  => 'themes.php',            // Parent menu slug.
-    'capability'   => 'edit_theme_options',    // Capability needed to view plugin install page, should be a capability associated with the parent menu used.
-    'has_notices'  => true,                    // Show admin notices or not.
-    'dismissable'  => true,                    // If false, a user cannot dismiss the nag message.
-    'dismiss_msg'  => '',                      // If 'dismissable' is false, this message will be output at top of nag.
-    'is_automatic' => false,                   // Automatically activate plugins after installation or not.
-    'message'      => '',                      // Message to output right before the plugins table.
+    'id'           => 'matheusli',
+    'default_path' => '',
+    'menu'         => 'tgmpa-install-plugins',
+    'parent_slug'  => 'themes.php',
+    'capability'   => 'edit_theme_options',
+    'has_notices'  => true,
+    'dismissable'  => true,
+    'dismiss_msg'  => '',
+    'is_automatic' => false,
+    'message'      => '',
   );
 
   tgmpa( $plugins, $config );
