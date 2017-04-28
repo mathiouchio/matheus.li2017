@@ -142,6 +142,16 @@ function matheusli_register_required_plugins() {
       'required'  => true,
     ),
     array(
+      'name'      => 'Advanced Custom Fields',
+      'slug'      => 'advanced-custom-fields',
+      'required'  => true,
+    ),
+    array(
+      'name'      => 'Advanced Custom Fields: Repeater Field',
+      'slug'      => 'acf-repeater',
+      'required'  => true,
+    ),
+    array(
       'name'      => 'Better REST API Featured Images',
       'slug'      => 'better-rest-api-featured-images',
       'required'  => true,

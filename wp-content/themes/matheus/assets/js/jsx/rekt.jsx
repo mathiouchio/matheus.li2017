@@ -80,8 +80,9 @@ var REST = {
 
 var wp_REST = {
   init: function(){
-    this.category.fetch_and_store(wplocal.basePathURL+'/wp-json/wp/v2/categories');
+    // this.category.fetch_and_store(wplocal.basePathURL+'/wp-json/wp/v2/categories');
   },
+  /*
   category: {
     fetch_and_store: function(url){
       REST.get(url).success( function(data){
@@ -106,7 +107,7 @@ var wp_REST = {
       }
     }
   }
-}
+}*/
 
 var rekt = {
   render: function(id, url){
