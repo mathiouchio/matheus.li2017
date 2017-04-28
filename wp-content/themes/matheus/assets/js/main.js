@@ -195,5 +195,4 @@ var ohSnap = {
 
 jQuery(function(){
   nav.init();
-  // contact.init();
 });

@@ -78,11 +78,11 @@ var REST = {
   }
 };
 
+/*
 var wp_REST = {
   init: function(){
     // this.category.fetch_and_store(wplocal.basePathURL+'/wp-json/wp/v2/categories');
   },
-  /*
   category: {
     fetch_and_store: function(url){
       REST.get(url).success( function(data){
@@ -107,7 +107,8 @@ var wp_REST = {
       }
     }
   }
-}*/
+}
+*/
 
 var rekt = {
   render: function(id, url){
@@ -120,15 +121,13 @@ var rekt = {
     },
     projects: function(url){
       return React.createClass({
-        getInitialState: function(){
-          return null;
-        },
+        getInitialState: function(){ return null },
         componentWillMount: function(){
           // console.log('will mount');
           var that = this;
           REST.get(url)
               .success( function(data){
-                console.log(data);
+                // console.log(data);
                 that.setState({ posts: data });
               });
         },
@@ -159,9 +158,9 @@ var rekt = {
           if (e.ctrlKey || e.shiftKey || e.metaKey || (e.button && e.button == 1)){
             
           } else {
-            console.log(this.state.posts[i]); 
+            // console.log(this.state.posts[i]); 
             var galleryJSON = this.state.posts[i].gallery;
-            console.log(this);
+            // console.log(this);
             popup.run(this, i);
             // popup.populate(this.state.posts[i].gallery, this.state.posts[i].format);
 
@@ -209,9 +208,7 @@ var rekt = {
     },
     blog: function(url){
       return React.createClass({
-        getInitialState: function(){
-          return null;
-        },
+        getInitialState: function(){ return null },
         componentWillMount: function(){
           var that = this;
           REST.get(url)
@@ -411,13 +408,19 @@ var popup = {
     that.show();
   },
   gallery: function(json_data, that){
-    console.log(json_data);
+    // console.log(json_data);
+    // console.log(that);
 
     return React.createClass({
       getInitialState: function(){ return null },
+      componentDidMount: function(){
+        console.log('did mount');
+        console.log(this);
+        if(that.state.datatype == 'video') plyr.setup();
+      },
       slide: function(v,i){
-        console.log(v);
-        console.log(i);
+        // console.log(v);
+        // console.log(i);
 
         var slidenum = that.state.currentslide;
 
@@ -746,7 +749,6 @@ var contact = {
 };
 
 (function(){
-  wp_REST.init();
   popup.init();
   rekt.render('projects', wplocal.basePathURL+'/wp-json/wp/v2/portfolio');
   rekt.render('blog',     wplocal.basePathURL+'/wp-json/wp/v2/posts?per_page=100');

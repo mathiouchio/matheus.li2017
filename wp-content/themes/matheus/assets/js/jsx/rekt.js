@@ -80,34 +80,37 @@ var REST = {
   }
 };
 
+/*
 var wp_REST = {
-  init: function init() {
-    this.category.fetch_and_store(wplocal.basePathURL + '/wp-json/wp/v2/categories');
+  init: function(){
+    // this.category.fetch_and_store(wplocal.basePathURL+'/wp-json/wp/v2/categories');
   },
   category: {
-    fetch_and_store: function fetch_and_store(url) {
-      REST.get(url).success(function (data) {
+    fetch_and_store: function(url){
+      REST.get(url).success( function(data){
         REST.json.category_slugs = data;
       });
     },
-    loopcheck: function loopcheck(data) {
+    loopcheck: function(data){
       for (var i = 0; i < REST.json.category_slugs.length; i++) {
-        if (REST.json.category_slugs[i].id == data) {
+        if(REST.json.category_slugs[i].id == data ) {
           return REST.json.category_slugs[i].slug;
         }
       }
     },
-    checker: function checker(ids) {
-      if (ids.length > 1) {
-        for (var b = 0; b < ids.length; b++) {
-          if (this.loopcheck(ids[b])) return this.loopcheck(ids[b]);
+    checker: function(ids){
+      if(ids.length > 1) {
+        for(var b = 0; b < ids.length; b++){
+          if (this.loopcheck(ids[b]))
+             return this.loopcheck(ids[b]);
         }
       } else {
         return this.loopcheck(ids);
       }
     }
   }
-};
+}
+*/
 
 var rekt = {
   render: function render(id, url) {
@@ -127,7 +130,7 @@ var rekt = {
           // console.log('will mount');
           var that = this;
           REST.get(url).success(function (data) {
-            console.log(data);
+            // console.log(data);
             that.setState({ posts: data });
           });
         },
@@ -156,9 +159,9 @@ var rekt = {
         handleClick: function handleClick(i, e) {
           /* Preventing preventDefault on new tab click */
           if (e.ctrlKey || e.shiftKey || e.metaKey || e.button && e.button == 1) {} else {
-            console.log(this.state.posts[i]);
+            // console.log(this.state.posts[i]); 
             var galleryJSON = this.state.posts[i].gallery;
-            console.log(this);
+            // console.log(this);
             popup.run(this, i);
             // popup.populate(this.state.posts[i].gallery, this.state.posts[i].format);
 
@@ -491,15 +494,21 @@ var popup = {
     that.show();
   },
   gallery: function gallery(json_data, that) {
-    console.log(json_data);
+    // console.log(json_data);
+    // console.log(that);
 
     return React.createClass({
       getInitialState: function getInitialState() {
         return null;
       },
+      componentDidMount: function componentDidMount() {
+        console.log('did mount');
+        console.log(this);
+        if (that.state.datatype == 'video') plyr.setup();
+      },
       slide: function slide(v, i) {
-        console.log(v);
-        console.log(i);
+        // console.log(v);
+        // console.log(i);
 
         var slidenum = that.state.currentslide;
 
@@ -960,7 +969,6 @@ var contact = {
 };
 
 (function () {
-  wp_REST.init();
   popup.init();
   rekt.render('projects', wplocal.basePathURL + '/wp-json/wp/v2/portfolio');
   rekt.render('blog', wplocal.basePathURL + '/wp-json/wp/v2/posts?per_page=100');
