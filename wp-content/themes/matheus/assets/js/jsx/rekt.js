@@ -467,28 +467,44 @@ var rekt = {
   }
 };
 
+var responsive = {
+  start: function start(rektObj) {
+    // console.log(rektObj.state.currentslide);
+    slidePos = rektObj.state.currentslide;
+    window.onresize = function (event) {
+      /* CONTINUE HERE */
+      /* calculate media sizes and center with margin minus values */
+      // plyrEmbedParams = popup.plyr.obj[slidePos].getEmbed();
+      console.log(popup.plyr.obj[slidePos]);
+      // responsive.plyr(plyrEmbedParams);
+    };
+  },
+  stop: function stop() {
+    window.onresize = null;
+  },
+  plyr: function plyr(data) {
+    console.log(data);
+  }
+};
+
 var popup = {
+  plyr: {
+    obj: null,
+    init: function init() {
+      this.obj = plyr.setup();
+    },
+    destroy: function destroy() {
+      this.obj.map(function (v) {
+        v.destroy();
+      });
+    }
+  },
   popupdom: document.createElement('div'),
   init: function init(json_data) {
     this.popupdom.id = "popup";
 
     document.body.appendChild(this.popupdom);
     $popup = document.getElementById('popup');
-  },
-  article: function article(content, that) {
-    // console.log(json_data);
-    // console.log(that);
-
-    return React.createClass({
-      render: function render() {
-        return React.createElement(
-          'div',
-          null,
-          'hello article'
-        );
-      }
-    });
-    that.show();
   },
   gallery: function gallery(json_data, that) {
     // console.log(json_data);
@@ -499,8 +515,14 @@ var popup = {
         return null;
       },
       componentDidMount: function componentDidMount() {
-        // console.log(this);
-        if (that.state.datatype == 'video') plyr.setup();
+        if (that.state.datatype == 'video') {
+          popup.plyr.init();
+          responsive.start(that);
+        }
+      },
+      componentWillUnmount: function componentWillUnmount() {
+        popup.plyr.destroy();
+        responsive.stop();
       },
       slide: function slide(v, i) {
         // console.log(v);
@@ -524,7 +546,7 @@ var popup = {
           return React.createElement(
             'li',
             { 'data-show': i == slidenum ? '' : null, 'data-transitioning': i == that.state.previouslide ? "" : null, key: 'popup' + i },
-            React.createElement('div', { 'data-type': youmeo, 'data-video-id': vid })
+            React.createElement('div', { 'data-type': youmeo, 'data-video-id': vid, onResize: this.handleResize })
           );
         } else if (v.video_url) {
           return React.createElement(

@@ -680,3 +680,10 @@ svg.navigate {
     }
   }
 }
+
+.plyr {
+  .plyr__video-embed {
+    height: 100vh;
+    padding-bottom: 0;
+  }
+}

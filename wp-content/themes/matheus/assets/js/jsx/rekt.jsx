@@ -385,24 +385,42 @@ var rekt = {
   }
 };
 
+var responsive = {
+  start: function(rektObj){
+    // console.log(rektObj.state.currentslide);
+    slidePos = rektObj.state.currentslide;
+    window.onresize = function(event) {
+      /* CONTINUE HERE */
+      /* calculate media sizes and center with margin minus values */
+      // plyrEmbedParams = popup.plyr.obj[slidePos].getEmbed();
+      console.log(popup.plyr.obj[slidePos]);
+      // responsive.plyr(plyrEmbedParams);
+    };
+  },
+  stop: function(){
+    window.onresize = null;
+  },
+  plyr: function(data){
+    console.log(data);
+  }
+};
+
 var popup = {
+  plyr: {
+    obj: null,
+    init: function(){
+      this.obj = plyr.setup();
+    },
+    destroy: function(){
+      this.obj.map( function(v){ v.destroy() });
+    }
+  },
   popupdom: document.createElement('div'),
   init: function(json_data){
     this.popupdom.id = "popup"; 
     
     document.body.appendChild(this.popupdom);
     $popup = document.getElementById('popup');
-  },
-  article: function(content, that){
-    // console.log(json_data);
-    // console.log(that);
-
-    return React.createClass({
-      render: function(){
-        return <div>hello article</div>
-      }
-    });
-    that.show();
   },
   gallery: function(json_data, that){
     // console.log(json_data);
@@ -411,8 +429,14 @@ var popup = {
     return React.createClass({
       getInitialState: function(){ return null },
       componentDidMount: function(){
-        // console.log(this);
-        if(that.state.datatype == 'video') plyr.setup();
+        if(that.state.datatype == 'video') {
+          popup.plyr.init();
+          responsive.start(that);
+        } 
+      },
+      componentWillUnmount: function() {
+        popup.plyr.destroy();
+        responsive.stop();
       },
       slide: function(v,i){
         // console.log(v);
@@ -431,7 +455,7 @@ var popup = {
               vid    = (youmeo) ? v.youtube_id : v.vimeo_id;
 
           return <li data-show={i==slidenum ? '' : null} data-transitioning={i==that.state.previouslide ? "" : null} key={'popup'+i}>
-              <div data-type={youmeo} data-video-id={vid}></div>
+              <div data-type={youmeo} data-video-id={vid} onResize={this.handleResize}></div>
             </li>;
         } else if(v.video_url){ 
           return <li data-show={i==slidenum ? '' : null} data-transitioning={i==that.state.previouslide ? "" : null} key={'popup'+i}>
