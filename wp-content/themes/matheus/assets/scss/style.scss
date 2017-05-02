@@ -685,5 +685,9 @@ svg.navigate {
   .plyr__video-embed {
     height: 100vh;
     padding-bottom: 0;
+    iframe {
+      margin-left: 50%;
+      transform: translateX(-50%);
+    }
   }
 }

@@ -1028,3 +1028,8 @@ svg.navigate .round {
   height: 100vh;
   padding-bottom: 0;
 }
+/* line 688, ../scss/style.scss */
+.plyr .plyr__video-embed iframe {
+  margin-left: 50%;
+  transform: translateX(-50%);
+}

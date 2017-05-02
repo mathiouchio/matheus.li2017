@@ -343,38 +343,6 @@ var REST = {
   }
 };
 
-/*
-var wp_REST = {
-  init: function(){
-    // this.category.fetch_and_store(wplocal.basePathURL+'/wp-json/wp/v2/categories');
-  },
-  category: {
-    fetch_and_store: function(url){
-      REST.get(url).success( function(data){
-        REST.json.category_slugs = data;
-      });
-    },
-    loopcheck: function(data){
-      for (var i = 0; i < REST.json.category_slugs.length; i++) {
-        if(REST.json.category_slugs[i].id == data ) {
-          return REST.json.category_slugs[i].slug;
-        }
-      }
-    },
-    checker: function(ids){
-      if(ids.length > 1) {
-        for(var b = 0; b < ids.length; b++){
-          if (this.loopcheck(ids[b]))
-             return this.loopcheck(ids[b]);
-        }
-      } else {
-        return this.loopcheck(ids);
-      }
-    }
-  }
-}
-*/
-
 var rekt = {
   render: function render(id, url) {
     var Component = this.component[id](url);
@@ -730,35 +698,57 @@ var rekt = {
   }
 };
 
-var responsive = {
-  start: function start(rektObj) {
-    // console.log(rektObj.state.currentslide);
-    slidePos = rektObj.state.currentslide;
-    window.onresize = function (event) {
-      /* CONTINUE HERE */
-      /* calculate media sizes and center with margin minus values */
-      // plyrEmbedParams = popup.plyr.obj[slidePos].getEmbed();
-      console.log(popup.plyr.obj[slidePos]);
-      // responsive.plyr(plyrEmbedParams);
-    };
-  },
-  stop: function stop() {
-    window.onresize = null;
-  },
-  plyr: function plyr(data) {
-    console.log(data);
-  }
-};
+// var responsive = {
+//   init: function(){
+//     console.log('initted');
+//     window.onresize = function(event) {
+//       console.log('hey');
+//       popup.plyr.mathematics();
+//     };
+//   },
+//   uninit: function(){
+//     window.onresize = null;
+//   }
+// };
 
 var popup = {
   plyr: {
     obj: null,
-    init: function init() {
+    rektObj: null,
+    init: function init(rektObj) {
       this.obj = plyr.setup();
+      this.rektObj = rektObj;
+      this.responsive();
     },
     destroy: function destroy() {
-      this.obj.map(function (v) {
-        v.destroy();
+      this.obj.map(function (target) {
+        target.destroy();
+      });
+    },
+    mathematics: function mathematics(target) {
+      console.log('calculating');
+      var vHeight = target.height ? target.height : target.videoHeight,
+          vWidth = target.width ? target.width : target.videoWidth,
+          vRatio = vWidth / vHeight,
+          realHeight = window.innerHeight;
+      realWidth = realHeight * vRatio;
+
+      $(target).css('width', realWidth);
+    },
+    responsive: function responsive() {
+      var slidePos = this.rektObj.state.currentslide,
+          currentTarget = this.obj[slidePos];
+
+      currentTarget.on('ready', function (event) {
+        var plyrObj = currentTarget.getEmbed() ? currentTarget.getEmbed().a : currentTarget.getMedia();
+        if (plyrObj.tagName == 'VIDEO') {
+          // waiting for all the metadatas load to determine height x width
+          plyrObj.addEventListener('loadedmetadata', function (e) {
+            popup.plyr.mathematics(plyrObj);
+          });
+        } else {
+          popup.plyr.mathematics(plyrObj);
+        }
       });
     }
   },
@@ -779,13 +769,11 @@ var popup = {
       },
       componentDidMount: function componentDidMount() {
         if (that.state.datatype == 'video') {
-          popup.plyr.init();
-          responsive.start(that);
+          popup.plyr.init(that);
         }
       },
       componentWillUnmount: function componentWillUnmount() {
         popup.plyr.destroy();
-        responsive.stop();
       },
       slide: function slide(v, i) {
         // console.log(v);
