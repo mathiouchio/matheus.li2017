@@ -423,10 +423,12 @@ var popup = {
       componentDidMount: function(){
         if(that.state.datatype == 'video') {
           popup.plyr.init(that);
-        } 
+        }
       },
       componentWillUnmount: function() {
-        popup.plyr.destroy();
+        if(that.state.datatype == 'video') {
+          popup.plyr.destroy();
+        } 
       },
       slide: function(v,i){
         // console.log(v);

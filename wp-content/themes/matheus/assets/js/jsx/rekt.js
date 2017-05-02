@@ -510,7 +510,9 @@ var popup = {
         }
       },
       componentWillUnmount: function componentWillUnmount() {
-        popup.plyr.destroy();
+        if (that.state.datatype == 'video') {
+          popup.plyr.destroy();
+        }
       },
       slide: function slide(v, i) {
         // console.log(v);
