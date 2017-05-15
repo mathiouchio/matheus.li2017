@@ -440,20 +440,20 @@ var popup = {
           var portrait = v.media_details.height > v.media_details.width; 
 
           return <li data-show={i==slidenum ? '' : null} data-transitioning={i==that.state.previouslide ? "" : null} className={portrait ? 'portrait' : null} key={'popup'+i}>
-              <img src={v.source_url} width={v.media_details.width} height={v.media_details.height} />;
-            </li>;
+              <img src={v.source_url} width={v.media_details.width} height={v.media_details.height} />
+            </li>
         } else if(v.youtube_id || v.vimeo_id){
           var youmeo = (v.youtube_id) ? 'youtube' : 'vimeo',
               vid    = (youmeo) ? v.youtube_id : v.vimeo_id;
 
           return <li data-show={i==slidenum ? '' : null} data-transitioning={i==that.state.previouslide ? "" : null} key={'popup'+i}>
               <div data-type={youmeo} data-video-id={vid} onResize={this.handleResize}></div>
-            </li>;
+            </li>
         } else if(v.video_url){ 
           return <li data-show={i==slidenum ? '' : null} data-transitioning={i==that.state.previouslide ? "" : null} key={'popup'+i}>
                    <video controls>
                      <source src={v.video_url} type="video/mp4" />
-                   </video>;
+                   </video>
                  </li>
         }
       },

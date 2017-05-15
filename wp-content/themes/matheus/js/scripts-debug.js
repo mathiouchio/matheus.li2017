@@ -789,8 +789,7 @@ var popup = {
           return React.createElement(
             'li',
             { 'data-show': i == slidenum ? '' : null, 'data-transitioning': i == that.state.previouslide ? "" : null, className: portrait ? 'portrait' : null, key: 'popup' + i },
-            React.createElement('img', { src: v.source_url, width: v.media_details.width, height: v.media_details.height }),
-            ';'
+            React.createElement('img', { src: v.source_url, width: v.media_details.width, height: v.media_details.height })
           );
         } else if (v.youtube_id || v.vimeo_id) {
           var youmeo = v.youtube_id ? 'youtube' : 'vimeo',
@@ -809,8 +808,7 @@ var popup = {
               'video',
               { controls: true },
               React.createElement('source', { src: v.video_url, type: 'video/mp4' })
-            ),
-            ';'
+            )
           );
         }
       },
