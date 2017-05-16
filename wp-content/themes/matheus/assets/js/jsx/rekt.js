@@ -463,7 +463,7 @@ var popup = {
       });
     },
     mathematics: function mathematics(target) {
-      console.log('calculating');
+      // console.log('calculating');
       var vHeight = target.height ? target.height : target.videoHeight,
           vWidth = target.width ? target.width : target.videoWidth,
           vRatio = vWidth / vHeight,
@@ -677,6 +677,13 @@ var popup = {
           this.navigate[run]();
         },
         navigate: {
+          mute: function mute() {
+            // console.log(popup.plyr.obj);
+            // console.log(that.state);
+            if (popup.plyr.obj.length) {
+              popup.plyr.obj[that.state.currentslide].toggleMute();
+            }
+          },
           prev: function prev() {
             // console.log(that);
             var i = that.state.currentslide;
@@ -706,7 +713,7 @@ var popup = {
           currentslide++;
           return React.createElement(
             'div',
-            { className: 'controller', 'data-single': that.state.totalslide == 1 ? '' : null },
+            { className: 'controller', 'data-video': that.state.datatype == 'video' ? '' : null, 'data-single': that.state.totalslide == 1 ? '' : null },
             React.createElement(
               'span',
               { 'data-control': 'close', onClick: this.handleClick },
@@ -741,6 +748,11 @@ var popup = {
               'span',
               { 'data-control': 'next', onClick: this.handleClick },
               'next'
+            ),
+            React.createElement(
+              'mute',
+              { 'data-control': 'mute', onClick: this.handleClick },
+              'mute'
             )
           );
         }

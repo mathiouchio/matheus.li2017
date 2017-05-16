@@ -325,6 +325,13 @@ h2 {
     @extend %controllerbottom;
     padding: 4px 20px 0 20px;
 
+    [data-control="mute"] {
+      display: none;
+    }
+    &[data-video] [data-control="mute"] {
+      display: inline-block;
+    }
+
     &[data-single] {
       i, divider, c, t,
       [data-control="prev"],
@@ -345,6 +352,7 @@ h2 {
       text-align:right;
       display: inline-block;
     }
+    mute,
     t {
       font-family: $font-stack;
       text-transform:lowercase;
@@ -639,6 +647,7 @@ svg.navigate {
   font-family: $font-stack-hero;
   text-transform: uppercase;
   
+  mute,
   svg,
   span,
   li { 

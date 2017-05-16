@@ -379,7 +379,7 @@ var popup = {
       this.obj.map( function(target){ target.destroy() });
     },
     mathematics: function(target){
-      console.log('calculating');
+      // console.log('calculating');
       var vHeight = (target.height) ? target.height : target.videoHeight,
           vWidth  = (target.width) ? target.width : target.videoWidth,
           vRatio  = vWidth/vHeight,
@@ -563,6 +563,13 @@ var popup = {
           this.navigate[run]();
         },
         navigate: {
+          mute: function(){
+            // console.log(popup.plyr.obj);
+            // console.log(that.state);
+            if(popup.plyr.obj.length){
+              popup.plyr.obj[that.state.currentslide].toggleMute(); 
+            }
+          },
           prev: function(){
             // console.log(that);
             var i = that.state.currentslide;
@@ -590,7 +597,7 @@ var popup = {
         render: function(){
           var currentslide = that.state.currentslide;
           currentslide++;
-          return <div className="controller" data-single={that.state.totalslide == 1 ? '' : null}>
+          return <div className="controller" data-video={that.state.datatype=='video' ? '' : null} data-single={that.state.totalslide == 1 ? '' : null}>
                     <span data-control="close" onClick={this.handleClick} >close</span>
                     <i>{currentslide}</i>
                     <divider> / </divider>
@@ -598,6 +605,7 @@ var popup = {
                     <t>{that.state.datatype}</t>
                     <span data-control="prev" onClick={this.handleClick} >prev</span>
                     <span data-control="next" onClick={this.handleClick} >next</span>
+                    <mute data-control="mute" onClick={this.handleClick}>mute</mute>
                  </div>          
         }
       });
