@@ -456,7 +456,15 @@ var popup = {
       this.obj = plyr.setup();
       this.rektObj = rektObj;
       this.responsive();
+
+      var targetslide = this.rektObj.state.currentslide,
+          targetplyr = this.obj[targetslide];
+
+      targetplyr.on('ready', function (e) {
+        targetplyr.play();
+      });
     },
+    ready: function ready() {},
     destroy: function destroy() {
       this.obj.map(function (target) {
         target.destroy();
@@ -611,7 +619,6 @@ var popup = {
         that.populate(data, 'gallery');
       });
     } else if (format == 'video') {
-      // console.log(rektComp.state.posts[index]);
       that.populate(rektComp.state.posts[index].fields, 'video');
     } else {
       // article 
@@ -678,14 +685,11 @@ var popup = {
         },
         navigate: {
           mute: function mute() {
-            // console.log(popup.plyr.obj);
-            // console.log(that.state);
             if (popup.plyr.obj.length) {
               popup.plyr.obj[that.state.currentslide].toggleMute();
             }
           },
           prev: function prev() {
-            // console.log(that);
             var i = that.state.currentslide;
             if (i > 0) {
               i--;
@@ -696,9 +700,6 @@ var popup = {
             var i = that.state.currentslide,
                 total = that.state.totalslide;
             total--;
-            // console.log(this);
-            // console.log(ReactDOM.findDOMNode(that));
-
             if (i < total) {
               i++;
               that.setState({ currentslide: i, previouslide: that.state.currentslide });
@@ -880,7 +881,6 @@ var contact = {
         } else {
           obj.dataset.invalid = "";
         }
-
         // console.log(this.checker);
 
         this.props.onValidate(this.checker[0], this.checker[1]);
@@ -960,11 +960,9 @@ var contact = {
             url: "/matheus.li/wp-content/themes/matheus/contact.php",
             data: dataString
           }).success(function (data) {
-            // console.log('success!');
             // console.log(data);
             that.setState({ sent: "" });
           }).error(function (data) {
-            // console.log('error!');
             // console.log(data.status);
             that.setState({ response: data.status });
           });

@@ -691,6 +691,9 @@ svg.navigate {
 }
 
 .plyr {
+  .plyr__controls {
+    display: none;
+  }
   .plyr__video-embed {
     height: 100vh;
     padding-bottom: 0;

@@ -1034,11 +1034,15 @@ svg.navigate .round {
 }
 
 /* line 694, ../scss/style.scss */
+.plyr .plyr__controls {
+  display: none;
+}
+/* line 697, ../scss/style.scss */
 .plyr .plyr__video-embed {
   height: 100vh;
   padding-bottom: 0;
 }
-/* line 697, ../scss/style.scss */
+/* line 700, ../scss/style.scss */
 .plyr .plyr__video-embed iframe {
   margin-left: 50%;
   transform: translateX(-50%);
