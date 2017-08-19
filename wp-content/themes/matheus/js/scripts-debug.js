@@ -1220,7 +1220,7 @@ var contact = {
           jQuery.ajax({
             type: "POST",
             dataType: "text",
-            url: "/matheus.li/wp-content/themes/matheus/contact.php",
+            url: "/matheus.li/blog/wp-content/themes/matheus/contact.php",
             data: dataString
           }).success(function (data) {
             // console.log(data);
