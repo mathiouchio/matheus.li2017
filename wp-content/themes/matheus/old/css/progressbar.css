@@ -1,0 +1,24 @@
+.default {
+	margin: 0 auto;
+	background: url('../images/loading-notfinished.png');
+	width: 392px;
+	height: 262px;
+	position:relative;
+}
+.default div {	
+	position: absolute;
+	bottom: 0; left: 0;
+	
+	width:392px;
+	background:url('../images/loading.png');
+	background-position: bottom left;
+}
+.progwrap {
+	position: absolute;
+	top: 50%;
+	z-index: 110;
+	display: block;
+	width: 100%;
+	text-align: center;
+	margin-top: -195px;
+}
