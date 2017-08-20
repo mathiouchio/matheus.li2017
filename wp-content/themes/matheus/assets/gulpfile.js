@@ -35,11 +35,15 @@ gulp.task('copy-assets', ['clean-dist'], function(){
       '!'+paths.node+'jquery/dist/core.js'])
         .pipe(a == "react-dom" ? rename({basename: 'reactdom'}) : gutil.noop())
         .pipe(gulp.dest('js/libs'));
+
+    gulp.src([paths.node+a+'/dist/*.css',
+      '!'+paths.node+a+'/dist/*min.css'])
+        .pipe(gulp.dest('css/libs'));
   });
 });
 
 gulp.task('clean-dist', function(){
-  return del(['js/libs']);
+  return del(['js/libs','css/libs']);
 });
 
 gulp.task('concat', function(){
@@ -98,8 +102,6 @@ gulp.task('watch', function() {
   gulp.watch(paths.jsx, ['babel']);
   // detect when to concat
   gulp.watch(paths.jsConcat, ['concat']);
-  // detect when to minify
-  // gulp.watch(paths.js+'/*.js', ['minify']);
   // detect when to compass
   gulp.watch(['scss/*.scss','scss/partials/*.scss'], ['compass']);
 });
