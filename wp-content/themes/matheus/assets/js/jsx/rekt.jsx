@@ -94,7 +94,7 @@ var rekt = {
           // console.log('will mount');
           var that = this;
           REST.get(url)
-              .success( function(data){
+              .done( function(data){
                 // console.log(data);
                 that.setState({ posts: data });
               });
@@ -115,7 +115,7 @@ var rekt = {
             var gallery_path = wplocal.basePathURL+'/wp-json/wp/v2/media?parent='+v.id; 
             
             // console.log(gallery_path);
-            REST.get(gallery_path).success( function(data){
+            REST.get(gallery_path).done( function(data){
               // console.log(data);
               that.state.posts[i].gallery = data;
             });
@@ -180,7 +180,7 @@ var rekt = {
         componentWillMount: function(){
           var that = this;
           REST.get(url)
-              .success( function(data){
+              .done( function(data){
                 that.setState({ posts: data, currentslide: 0 });
               });
         },
@@ -507,7 +507,7 @@ var popup = {
       var gallery_path = wplocal.basePathURL+'/wp-json/wp/v2/media?parent='+rektComp.state.posts[index].id;
       
       REST.get(gallery_path)
-          .success( function(data){
+          .done( function(data){
             rektComp.state.posts[index].gallery = data;
             that.populate(data, 'gallery');
       });
@@ -743,10 +743,10 @@ var contact = {
             dataType: "text",
             url: "/blog/wp-content/themes/matheus/contact.php",
             data: dataString
-          }).success( function(data){
+          }).done( function(data){
             // console.log(data);
             that.setState({ sent: "" });
-          }).error( function(data){
+          }).fail( function(data){
             // console.log(data.status);
             that.setState({ response: data.status });
           });

@@ -42745,7 +42745,7 @@ var rekt = {
         },
         componentDidMount: function componentDidMount() {
           // console.log('did mount');
-          // nav.travelOnRdy(); // @TODO: js error?
+          nav.travelOnRdy();
           // this.handleResponsive();
         },
         nextSlide: function nextSlide() {
@@ -43479,7 +43479,7 @@ var contact = {
           }).done(function (data) {
             // console.log(data);
             that.setState({ sent: "" });
-          }).error(function (data) {
+          }).fail(function (data) {
             // console.log(data.status);
             that.setState({ response: data.status });
           });
