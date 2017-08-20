@@ -457,7 +457,7 @@ var popup = {
               vid    = (youmeo) ? v.youtube_id : v.vimeo_id;
 
           return <li data-show={i==slidenum ? '' : null} data-transitioning={i==that.state.previouslide ? "" : null} key={'popup'+i}>
-              <div data-type={youmeo} data-video-id={vid} onResize={this.handleResize}></div>
+              <div data-type={youmeo} data-video-id={vid}></div>
             </li>
         } else if(v.video_url){ 
           return <li data-show={i==slidenum ? '' : null} data-transitioning={i==that.state.previouslide ? "" : null} key={'popup'+i}>
