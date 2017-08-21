@@ -1,5 +1,4 @@
 const babel   = require('gulp-babel'),
-      compass = require('gulp-compass'),
       concat  = require('gulp-concat'),
       del     = require('del'),
       gulp    = require('gulp'),
@@ -48,20 +47,24 @@ gulp.task('clean-dist', function(){
   return del(['js/libs','css/libs']);
 });
 
-gulp.task('concat', function(cb){
-  gulp.src(paths.jsConcat)
-      .pipe(concat('scripts.js'))
-      .pipe(minify({
-        ext:{
-          min: '.min.js'
-        },
-        output: {
-          beautify: !!gutil.env.prod ? false : true,
-          comments: !!gutil.env.prod ? false : true,
-        }
-      }))
-      .pipe(gulp.dest(paths.js))
-      .pipe(livereload());
+gulp.task('concat', function(){
+  var stream = gulp.src(paths.jsConcat)
+    .pipe(concat('scripts.js'))
+    .pipe(minify({
+      ext:{
+        min: '.min.js'
+      },
+      output: {
+        beautify: gutil.env.prod ? true : false,
+        comments: gutil.env.prod ? true : false,
+      }
+    }))
+    .pipe(gulp.dest(paths.js))
+    .pipe(livereload());
+
+  stream.on('end', function() {
+    del('../js/scripts.js', {force: true});
+  });
 });
 
 gulp.task('babel', function() {
@@ -82,19 +85,27 @@ gulp.task('ts', function(){
 });
 
 gulp.task('compass', function() {
-  gulp.src(paths.sass)
-      .pipe(compass({
-        style: 'expanded',
-        css: 'css',
-        sass: 'scss',
-        comments: true
-      }))
-      .on('error', function(error) {
-        console.log(error);
-        this.emit('end');
-      })
-      .pipe(gulp.dest(paths.css))
-      .pipe(livereload());
+  return gulp.src(paths.sass)
+    .pipe( sass({
+        outputStyle: gutil.env.prod ? 'compressed' : 'expanded',
+        sourceComments: 'map'
+      }).on('error', sass.logError))
+    .pipe(gulp.dest(paths.css))
+    .pipe(livereload());
+
+  // gulp.src(paths.sass)
+  //     .pipe(compass({
+  //       style:    !!gutil.env.prod ? 'expanded' : 'compressed',
+  //       css:      'css',
+  //       sass:     'scss',
+  //       comments: !!gutil.env.prod ? false : true
+  //     }))
+  //     .on('error', function(error) {
+  //       console.log(error);
+  //       this.emit('end');
+  //     })
+  //     .pipe(gulp.dest(paths.css))
+  //     .pipe(livereload());
 });
 
 gulp.task('watch', function() {
