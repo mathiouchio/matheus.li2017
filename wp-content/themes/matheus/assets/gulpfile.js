@@ -8,8 +8,10 @@ const babel   = require('gulp-babel'),
       minify  = require('gulp-minify'),
       rename  = require("gulp-rename"),
       sass    = require('gulp-sass'),
+      sourcemaps = require('gulp-sourcemaps'),
       stylish = require('jshint-stylish'),
-      ts      = require('gulp-typescript');
+      ts      = require('gulp-typescript'),
+      uglify = require('gulp-uglify');
 
 var paths = {
   node:     './node_modules/',
@@ -48,23 +50,35 @@ gulp.task('clean-dist', function(){
 });
 
 gulp.task('concat', function(){
+  // var stream = gulp.src(paths.jsConcat)
+  //   .pipe( gutil.env.prod ? gutil.noop() : sourcemaps.init())
+  //   .pipe( concat('scripts.js'))
+  //   .pipe( uglify({ preserveComments: 'license' }))
+  //   .pipe( rename({ extname: '.min.js' }))
+  //   .pipe( gutil.env.prod ? gutil.noop() : sourcemaps.write())
+  //   .pipe( gulp.dest(paths.js))
+  //   .pipe( livereload());
+
   var stream = gulp.src(paths.jsConcat)
+    .pipe( gutil.env.prod ? gutil.noop() : sourcemaps.init()) // @TODO: doesn't work
     .pipe(concat('scripts.js'))
     .pipe(minify({
       ext:{
         min: '.min.js'
       },
       output: {
-        beautify: gutil.env.prod ? true : false,
-        comments: gutil.env.prod ? true : false,
+        beautify: gutil.env.prod ? false : true,
+        comments: gutil.env.prod ? false : true,
       }
     }))
+    .pipe( gutil.env.prod ? gutil.noop() : sourcemaps.write()) // @TODO: doesn't work
     .pipe(gulp.dest(paths.js))
     .pipe(livereload());
 
   stream.on('end', function() {
     del('../js/scripts.js', {force: true});
   });
+  return stream;
 });
 
 gulp.task('babel', function() {
@@ -84,12 +98,14 @@ gulp.task('ts', function(){
       .pipe(gulp.dest('js'));
 });
 
-gulp.task('compass', function() {
+gulp.task('sass', function() {
   return gulp.src(paths.sass)
+    .pipe( gutil.env.prod ? gutil.noop() : sourcemaps.init())
     .pipe( sass({
         outputStyle: gutil.env.prod ? 'compressed' : 'expanded',
         sourceComments: 'map'
       }).on('error', sass.logError))
+    .pipe( gutil.env.prod ? gutil.noop() : sourcemaps.write())
     .pipe(gulp.dest(paths.css))
     .pipe(livereload());
 
@@ -125,8 +141,8 @@ gulp.task('watch', function() {
   gulp.watch(paths.ts, ['ts']);
   // detect when to concat
   gulp.watch(paths.jsConcat, ['concat']);
-  // detect when to compass
-  gulp.watch(['scss/*.scss','scss/partials/*.scss'], ['compass']);
+  // detect when to sass
+  gulp.watch(['scss/*.scss','scss/partials/*.scss'], ['sass']);
 });
 
-gulp.task('default', ['babel','compass','watch']);
+gulp.task('default', ['babel','sass','watch']);
