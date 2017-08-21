@@ -108,20 +108,6 @@ gulp.task('sass', function() {
     .pipe( gutil.env.prod ? gutil.noop() : sourcemaps.write())
     .pipe(gulp.dest(paths.css))
     .pipe(livereload());
-
-  // gulp.src(paths.sass)
-  //     .pipe(compass({
-  //       style:    !!gutil.env.prod ? 'expanded' : 'compressed',
-  //       css:      'css',
-  //       sass:     'scss',
-  //       comments: !!gutil.env.prod ? false : true
-  //     }))
-  //     .on('error', function(error) {
-  //       console.log(error);
-  //       this.emit('end');
-  //     })
-  //     .pipe(gulp.dest(paths.css))
-  //     .pipe(livereload());
 });
 
 gulp.task('watch', function() {
