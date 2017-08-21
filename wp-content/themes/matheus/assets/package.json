@@ -18,13 +18,15 @@
     "gulp-minify": "0.0.12",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
+    "gulp-typescript": "^3.2.1",
     "gulp-util": "^3.0.8",
     "jquery": "^3.2.1",
     "jshint-stylish": "^2.0.0",
     "plyr": "^2.0.13",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "snapsvg": "^0.5.1"
+    "snapsvg": "^0.5.1",
+    "typescript": "^2.4.2"
   },
   "main": "gulpfile.js",
   "author": "Matheus",

@@ -9,19 +9,21 @@ const babel   = require('gulp-babel'),
       minify  = require('gulp-minify'),
       rename  = require("gulp-rename"),
       sass    = require('gulp-sass'),
-      stylish = require('jshint-stylish');
+      stylish = require('jshint-stylish'),
+      ts      = require('gulp-typescript');
 
 var paths = {
   node:     './node_modules/',
   php:      ['../*.php', '../**/*.php'],
   jsx:      'js/jsx/*.jsx',
+  ts:      'js/ts/*.ts',
   js:       '../js',
-  jsMin:    '../js/min',
   css:      'css',
   sass:     'scss/*.scss',
   jsConcat: ['js/libs/*.js',
     'js/main.js',
-    'js/rekt.js']
+    'js/rekt.js',
+    'js/wipeskript.js']
 }
 
 gulp.task('copy-assets', ['clean-dist'], function(){
@@ -46,16 +48,16 @@ gulp.task('clean-dist', function(){
   return del(['js/libs','css/libs']);
 });
 
-gulp.task('concat', function(){
+gulp.task('concat', function(cb){
   gulp.src(paths.jsConcat)
       .pipe(concat('scripts.js'))
       .pipe(minify({
         ext:{
-          src: '-debug.js',
           min: '.min.js'
         },
         output: {
-          beautify: false
+          beautify: !!gutil.env.prod ? false : true,
+          comments: !!gutil.env.prod ? false : true,
         }
       }))
       .pipe(gulp.dest(paths.js))
@@ -67,6 +69,14 @@ gulp.task('babel', function() {
       .pipe(babel({
           plugins: ['transform-react-jsx'],
           presets: ['es2015','react']
+      }))
+      .pipe(gulp.dest('js'));
+});
+
+gulp.task('ts', function(){
+  gulp.src(paths.ts)
+      .pipe(ts({
+        noImplicitAny: true
       }))
       .pipe(gulp.dest('js'));
 });
