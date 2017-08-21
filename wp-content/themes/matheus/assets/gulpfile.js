@@ -108,8 +108,10 @@ gulp.task('watch', function() {
             .pipe(livereload());
       });
 
-  // detech when to babel
+  // detect when to babel
   gulp.watch(paths.jsx, ['babel']);
+  // detect when to transpile ts
+  gulp.watch(paths.ts, ['ts']);
   // detect when to concat
   gulp.watch(paths.jsConcat, ['concat']);
   // detect when to compass
