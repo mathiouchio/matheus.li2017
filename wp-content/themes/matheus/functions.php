@@ -4,115 +4,20 @@
  * @since Twenty Sixteen 1.0
  */
 
-add_theme_support( 'post-thumbnails' );
-
-function twentysixteen_scripts() {
-  $templateURL = get_template_directory_uri();
-
-  wp_enqueue_style(
-    'matheus-twentyseventeen',
-    $templateURL.'/style.css'
-  );
-
-  // deregister
-  wp_deregister_script('jquery');
-
-  // concatenated all scripts
-  wp_enqueue_script(
-    'matheus-twentysixteen-script',
-    $templateURL.'/js/scripts.min.js',
-    // $templateURL.'/js/scripts-debug.js',
-    array(),
-    '1.0.0',
-    true
-  );
-
-  wp_localize_script(
-  	'matheus-twentysixteen-script',
-  	'wplocal',
-  	array(
-	    'basePathURL' => site_url(),
-      'templateURL' => get_template_directory_uri()
-  	)
-  );
-
-}
-add_action( 'wp_enqueue_scripts', 'twentysixteen_scripts' );
-
-// PORTFOLIO custom post type
-add_action( 'init', 'create_post_type' );
-function create_post_type() {
-  register_post_type( 'portfolio',
-    array(
-      'labels' => array(
-        'name' => __( 'Portfolio' ),
-        'singular_name' => __( 'Porfolio' )
-      ),
-      'public' => true,
-      'publicly_queryable' => true,
-      'show_in_rest' => true,
-      'rest_base' => 'portfolio',
-      'has_archive' => false,
-      'supports' => array(
-        'title',
-        'editor',
-        'author',
-        'thumbnail',
-        'post-formats'
-      ),
-      'rewrite' => array(
-        'slug' => false,
-        'with_front' => false
-      )
-    )
-  );
-}
-
-/* show acf fields on wp rest api @davidmaneuver:
- * https://gist.github.com/rileypaulsen/9b4505cdd0ac88d5ef51
- * reference: http://v2.wp-api.org/extending/modifying/
+/**
+ * Enqueue functions.
  */
-function wp_rest_api_alter() {
-  register_api_field( 'portfolio',
-      'fields',
-      array(
-        'get_callback'    => function($data, $field, $request, $type){
-          if (function_exists('get_fields')) {
-            return get_fields($data['id']);
-          }
-          return [];
-        },
-        'update_callback' => null,
-        'schema'          => null,
-      )
-  );
-  register_api_field( 'post',
-      'fields',
-      array(
-        'get_callback'    => function($data, $field, $request, $type){
-          if (function_exists('get_fields')) {
-            return get_fields($data['id']);
-          }
-          return [];
-        },
-        'update_callback' => null,
-        'schema'          => null,
-      )
-  );
-}
-add_action( 'rest_api_init', 'wp_rest_api_alter');
+require get_template_directory() . '/inc/enqueue.php';
 
-/* Redirect 404 to homepage */
-add_action( 'pre_get_posts', 'wpse44983_single_post_404' );
-function wpse44983_single_post_404( $query ) {
-  if ( $query->is_main_query() && $query->is_single() ) {
-    $query->is_404 = true;
-  }
-}
+/**
+ * Custom post type functions.
+ */
+require get_template_directory() . '/inc/post-type.php';
 
-/* Adding post format support to custom-post-type */
-add_theme_support('post-formats', array('video','gallery'));
-add_post_type_support( 'portfolio', 'post-formats' );
+/**
+ * Custom REST API functions.
+ */
+require get_template_directory() . '/inc/rest.php';
 
 /**
  * Register the required plugins for this theme.
@@ -132,123 +37,29 @@ add_post_type_support( 'portfolio', 'post-formats' );
  * This function is hooked into `tgmpa_register`, which is fired on the WP `init` action on priority 10.
  */
 require_once 'class-tgm-plugin-activation.php';
-add_action( 'tgmpa_register', 'matheusli_register_required_plugins' );
 
-function matheusli_register_required_plugins() {
-  $plugins = array(
-    array(
-      'name'      => 'WP REST API',
-      'slug'      => 'rest-api',
-      'required'  => true,
-    ),
-    array(
-      'name'      => 'Advanced Custom Fields',
-      'slug'      => 'advanced-custom-fields',
-      'required'  => true,
-    ),
-    array(
-      'name'      => 'Advanced Custom Fields: Repeater Field',
-      'slug'      => 'acf-repeater',
-      'required'  => true,
-    ),
-    array(
-      'name'      => 'Better REST API Featured Images',
-      'slug'      => 'better-rest-api-featured-images',
-      'required'  => true,
-    )
-  );
+/**
+ * Plugins functions.
+ */
+require get_template_directory() . '/inc/plugins.php';
 
-  $config = array(
-    'id'           => 'matheusli',
-    'default_path' => '',
-    'menu'         => 'tgmpa-install-plugins',
-    'parent_slug'  => 'themes.php',
-    'capability'   => 'edit_theme_options',
-    'has_notices'  => true,
-    'dismissable'  => true,
-    'dismiss_msg'  => '',
-    'is_automatic' => false,
-    'message'      => '',
-  );
+/**
+ * Custom fields functions.
+ */
+require get_template_directory() . '/inc/fields.php';
 
-  tgmpa( $plugins, $config );
-}
+/**
+ * Featured image
+ */ 
+add_theme_support( 'post-thumbnails' );
 
-if(function_exists("register_field_group")) {
-  register_field_group(array (
-    'id' => 'acf_video-posts',
-    'title' => 'Video Posts',
-    'fields' => array (
-      array (
-        'key' => 'field_58ffad28d5f8a',
-        'label' => 'Videos',
-        'name' => 'videos',
-        'type' => 'repeater',
-        'sub_fields' => array (
-          array (
-            'key' => 'field_58ffbdcada41b',
-            'label' => 'Youtube ID',
-            'name' => 'youtube_id',
-            'type' => 'text',
-            'instructions' => 'Case Sensitive',
-            'column_width' => '',
-            'default_value' => '',
-            'placeholder' => '',
-            'prepend' => '',
-            'append' => '',
-            'formatting' => 'none',
-            'maxlength' => '',
-          ),
-          array (
-            'key' => 'field_58ffbdf3da41c',
-            'label' => 'Vimeo ID',
-            'name' => 'vimeo_id',
-            'type' => 'text',
-            'column_width' => '',
-            'default_value' => '',
-            'placeholder' => '',
-            'prepend' => '',
-            'append' => '',
-            'formatting' => 'none',
-            'maxlength' => '',
-          ),
-          array (
-            'key' => 'field_58ffbdfdda41d',
-            'label' => 'Video URL',
-            'name' => 'video_url',
-            'type' => 'text',
-            'column_width' => '',
-            'default_value' => '',
-            'placeholder' => '',
-            'prepend' => '',
-            'append' => '',
-            'formatting' => 'none',
-            'maxlength' => '',
-          ),
-        ),
-        'row_min' => '',
-        'row_limit' => '',
-        'layout' => 'row',
-        'button_label' => 'Add Row',
-      ),
-    ),
-    'location' => array (
-      array (
-        array (
-          'param' => 'post_format',
-          'operator' => '==',
-          'value' => 'video',
-          'order_no' => 0,
-          'group_no' => 0,
-        ),
-      ),
-    ),
-    'options' => array (
-      'position' => 'acf_after_title',
-      'layout' => 'no_box',
-      'hide_on_screen' => array (
-      ),
-    ),
-    'menu_order' => 0,
-  ));
+/**
+ * Redirect 404 to homepage:
+ * https://wordpress.stackexchange.com/questions/44983/disable-single-post-page/44990
+ */ 
+add_action( 'pre_get_posts', 'wpse44983_single_post_404' );
+function wpse44983_single_post_404( $query ) {
+  if ( $query->is_main_query() && $query->is_single() ) {
+    $query->is_404 = true;
+  }
 }
