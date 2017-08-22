@@ -76,4 +76,80 @@ if(function_exists("register_field_group")) {
     ),
     'menu_order' => 0,
   ));
+
+  register_field_group(array (
+    'id' => 'acf_old-portfolio',
+    'title' => 'Old Portfolio',
+    'fields' => array (
+      array (
+        'key' => 'field_599c871b421d1',
+        'label' => 'Thumb',
+        'name' => 'thumb',
+        'type' => 'image',
+        'save_format' => 'id',
+        'preview_size' => 'thumbnail',
+        'library' => 'uploadedTo',
+      ),
+      array (
+        'key' => 'field_599c879f421d2',
+        'label' => 'Thumb Hover',
+        'name' => 'thumb_hover',
+        'type' => 'image',
+        'save_format' => 'id',
+        'preview_size' => 'thumbnail',
+        'library' => 'uploadedTo',
+      ),
+      array (
+        'key' => 'field_599c87b1421d3',
+        'label' => 'Background',
+        'name' => 'background',
+        'type' => 'image',
+        'save_format' => 'id',
+        'preview_size' => 'thumbnail',
+        'library' => 'uploadedTo',
+      ),
+      array (
+        'key' => 'field_599c889f9b0b4',
+        'label' => 'Slides',
+        'name' => 'slides',
+        'type' => 'repeater',
+        'sub_fields' => array (
+          array (
+            'key' => 'field_599c88af9b0b5',
+            'label' => 'slide',
+            'name' => 'slide',
+            'type' => 'image',
+            'column_width' => 50,
+            'save_format' => 'id',
+            'preview_size' => 'thumbnail',
+            'library' => 'uploadedTo',
+          ),
+        ),
+        'row_min' => '',
+        'row_limit' => '',
+        'layout' => 'table',
+        'button_label' => 'Add Slide',
+      ),
+    ),
+    'location' => array (
+      array (
+        array (
+          'param' => 'post_type',
+          'operator' => '==',
+          'value' => 'old',
+          'order_no' => 0,
+          'group_no' => 0,
+        ),
+      ),
+    ),
+    'options' => array (
+      'position' => 'acf_after_title',
+      'layout' => 'default',
+      'hide_on_screen' => array (
+      ),
+    ),
+    'menu_order' => 0,
+  ));
+
 }
+
