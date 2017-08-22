@@ -1,7 +1,6 @@
 <?php
 function twentysixteen_scripts() {
-  $templateURL = get_template_directory_uri();
-
+  $templateURL = get_stylesheet_directory_uri();
   wp_enqueue_style(
     'matheus-twentyseventeen',
     $templateURL.'/style.css'
@@ -25,8 +24,16 @@ function twentysixteen_scripts() {
     'wplocal',
     array(
       'basePathURL' => site_url(),
-      'templateURL' => get_template_directory_uri()
+      'templateURL' => $templateURL
     )
   );
 }
 add_action( 'wp_enqueue_scripts', 'twentysixteen_scripts' );
+
+function admin_scripts() {
+  wp_enqueue_style(
+    'admin_style',
+    get_template_directory_uri().'/css/admin-style.css'
+  );
+}
+add_action( 'admin_enqueue_scripts', 'admin_scripts' );

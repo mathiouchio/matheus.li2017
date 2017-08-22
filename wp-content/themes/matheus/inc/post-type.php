@@ -39,8 +39,7 @@ function create_post_type() {
       'supports' => array(
         'title',
         'editor',
-        'thumbnail',
-        'post-formats'
+        'thumbnail'
       ),
       'rewrite' => array(
         'with_front' => false
