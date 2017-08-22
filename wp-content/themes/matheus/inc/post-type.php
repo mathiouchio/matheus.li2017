@@ -16,18 +16,41 @@ function create_post_type() {
       'supports' => array(
         'title',
         'editor',
-        'author',
         'thumbnail',
         'post-formats'
       ),
       'rewrite' => array(
-        'slug' => false,
         'with_front' => false
       )
     )
   );
+
+  register_post_type( 'old',
+    array(
+      'labels' => array(
+        'name' => __( 'Old Portfolio' ),
+        'singular_name' => __( 'Old Porfolio' )
+      ),
+      'public' => true,
+      'publicly_queryable' => false,
+      'show_in_rest' => true,
+      'rest_base' => 'old_portfolio',
+      'has_archive' => false,
+      'supports' => array(
+        'title',
+        'editor',
+        'thumbnail',
+        'post-formats'
+      ),
+      'rewrite' => array(
+        'with_front' => false
+      )
+    )
+  );
+
+  add_post_type_support( 'portfolio', 'post-formats' );
+  add_post_type_support( 'old', 'post-formats' );
 }
 
 /* Adding post format support to custom-post-type */
 add_theme_support('post-formats', array('video','gallery'));
-add_post_type_support( 'portfolio', 'post-formats' );

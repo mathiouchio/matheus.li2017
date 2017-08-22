@@ -1,10 +1,5 @@
 <?php
 /**
- * Enqueues scripts and styles.
- * @since Twenty Sixteen 1.0
- */
-
-/**
  * Enqueue functions.
  */
 require get_template_directory() . '/inc/enqueue.php';
