@@ -131,4 +131,4 @@ gulp.task('watch', function() {
   gulp.watch(['scss/*.scss','scss/partials/*.scss'], ['sass']);
 });
 
-gulp.task('default', ['babel','sass','watch']);
+gulp.task('default', ['babel','ts','sass','watch']);
