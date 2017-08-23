@@ -1,8 +1,25 @@
 {
-  "name": "assets",
+  "name": "matheus.li",
   "version": "1.0.0",
   "description": "",
+  "private": true,
+  "config": {
+    "unsafe-perm": true
+  },
+  "scripts": {
+    "postinstall": "gulp copy-assets && gulp"
+  },
   "dependencies": {
+    "@angular/animations": "^4.0.0",
+    "@angular/common": "^4.0.0",
+    "@angular/compiler": "^4.0.0",
+    "@angular/core": "^4.0.0",
+    "@angular/forms": "^4.0.0",
+    "@angular/http": "^4.0.0",
+    "@angular/platform-browser": "^4.0.0",
+    "@angular/platform-browser-dynamic": "^4.0.0",
+    "@angular/router": "^4.0.0",
+    "angular-in-memory-web-api": "^0.3.1",
     "babel-cli": "^6.10.1",
     "babel-plugin-transform-react-jsx": ">= 6.3",
     "babel-preset-es2015": ">= 6.3",
@@ -12,21 +29,27 @@
     "gulp-babel": "^6.1.2",
     "gulp-concat": "^2.6.1",
     "gulp-jshint": "^2.0.4",
-    "gulp-livereload": "^3.8.1",
     "gulp-minify": "0.0.12",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
-    "gulp-sourcemaps": "^2.6.1",
     "gulp-typescript": "^3.2.1",
     "gulp-uglify": "^3.0.0",
     "gulp-util": "^3.0.8",
     "jquery": "^3.2.1",
-    "jshint-stylish": "^2.0.0",
     "plyr": "^2.0.13",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "snapsvg": "^0.5.1",
     "typescript": "^2.4.2"
+  },
+  "devDependencies": {
+    "@angular/cli": "1.2.0",
+    "@angular/compiler-cli": "^4.0.0",
+    "@angular/language-service": "^4.0.0",
+    "gulp-livereload": "^3.8.1",
+    "gulp-sourcemaps": "^2.6.1",
+    "jshint-stylish": "^2.0.0",
+    "tslint": "~5.3.2"
   },
   "main": "gulpfile.js",
   "author": "Matheus",
