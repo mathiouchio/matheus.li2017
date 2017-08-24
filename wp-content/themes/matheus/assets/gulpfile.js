@@ -11,31 +11,45 @@ const babel   = require('gulp-babel'),
       sourcemaps = require('gulp-sourcemaps'),
       stylish = require('jshint-stylish'),
       ts      = require('gulp-typescript'),
-      uglify = require('gulp-uglify');
+      tscConfig  = require('./tsconfig.json');
+      uglify  = require('gulp-uglify');
 
-var paths = {
+const paths = {
   node:     './node_modules/',
   php:      ['../*.php', '../**/*.php'],
   jsx:      'js/jsx/*.jsx',
   ts:      'js/ts/*.ts',
-  js:       '../js',
+  jsMin:       '../js',
   css:      'css',
   sass:     'scss/*.scss',
   jsConcat: ['js/libs/*.js',
     'js/main.js',
     'js/rekt.js',
-    'js/wipeskript.js']
+    'js/wipeskript.js'],
+  angularLibraries: [
+    '@angular/**/bundles/**',
+    'angular-in-memory-web-api/bundles/in-memory-web-api.umd.js',
+    'core-js/client/shim.min.js',
+    'reflect-metadata/Reflect.js',
+    'systemjs/dist/system.src.js',
+    'rxjs/**/*.js',
+    'zone.js/dist/**'
+  ],
+  libs: ['react','react-dom', 'snapsvg', 'plyr', 'jquery']
 }
 
 gulp.task('copy-assets', ['clean-dist'], function(){
-  var libs = ['react','react-dom', 'snapsvg', 'plyr', 'jquery'];
-  libs.map( function(a){
+  // angular
+  gulp.src(paths.angularLibraries, {cwd: "node_modules/**"})
+      .pipe(gulp.dest('angular'));
+  // everything else
+  paths.libs.map( function(a){
     gulp.src([paths.node+a+'/dist/*.js',
       '!'+paths.node+a+'/dist/*min.js',
       '!'+paths.node+a+'/dist/*with-addons.js',
       '!'+paths.node+a+'/dist/*-server.js',
       '!'+paths.node+a+'/dist/*slim.js',
-      '!'+paths.node+'jquery/dist/core.js'])
+      '!'+paths.node+a+'/dist/core.js'])
         .pipe(a == "react-dom" ? rename({basename: 'reactdom'}) : gutil.noop())
         .pipe(gulp.dest('js/libs'));
 
@@ -45,8 +59,14 @@ gulp.task('copy-assets', ['clean-dist'], function(){
   });
 });
 
-gulp.task('clean-dist', function(){
-  return del(['js/libs','css/libs']);
+gulp.task('clean-dist', function(cb){
+  return del(['js/libs',
+    'angular/**/*',
+    '!angular/systemJSConfig',
+    '!angular/systemJSConfig/systemjs.config.js',
+    'js/angular',
+    'css/libs'
+  ], cb);
 });
 
 gulp.task('concat', function(){
@@ -72,7 +92,7 @@ gulp.task('concat', function(){
       }
     }))
     .pipe( gutil.env.prod ? gutil.noop() : sourcemaps.write()) // @TODO: doesn't work
-    .pipe(gulp.dest(paths.js))
+    .pipe(gulp.dest(paths.jsMin))
     .pipe(livereload());
 
   stream.on('end', function() {
@@ -92,10 +112,8 @@ gulp.task('babel', function() {
 
 gulp.task('ts', function(){
   gulp.src(paths.ts)
-      .pipe(ts({
-        noImplicitAny: true
-      }))
-      .pipe(gulp.dest('js'));
+      .pipe(ts(tscConfig.compilerOptions))
+      .pipe(gulp.dest('angular/main'));
 });
 
 gulp.task('sass', function() {
