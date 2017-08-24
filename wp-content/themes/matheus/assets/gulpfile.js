@@ -19,9 +19,9 @@ const paths = {
   node:     './node_modules/',
   php:      ['../*.php', '../**/*.php'],
   jsx:      'js/jsx/*.jsx',
-  ts:      'js/ts/*.ts',
-  jsMin:       '../js',
-  css:      'css',
+  ts:       'js/ts/*.ts',
+  jsMin:    '../js',
+  css:      '../css',
   sass:     'scss/*.scss',
   jsConcat: ['js/libs/*.js',
     'js/main.js',
@@ -56,7 +56,7 @@ gulp.task('copy-assets', ['clean-dist'], function(){
 
     gulp.src([paths.node+a+'/dist/*.css',
       '!'+paths.node+a+'/dist/*min.css'])
-        .pipe(gulp.dest('css/libs'));
+        .pipe(gulp.dest(paths.css+'/libs'));
   });
 });
 
@@ -66,8 +66,8 @@ gulp.task('clean-dist', function(cb){
     '!angular/systemJSConfig',
     '!angular/systemJSConfig/systemjs.config.js',
     'js/angular',
-    'css/libs'
-  ], cb);
+    '../css/libs'
+  ], {force: true});
 });
 
 gulp.task('concat', function(){
@@ -81,7 +81,7 @@ gulp.task('concat', function(){
   //   .pipe( livereload());
 
   var stream = gulp.src(paths.jsConcat)
-    .pipe( gutil.env.prod ? gutil.noop() : sourcemaps.init()) // @TODO: doesn't work
+    .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.init()) // @TODO: doesn't work
     .pipe(concat('scripts.js'))
     .pipe(minify({
       ext:{
@@ -92,7 +92,7 @@ gulp.task('concat', function(){
         comments: gutil.env.prod ? false : true,
       }
     }))
-    .pipe( gutil.env.prod ? gutil.noop() : sourcemaps.write()) // @TODO: doesn't work
+    .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.write()) // @TODO: doesn't work
     .pipe(gulp.dest(paths.jsMin))
     .pipe(livereload());
 
@@ -119,13 +119,13 @@ gulp.task('ts', function(){
 
 gulp.task('sass', function() {
   return gulp.src(paths.sass)
-    .pipe( gutil.env.prod ? gutil.noop() : sourcemaps.init())
-    .pipe( sass({
+    .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.init())
+    .pipe(sass({
         outputStyle: gutil.env.prod ? 'compressed' : 'expanded',
         sourceComments: 'map'
       }).on('error', sass.logError))
-    // .pipe( autoprefixer({remove: true}))
-    .pipe( gutil.env.prod ? gutil.noop() : sourcemaps.write())
+    .pipe(autoprefixer({remove: true}))
+    .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.write())
     .pipe(gulp.dest(paths.css))
     .pipe(livereload());
 });

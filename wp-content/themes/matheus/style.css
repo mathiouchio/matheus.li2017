@@ -6,5 +6,5 @@ Description: A child theme of twentysixteen
 Version: 1.0
 */
 
-@import 'assets/css/libs/plyr.css';
-@import 'assets/css/style.css';
+@import 'css/libs/plyr.css';
+@import 'css/style.css';
