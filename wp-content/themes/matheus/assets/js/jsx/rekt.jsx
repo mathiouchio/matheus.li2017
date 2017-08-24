@@ -1,7 +1,7 @@
 /*! react you wot */
-if(window.location.hostname != 'localhost') {
-  wplocal.basePathURL = window.location.origin;
-}
+// if(window.location.hostname != 'localhost') {
+  // wplocal.basePathURL = window.location.origin;
+// }
 
 // global vars
 var $body    = jQuery('body'),

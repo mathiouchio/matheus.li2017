@@ -1,4 +1,16 @@
 <?php
+function localize() {
+  $template_path = get_stylesheet_directory_uri();
+  $localize_arr = [
+    'basePathURL' => get_bloginfo('wpurl'),
+    'templateURL' => $template_path
+  ];
+  wp_register_script('localize', $template_path.'/js/localize.js');
+  wp_enqueue_script('localize');
+  wp_localize_script( 'localize', 'wplocal', $localize_arr );
+}
+add_action('wp_enqueue_scripts', 'localize');  
+
 function twentysixteen_scripts() {
   $templateURL = get_stylesheet_directory_uri();
   wp_enqueue_style(
@@ -14,19 +26,19 @@ function twentysixteen_scripts() {
     'matheus-twentysixteen-script',
     $templateURL.'/js/scripts.min.js',
     // $templateURL.'/js/scripts-debug.js',
-    array(),
+    ['localize'],
     '1.0.0',
     true
   );
 
-  wp_localize_script(
-    'matheus-twentysixteen-script',
-    'wplocal',
-    array(
-      'basePathURL' => site_url(),
-      'templateURL' => $templateURL
-    )
-  );
+  // wp_localize_script(
+  //   'matheus-twentysixteen-script',
+  //   'wplocal',
+  //   array(
+  //     'basePathURL' => site_url(),
+  //     'templateURL' => $templateURL
+  //   )
+  // );
 }
 add_action( 'wp_enqueue_scripts', 'twentysixteen_scripts' );
 
