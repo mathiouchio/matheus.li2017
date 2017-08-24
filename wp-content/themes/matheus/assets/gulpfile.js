@@ -1,18 +1,19 @@
-const babel   = require('gulp-babel'),
-      concat  = require('gulp-concat'),
-      del     = require('del'),
-      gulp    = require('gulp'),
-      gutil   = require('gulp-util'),
-      jshint  = require('gulp-jshint'),
-      livereload = require('gulp-livereload'),
-      minify  = require('gulp-minify'),
-      rename  = require("gulp-rename"),
-      sass    = require('gulp-sass'),
-      sourcemaps = require('gulp-sourcemaps'),
-      stylish = require('jshint-stylish'),
-      ts      = require('gulp-typescript'),
-      tscConfig  = require('./tsconfig.json');
-      uglify  = require('gulp-uglify');
+const autoprefixer = require('gulp-autoprefixer'),
+      babel        = require('gulp-babel'),
+      concat       = require('gulp-concat'),
+      del          = require('del'),
+      gulp         = require('gulp'),
+      gutil        = require('gulp-util'),
+      jshint       = require('gulp-jshint'),
+      livereload   = require('gulp-livereload'),
+      minify       = require('gulp-minify'),
+      rename       = require("gulp-rename"),
+      sass         = require('gulp-sass'),
+      sourcemaps   = require('gulp-sourcemaps'),
+      stylish      = require('jshint-stylish'),
+      ts           = require('gulp-typescript'),
+      tscConfig    = require('./tsconfig.json');
+      uglify       = require('gulp-uglify');
 
 const paths = {
   node:     './node_modules/',
@@ -123,6 +124,7 @@ gulp.task('sass', function() {
         outputStyle: gutil.env.prod ? 'compressed' : 'expanded',
         sourceComments: 'map'
       }).on('error', sass.logError))
+    // .pipe( autoprefixer({remove: true}))
     .pipe( gutil.env.prod ? gutil.noop() : sourcemaps.write())
     .pipe(gulp.dest(paths.css))
     .pipe(livereload());

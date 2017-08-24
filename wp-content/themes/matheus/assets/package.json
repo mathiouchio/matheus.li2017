@@ -27,6 +27,7 @@
     "core-js": "^2.4.1",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^4.0.0",
     "gulp-babel": "^6.1.2",
     "gulp-concat": "^2.6.1",
     "gulp-jshint": "^2.0.4",
@@ -54,6 +55,11 @@
     "tslint": "~5.3.2",
     "zone.js": "^0.8.16"
   },
+  "browserslist": [
+    "last 2 versions",
+    "iOS > 7",
+    "ie > 8"
+  ],
   "main": "gulpfile.js",
   "author": "Matheus",
   "license": "ISC"
