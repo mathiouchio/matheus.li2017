@@ -1,5 +1,6 @@
 const autoprefixer = require('gulp-autoprefixer'),
       babel        = require('gulp-babel'),
+      browserSync  = require('browser-sync').create(),
       concat       = require('gulp-concat'),
       del          = require('del'),
       gulp         = require('gulp'),
@@ -7,7 +8,7 @@ const autoprefixer = require('gulp-autoprefixer'),
       jshint       = require('gulp-jshint'),
       livereload   = require('gulp-livereload'),
       minify       = require('gulp-minify'),
-      rename       = require("gulp-rename"),
+      rename       = require('gulp-rename'),
       sass         = require('gulp-sass'),
       sourcemaps   = require('gulp-sourcemaps'),
       stylish      = require('jshint-stylish'),
@@ -21,7 +22,7 @@ const paths = {
   jsx:      'js/jsx/*.jsx',
   ts:       'js/ts/*.ts',
   jsMin:    '../js',
-  css:      '../css',
+  cssMin:   '../css',
   sass:     'scss/*.scss',
   jsConcat: ['js/libs/*.js',
     'js/main.js',
@@ -36,8 +37,34 @@ const paths = {
     'rxjs/**/*.js',
     'zone.js/dist/**'
   ],
-  libs: ['react','react-dom', 'snapsvg', 'plyr', 'jquery']
+  libs: ['react','react-dom', 'snapsvg', 'plyr', 'jquery'],
+  old: '../old'
 }
+
+const browserSyncProps = (function(){
+  return {
+    bsPort: !!gutil.env.port ? gutil.env.port : 8080,
+    get options(){
+      return {
+        files: [
+          paths.jsMin+'*.js',
+          paths.cssMin+'*.css',
+          paths.php
+        ],
+        proxy: 'localhost:'+this.bsPort+'/matheus.li',
+        port: 3000,
+        notify: false,
+        ui: false,
+        ghost: false,
+        open: 'local'
+      }
+    }
+  }
+})();
+
+gulp.task('browser-sync', function() {
+  browserSync.init(browserSyncProps.options);
+});
 
 gulp.task('copy-assets', ['clean-dist'], function(){
   // angular
@@ -56,7 +83,7 @@ gulp.task('copy-assets', ['clean-dist'], function(){
 
     gulp.src([paths.node+a+'/dist/*.css',
       '!'+paths.node+a+'/dist/*min.css'])
-        .pipe(gulp.dest(paths.css+'/libs'));
+        .pipe(gulp.dest(paths.cssMin+'/libs'));
   });
 });
 
@@ -94,7 +121,7 @@ gulp.task('concat', function(){
     }))
     .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.write()) // @TODO: doesn't work
     .pipe(gulp.dest(paths.jsMin))
-    .pipe(livereload());
+    .pipe((!!gutil.env.bs && !!gutil.env.prod) ? livereload() : gutil.noop());
 
   stream.on('end', function() {
     del('../js/scripts.js', {force: true});
@@ -126,19 +153,41 @@ gulp.task('sass', function() {
       }).on('error', sass.logError))
     .pipe(autoprefixer({remove: true}))
     .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.write())
-    .pipe(gulp.dest(paths.css))
-    .pipe(livereload());
+    .pipe(gulp.dest(paths.cssMin))
+    .pipe((!!gutil.env.bs && !!gutil.env.prod) ? livereload() : gutil.noop());
+});
+
+gulp.task('twentythirteen', function(){
+  return gulp.src(paths.old+'/scss/*.scss')
+    .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.init())
+    .pipe(sass({
+        outputStyle: gutil.env.prod ? 'compressed' : 'expanded',
+        sourceComments: 'map'
+      }).on('error', sass.logError))
+    .pipe(autoprefixer({remove: true}))
+    .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.write())
+    .pipe(gulp.dest(paths.old+'/css'))
+    .pipe((!!gutil.env.bs && !!gutil.env.prod) ? livereload() : gutil.noop());
+});
+
+gulp.task('watch-old', function() {
+  if (!!gutil.env.bs && !!gutil.env.prod)
+    livereload.listen();
+  gulp.watch(paths.old+'/scss/*', ['twentythirteen']);
 });
 
 gulp.task('watch', function() {
-  livereload.listen();
+  if (!!gutil.env.bs && !!gutil.env.prod)
+    livereload.listen();
 
   // detect php change
   gulp.watch(paths.php)
       .on('change', function(event) {
         console.log('File ' + event.path + ' was ' + event.type);
-        gulp.src(event.path)
-            .pipe(livereload());
+        if(!!gutil.env.bs) {
+          gulp.src(event.path)
+              .pipe((!!gutil.env.bs && !!gutil.env.prod) ? livereload() : gutil.noop());
+        }
       });
 
   // detect when to babel
@@ -151,4 +200,7 @@ gulp.task('watch', function() {
   gulp.watch(['scss/*.scss','scss/partials/*.scss'], ['sass']);
 });
 
-gulp.task('default', ['babel','ts','sass','watch']);
+gulp.task('default', ['browser-sync','babel','ts','sass','watch'], function(){
+  console.log(!!gutil.env.prod);
+  console.log(!!gutil.env.port);
+});
