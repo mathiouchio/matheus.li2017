@@ -46,11 +46,7 @@ const browserSyncProps = (function(){
     bsPort: !!gutil.env.port ? gutil.env.port : 8080,
     get options(){
       return {
-        files: [
-          paths.jsMin+'*.js',
-          paths.cssMin+'*.css',
-          paths.php
-        ],
+        injectChanges: true,
         proxy: 'localhost:'+this.bsPort+'/matheus.li',
         port: 3000,
         notify: false,
@@ -62,8 +58,16 @@ const browserSyncProps = (function(){
   }
 })();
 
+const config = {
+  dev: !!gutil.env.bs && !!gutil.env.prod
+};
+
 gulp.task('browser-sync', function() {
-  browserSync.init(browserSyncProps.options);
+  browserSync.init([
+      paths.jsMin+'*.js',
+      paths.cssMin+'*.css',
+      paths.php
+    ],browserSyncProps.options);
 });
 
 gulp.task('copy-assets', ['clean-dist'], function(){
@@ -121,7 +125,7 @@ gulp.task('concat', function(){
     }))
     .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.write()) // @TODO: doesn't work
     .pipe(gulp.dest(paths.jsMin))
-    .pipe((!!gutil.env.bs && !!gutil.env.prod) ? livereload() : gutil.noop());
+    .pipe((config.dev) ? livereload() : gutil.noop());
 
   stream.on('end', function() {
     del('../js/scripts.js', {force: true});
@@ -154,7 +158,8 @@ gulp.task('sass', function() {
     .pipe(autoprefixer({remove: true}))
     .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.write())
     .pipe(gulp.dest(paths.cssMin))
-    .pipe((!!gutil.env.bs && !!gutil.env.prod) ? livereload() : gutil.noop());
+    .pipe((config.dev) ? livereload() : gutil.noop())
+    .pipe(!!gutil.env.bs ? browserSync.stream() : gutil.noop());
 });
 
 gulp.task('twentythirteen', function(){
@@ -167,26 +172,27 @@ gulp.task('twentythirteen', function(){
     .pipe(autoprefixer({remove: true}))
     .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.write())
     .pipe(gulp.dest(paths.old+'/css'))
-    .pipe((!!gutil.env.bs && !!gutil.env.prod) ? livereload() : gutil.noop());
+    .pipe((config.dev) ? livereload() : gutil.noop());
 });
 
 gulp.task('watch-old', function() {
-  if (!!gutil.env.bs && !!gutil.env.prod)
+  if (config.dev)
     livereload.listen();
   gulp.watch(paths.old+'/scss/*', ['twentythirteen']);
 });
 
 gulp.task('watch', function() {
-  if (!!gutil.env.bs && !!gutil.env.prod)
+  if (config.dev)
     livereload.listen();
 
   // detect php change
   gulp.watch(paths.php)
       .on('change', function(event) {
+
         console.log('File ' + event.path + ' was ' + event.type);
         if(!!gutil.env.bs) {
           gulp.src(event.path)
-              .pipe((!!gutil.env.bs && !!gutil.env.prod) ? livereload() : gutil.noop());
+              .pipe((config.dev) ? livereload() : gutil.noop());
         }
       });
 
