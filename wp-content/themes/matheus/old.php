@@ -8,417 +8,287 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <title>Matheus Desain | Web and Graphic Design</title>
-
-<meta property="fb:app_id"      content="371603342945534" />
-<meta property="og:description"   content="Graphic Designer - Web Developer - Wordpress Nerd. A designer based in Toronto is longing for a good employment. :)" />
-<meta property="og:title"       content="Matheus Desain | Graphic Design Portfolio" /> 
-
-<!-- SEO -->
-<link rel="canonical" href="http://matheusdesain.com/" />
-<meta name="keywords" content="graphic design, web design, toronto, social media integration, brochure design, book layout, UI, UX, wordpress template, graphic design portfolio, freelance graphic designer, logo design, graphic design services, graphic design blog" />
-<link rel="canonical" href="http://matheusdesain.com/blog/portfolio/" />
-<meta name="description" content="Graphic Designer - Web Developer - Wordpress Nerd. A designer based in Toronto is longing for a good employment. :)">
 <meta name="viewport" content="width=device-width">
-<meta property='og:locale' content='en_US'/>
-<meta property='og:url' content='http://matheusdesain.com/blog/portfolio/'/>
-<meta property='og:site_name' content='Matheusdesain'/>
-<meta property='og:type' content='website'/>
-<meta property="og:image" content="http://matheusdesain.com/blog/images/fb-og-image.jpg"/>
-<!-- / SEO -->
-
-<link rel="stylesheet" href="<?php bloginfo( 'template_directory' ); ?>/old/css/style-twentythirteen.css" type="text/css" />
-<link rel="stylesheet" href="<?php bloginfo( 'template_directory' ); ?>/old/css/progressbar.css" type="text/css" />
+<link rel="stylesheet" href="<?php bloginfo( 'template_directory' ); ?>/old/css/twentythirteen.css" type="text/css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script src="<?php bloginfo( 'template_directory' ); ?>/old/js/modernizr.custom.15452.js"></script>
-<script src="<?php bloginfo( 'template_directory' ); ?>/old/js/jquery.fullscreenBackground.js"></script>
 <script src="<?php bloginfo( 'template_directory' ); ?>/old/js/slides.min.jquery.js"></script>
 <script src="<?php bloginfo( 'template_directory' ); ?>/old/js/jquery.parallax-1.1.3.js"></script>
 <script src="<?php bloginfo( 'template_directory' ); ?>/old/js/jquery.mousewheel.min.js"></script>
 <script src="<?php bloginfo( 'template_directory' ); ?>/old/js/jquery.cookie.js"></script>
 <script src="<?php bloginfo( 'template_directory' ); ?>/old/js/jquery.easing.1.3.js"></script>
-<script src="<?php bloginfo( 'template_directory' ); ?>/old/js/progressbar.js"></script>
-<script type="text/javascript">
 
-  var _gaq = _gaq || [];
-  var pluginUrl = 
-  '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
-  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
-  _gaq.push(['_setAccount', 'UA-12119947-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
+<script src="<?php bloginfo( 'template_directory' ); ?>/assets/angular/core-js/client/shim.min.js"></script>
+<script src="<?php bloginfo( 'template_directory' ); ?>/assets/angular/zone.js/dist/zone.js"></script>
+<script src="<?php bloginfo( 'template_directory' ); ?>/assets/angular/reflect-metadata/Reflect.js"></script>
+<script src="<?php bloginfo( 'template_directory' ); ?>/assets/angular/systemjs/dist/system.src.js"></script>
+<script src="<?php bloginfo( 'template_directory' ); ?>/assets/angular/systemJSConfig/systemjs.config.js"></script>
+<script>
+    System.import('app').then(null, console.error.bind(console));
 </script>
+
 <script type="text/javascript">
-  
-  $(window).load( function() {
-  
-  // init COOKIE tutorial
-  var cookieName = 'firstTimerTut';
-  // default
-  var firstTimer = 1;
-  // if cookie exists show nothing
-  if( $.cookie(cookieName, { path: 'blog', domain: 'matheusdesain.com' }) ) {
-    // nothing
-  } else {
-    if (!Modernizr.touch){
-    $(".conoverlay").fadeIn(300);
-    $('.tutorial').show();
-    $('.contactnow').hide();
-    firstTimer = 0;
-    $.cookie(cookieName, firstTimer, { path: 'blog', domain: 'matheusdesain.com' });
-    animatePanning();
-    }
-  }
-  });
-  
-  function animatePanning() {
-  var $body = $('.panning img'),cycle;
-  
-  (cycle = function() {
-    $body.delay(1000)
-    .animate({left:'-420'}, 5000)
-    .delay(1000)
-    .animate({left:'0'}, 8000, cycle);
-  })();
-  }
-  
   $(document).ready(function () {  
-  
-  // horizontal page scroll
-  function scrollhorizontal() {
-    $('body, html').mousewheel(function(event, delta) {
-    if ($('.conoverlay').hasClass('active')) {
-      return;
-    } else {
-      if (delta > 2 || delta < -2) {
-      this.scrollLeft -= delta;
-      event.preventDefault();
-      }
+    // horizontal page scroll
+    function scrollhorizontal() {
+      $('body, html').mousewheel(function(event, delta) {
+        if ($('.conoverlay').hasClass('active')) {
+          return;
+        } else {
+          if (delta != 0) {
+            this.scrollLeft -= delta;
+            this.scrollTop = 0;
+            event.preventDefault();
+          }
+        }
+      });
     }
+    
+    // fixed icos position
+    $('.conoverlay').scroll( function() {
+      var fixedicos = $('.conoverlay').scrollTop();
+      $('.popupbox .icos').stop().animate({ 'top': fixedicos },400);
+    });
+    scrollhorizontal();
+
+    // parallax
+    $('.moneyshot').horparallax('50%', 0.15);
+
+    // hover effect
+    $(".hover-eff img.grey").hover(
+      function() {
+        $(this).stop().animate({"opacity": "0"}, 300);
+      },
+      function() {
+        $(this).stop().animate({"opacity": "1"}, 300);
+    });
+      
+    // slider after expansive
+    $('.jq-slider').slides({
+      preload: true,
     });
 
-  }
-  
-  // fixed icos position
-  $('.conoverlay').scroll( function() {
-    var fixedicos = $('.conoverlay').scrollTop();
-    $('.popupbox .icos').stop().animate({ 'top': fixedicos },400);
-  });
-  scrollhorizontal();
-  
-  // parallax
-  $('.moneyshot').horparallax('50%', 0.15);
-  
-  // hover effect
-  $(".hover-eff img.grey").hover(
-    function() {
-    $(this).stop().animate({"opacity": "0"}, 300);
-    },
-    function() {
-    $(this).stop().animate({"opacity": "1"}, 300);
-  });
-    
-  // slider after expansive
-  $('.jq-slider').slides({
-    preload: true,
-  });
-  
-  // width counter
-  var totalWidth = 0;
-  $("ul.cfix").children().each(function() {
-  //  alert( $(this).outerWidth(true) );
-    totalWidth = totalWidth + $(this).outerWidth(true);
-    });
-  $('ul.cfix').css( 'width', totalWidth);
-  
-  /**
-  * ProgressBar for jQuery
-  *
-  * @version 1 (29. Dec 2012)
-  * @author Ivan Lazarevic
-  * @requires jQuery
-  * @see http://workshop.rs
-  *
-  * @param  {Number} percent
-  * @param  {Number} $element progressBar DOM element
-  */
-  
-  // progress bar
-  var numberOfImages = $('img').length,
-  numberOfLoaded = 0,
-  percent,
-  progressBarWidth,
-  step = 100 / numberOfImages;
-  //alert(numberOfImages);
-  
-  function cancelProgressBar() {
-    if (numberOfImages == numberOfLoaded) {
-    $('content').animate( {opacity:'1'},1400 );
-    $('.progwrap').hide();
-    $('body').css( 'background-color', '#b2adb1' );
-    //alert('complete');
-    }  
-  }
-  
-  $('img').each( function () {
-    if (!this.complete) {
-    $(this).load( function () {
-      numberOfLoaded++;
-      percent = step * numberOfLoaded;
-      //alert(percent); 
-      progressBarWidth = percent * $('.progwrap #progressBar').width() / 100;
-      //alert(numberOfLoaded);
-      $('.progwrap #progressBar').find('div').css( 'width' , progressBarWidth );
-      $('.progwrap .percent').html(Math.round(percent) + "%&nbsp;");
-      cancelProgressBar()
-    });
-    } else {
-    numberOfLoaded++;
-    cancelProgressBar()
-    }
-  });
+    // width counter
+    var totalWidth = 0;
+    $("ul.cfix").children().each(function() {
+    //  alert( $(this).outerWidth(true) );
+      totalWidth = totalWidth + $(this).outerWidth(true);
+      });
+    $('ul.cfix').css( 'width', totalWidth);   
   });
   
   // init hover and slider
   $(function() {
-  
-  /** init subnav travelingpanties shiiiit neaga **/
-  $('.travelingpants').click(function(){
-    var target = $(this).attr('href');
-    $('html, body').animate({
-    scrollLeft: $(target).offset().left
-    }, 400);
-    //alert($(document).scrollLeft());
-    return false;
-  });
-  
-  //checkpoints
-  var numberCheckpoints = $('.checkpoint').length;
-  //alert(numberCheckpoints);
-  var numberWaypoint = 1;
-  
-  // array of checkpoints
-  var checkpoints = [];
-  $('.checkpoint').each( function() {
-    checkpoints.push($(this).offset().left);
-  });
-  
-  // give travelingpants dynamic names
-  $(".subnav ul a").each( function() {
-    $(this).attr("class", "waypoint"+numberWaypoint);
-    numberWaypoint++;
-  });
-  
-  // check for positions and apply friggin classes
-  var i; var y = 0;
-  
-  var position = $(document).scrollLeft();
-  function defaultPosChecker() {
-    if (position <= checkpoints[0]) {
-    y = 0;
-    $('.subnav ul a').addClass('nav-default').removeClass('active');
-    }  
-  }
-  $(window).scroll(function() {
-    position = $(document).scrollLeft();
-    if (position > 995 ) {
-    $('.subnav').css({
-      'position': 'fixed',
-      'left': '35px'
-    });
-    } else {
-    $('.subnav').css({
-      'position': 'absolute',
-      'left': '1030px'
-    });
-    }
     
-    // looping some position checker
-    for (i = 0; i < numberCheckpoints; i++) {
-    if (position >= checkpoints[i])  {
-      y = i+1;
-      $('.subnav ul a').removeClass('nav-default active');
-      $('.subnav ul a.waypoint'+y).addClass('active');  
+    /** init subnav travelingpanties shiiiit neaga **/
+    $('.travelingpants').click(function(){
+      var target = $(this).attr('href');
+      $('html, body').animate({
+        scrollLeft: $(target).offset().left
+      }, 400);
+      return false;
+    });
+    
+    //checkpoints
+    var numberCheckpoints = $('.checkpoint').length;
+    var numberWaypoint = 1;
+    
+    // array of checkpoints
+    var checkpoints = [];
+    $('.checkpoint').each( function() {
+      checkpoints.push($(this).offset().left);
+    });
+    
+    // give travelingpants dynamic names
+    $(".subnav ul a").each( function() {
+      $(this).attr("class", "waypoint"+numberWaypoint);
+      numberWaypoint++;
+    });
+    
+    // check for positions and apply friggin classes
+    var i; var y = 0;
+    
+    var position = $(document).scrollLeft();
+    function defaultPosChecker() {
+      if (position <= checkpoints[0]) {
+        y = 0;
+        $('.subnav ul a').addClass('nav-default').removeClass('active');
+      }  
     }
+    $(window).scroll(function() {
+      position = $(document).scrollLeft();
+      if (position > 995 ) {
+        $('.subnav').css({
+          'position': 'fixed',
+          'left': '35px'
+        });
+      } else {
+        $('.subnav').css({
+          'position': 'absolute',
+          'left': '1030px'
+        });
+      }
+      
+      // looping some position checker
+      for (i = 0; i < numberCheckpoints; i++) {
+        if (position >= checkpoints[i])  {
+          y = i+1;
+          $('.subnav ul a').removeClass('nav-default active');
+          $('.subnav ul a.waypoint'+y).addClass('active');  
+        }
+        defaultPosChecker();
+      }
+      
+    });
     defaultPosChecker();
+    
+    /** init responsiveness **/
+    var windowHeight = $(window).height();
+      
+    // popup
+    $('.popup').click( function() {
+      $('.contactnow, .search').hide();
+      var imgsrc = $(this).attr('href');
+      $(".conoverlay").fadeIn(300).addClass('active');
+      $('.conoverlay .popupbox')
+      .append('<img src="'+ imgsrc +'"/>')
+      .show()
+      .addClass('active');
+      //scrollhorizontal();
+      return false;
+    });
+    
+    // init contact pop up
+    $(".contactbtn").click(function(){
+      $(".conoverlay").fadeIn(300);
+      $('.search').hide();
+      $('.contactnow').show();
+      return false;
+    });
+    
+    // init expanding box effect
+    $('.jq-trans').click(function () {
+      if( !$(this).is('.expanded') ) {
+        cancelExpand();
+        $(this).addClass('expanded');
+        
+        $(this).find('.blurb').hide();
+        $(this).find('.description').show();
+        
+        // animate dynamic height
+        var object_target = $(this);
+        
+        // z-index that bitch 
+        object_target.css({'z-index': '1000'});
+        //var target_height = object_target.height('100%').height();
+        var target_height = object_target.height('366px').height();
+        var target_width = object_target.width('605px').width();
+        
+        object_target.height('168px');
+        object_target.width('288px');
+      
+        // animate width
+        object_target.animate({
+          height: target_height + 'px',
+          width: target_width + 'px',
+        }, 300 );
+      }
+    });
+    
+    // init cancel expansive if already in expanded view
+    $('html').click(function() {
+      cancelExpand();
+      cancelContact();
+      cancelPopup();
+    });
+    
+    $('.popupbox, .contactnow, .expand, .popsearch, .search, .cancelpopup').click(function(event){
+      event.stopPropagation();
+    });
+    
+    // kill popupfullimg 
+    function cancelPopup() {
+      $('.conoverlay .popupbox > img').remove();
+      $('.conoverlay .popupbox, .conoverlay .search').hide();
+      $(".conoverlay").fadeOut(300).removeClass('active');
+      $('.sresult').empty();
+      cancelExpand();
+      //alert('?');
+      //scrollhorizontal();
+    }
+    $(document).keypress(function(e) {
+      if(e.which == 27) {
+      alert('You pressed esc!');
+      cancelPopup();
+      }
+    });
+    
+    
+    // init search function
+    $(".popsearch").click(function(){ 
+      $(".conoverlay").fadeIn(300).addClass('active');
+      $('.conoverlay > div').hide();
+      $('.conoverlay .search').show();
+      $('.conoverlay .search input.searchinput').focus();
+      return false;
+    });
+    
+    function loadSearch() {
+      searchQuery = encodeURI($('input.searchinput').val());
+      $('.sresult').load('http://matheusdesain.com/blog/?s='+searchQuery);
+    }
+    $('input.searchinput').keypress( function () {
+      clearTimeout(this.id);
+      this.id = setTimeout(loadSearch, 500);
+    });
+    
+    //init cancel expand if close btn is clicked
+    $('.close').click( function(event){
+      cancelExpand();
+      return false;
+    });
+    $('.popupclose').click( function(event) {
+      cancelPopup();
+    });
+    
+    // function kill contact
+    function cancelContact() {
+      $(".conoverlay").fadeOut(300);
+      return false;
     }
     
-    // drop google maaaaaaaps on sight  
-    if(position>1100) {
-    // dropGoogleMaps();
+    // function kill expanded view
+    function cancelExpand() {
+      // animate dynamic height
+      var toggle_expands = $('.expanded'),
+          target_height = toggle_expands.height('168px').height(),
+          target_width = toggle_expands.width('288px').width();
+      
+      toggle_expands.height('366px');
+      toggle_expands.width('605px');
+      
+      // animate width
+      toggle_expands.animate({
+        height: target_height + 'px',
+        width: target_width + 'px',
+      }, 300 );
+      
+      toggle_expands.find('.description').hide();
+      toggle_expands.find('.blurb').show();
+      
+      toggle_expands.css({'z-index': '25'});
+      setTimeout(function(){
+        toggle_expands.css({'z-index': '1'})
+      },300);
+      
+      toggle_expands.removeClass('expanded');
+      
+      return false;
     }
   });
-  defaultPosChecker();
-  
-  
-  /** init responsiveness **/
-  
-  var windowHeight = $(window).height();
-  $('content').fullscreenBackground();
-    
-  // popup
-  $('.popup').click( function() {
-    
-    $('.tutorial, .contactnow, .search').hide();
-    var imgsrc = $(this).attr('href');
-    $(".conoverlay").fadeIn(300).addClass('active');
-    $('.conoverlay .popupbox')
-    .append('<img src="'+ imgsrc +'"/>')
-    .show()
-    .addClass('active');
-    //scrollhorizontal();
-    return false;
-  });
-  
-  // init contact pop up
-  $(".contactbtn").click(function(){
-    $(".conoverlay").fadeIn(300);
-    $('.tutorial, .search').hide();
-    $('.contactnow').show();
-    return false;
-  });
-  
-  // init expanding box effect
-  $('.jq-trans').click(function () {
-    if( $(this).is('.expanded') ) {
-     //nothing
-    }
-    else {
-    cancelExpand();
-    $(this).addClass('expanded');
-    
-    $(this).find('.blurb').hide();
-    $(this).find('.description').show();
-    
-    // animate dynamic height
-    var object_target = $(this);
-    
-    // z-index that bitch 
-    object_target.css({'z-index': '1000'});
-    //var target_height = object_target.height('100%').height();
-    var target_height = object_target.height('366px').height();
-    var target_width = object_target.width('605px').width();
-    
-    object_target.height('168px');
-    object_target.width('288px');
-  
-    // animate width
-    object_target.animate({
-      height: target_height + 'px',
-      width: target_width + 'px',
-     //height: 'toggle'  
-    }, 300 );
-    }
-  });
-  
-  // init cancel expansive if already in expanded view
-  $('html').click(function() {
-    cancelExpand();
-    cancelContact();
-    cancelPopup();
-  });
-  
-  $('.tutorial, .popupbox, .contactnow, .expand, .popsearch, .search, .cancelpopup').click(function(event){
-    event.stopPropagation();
-  });
-  
-  // kill popupfullimg 
-  function cancelPopup() {
-    $('.conoverlay .popupbox > img').remove();
-    $('.conoverlay .popupbox, .tutorial, .conoverlay .search').hide();
-    $(".conoverlay").fadeOut(300).removeClass('active');
-    $('.sresult').empty();
-    cancelExpand();
-    //alert('?');
-    //scrollhorizontal();
-  }
-  $(document).keypress(function(e) {
-    if(e.which == 27) {
-    alert('You pressed esc!');
-    cancelPopup();
-    }
-  });
-  
-  
-  // init search function
-  $(".popsearch").click(function(){ 
-    $(".conoverlay").fadeIn(300).addClass('active');
-    $('.conoverlay > div').hide();
-    $('.conoverlay .search').show();
-    $('.conoverlay .search input.searchinput').focus();
-    return false;
-  });
-  
-  function loadSearch() {
-    searchQuery = encodeURI($('input.searchinput').val());
-    $('.sresult').load('http://matheusdesain.com/blog/?s='+searchQuery);
-  }
-  $('input.searchinput').keypress( function () {
-    clearTimeout(this.id);
-    this.id = setTimeout(loadSearch, 500);
-  });
-  
-  //init cancel expand if close btn is clicked
-  $('.close').click( function(event){
-    cancelExpand();
-    return false;
-  });
-  $('.popupclose').click( function(event) {
-    cancelPopup();
-  });
-  
-  // function kill contact
-  function cancelContact() {
-    $(".conoverlay").fadeOut(300);
-    return false;
-  }
-  
-  // function kill expanded view
-  function cancelExpand() {
-    // animate dynamic height
-    var toggle_expands = $('.expanded');
-    
-    //var target_height = object_target.height('100%').height();
-    var target_height = toggle_expands.height('168px').height();
-    var target_width = toggle_expands.width('288px').width();
-    
-    toggle_expands.height('366px');
-    toggle_expands.width('605px');
-    
-    // animate width
-    toggle_expands.animate({
-    height: target_height + 'px',
-    width: target_width + 'px',
-    }, 300 );
-    
-    toggle_expands.find('.description').hide();
-    toggle_expands.find('.blurb').show();
-    
-    toggle_expands.css({'z-index': '25'});
-    setTimeout(function(){
-    toggle_expands.css({'z-index': '1'})
-    },300);
-    
-    toggle_expands.removeClass('expanded');
-    
-    return false;
-  }
-  
-  });
-  
 </script>
 </head>
 
 <body>
-<div class="progwrap">
-  <h1>Magic in progress. Pew pew... <span class="percent">0%</span></h1>
-  <div id="progressBar" class="default"><div></div></div>
-</div>
 <div class="conoverlay">
   <div class="search" style="display:none;">
     <div>
@@ -436,18 +306,6 @@
       <img src="../images/ico-scroll.png" />
     </div>
   </div>
-  <div class="tutorial">
-    <div class="icos">
-      <img src="../images/ico-close.png" class="popupclose">
-    </div>
-    <div class="panning">
-      <img src="../images/pan-ani.jpg" />
-    </div>
-    <img src="../images/base-ani.jpg" />
-    <img src="../images/mouse-ani.png" class="mouseani"/>
-    <h1>Yellow. Is this your first time here?</h1>
-    <p>Please use your mousewheel/ flick to navigate the page. <a href="#" class="popupclose" style="display:inline-block; text-decoration:underline;">Got it.</a></p>
-  </div>
   <div class="contactnow" style="">
     <h1>Leave me a <span style="text-decoration: line-through;">message</span> massage.</h1>
     <p>Oh yesh. That's nice. I'll get back to you shortly.</p>
@@ -464,10 +322,7 @@
     </div>
    </nav>
 </div>
-<div class="wrapper top"></div>
-
-<content style="opacity:0;">
-  
+<content>
   <div class="subnav">
     <ul>
       <a href="#home" class="travelingpants"><li class="back">Back to Black</li></a>
@@ -486,8 +341,6 @@
     <ul class="big cfix">
       <li class="active moneyshtcontainer checkpoint" id="home">
       <img src="../images/hire.png" alt="Available to Hire!" class="contactbtn badge"/>
-      <div class="fb-like" style="margin-right:5px; width:auto;" data-href="<?php the_permalink(); ?>" data-send="false" data-layout="box_count" data-width="49" data-show-faces="false"></div>
-      <div class="tw-like"><a href="https://twitter.com/share" class="twitter-share-button" data-count="vertical" data-lang="en" data-via="mathiouchio" data-text="Mathiouchio is available for hire: <?php the_title(); ?>">Tweet</a>
 </div>
       <img src="../images/moneyshot2.png" class="moneyshot" style="left:0px;" />
       </li>
@@ -971,29 +824,5 @@
     </ul>
     
   </content>
-
-
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=502675583087434";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-<script>
-  window.fbAsyncInit = function() {
-  FB.Event.subscribe('edge.create', function(targetUrl) {
-    _gaq.push(['_trackSocial', 'facebook', 'like', targetUrl]);
-  });
-  FB.Event.subscribe('edge.remove', function(targetUrl) {
-    _gaq.push(['_trackSocial', 'facebook', 'unlike', targetUrl]);
-  });
-  FB.Event.subscribe('message.send', function(targetUrl) {
-    _gaq.push(['_trackSocial', 'facebook', 'send', targetUrl]);
-  });
-  };
-</script>
 </body>
 </html>
