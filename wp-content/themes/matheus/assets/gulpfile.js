@@ -200,7 +200,4 @@ gulp.task('watch', function() {
   gulp.watch(['scss/*.scss','scss/partials/*.scss'], ['sass']);
 });
 
-gulp.task('default', ['browser-sync','babel','ts','sass','watch'], function(){
-  console.log(!!gutil.env.prod);
-  console.log(!!gutil.env.port);
-});
+gulp.task('default', ['browser-sync','babel','ts','sass','watch']);
