@@ -41,26 +41,29 @@ const paths = {
   old: '../old'
 }
 
-const browserSyncProps = {
-  options: {
-    proxy: 'localhost:' +
-      (gutil.env.port) ? gutil.env.port : 8080 +
-      '/matheus.li/',
-    port: 3030,
-    notify: false,
-    ui: false,
-    ghost: false,
-    open: 'local'
-  },
-  watch: [
-    paths.jsMin+'*.js',
-    paths.cssMin+'*.css',
-    paths.php
-  ]
-};
+const browserSyncProps = (function(){
+  return {
+    bsPort: !!gutil.env.port ? gutil.env.port : 8080,
+    get options(){
+      return {
+        files: [
+          paths.jsMin+'*.js',
+          paths.cssMin+'*.css',
+          paths.php
+        ],
+        proxy: 'localhost:'+this.bsPort+'/matheus.li',
+        port: 3000,
+        notify: false,
+        ui: false,
+        ghost: false,
+        open: 'local'
+      }
+    }
+  }
+})();
 
 gulp.task('browser-sync', function() {
-  browserSync.init(browserSyncProps.watch, browserSyncProps.options);
+  browserSync.init(browserSyncProps.options);
 });
 
 gulp.task('copy-assets', ['clean-dist'], function(){
@@ -197,4 +200,7 @@ gulp.task('watch', function() {
   gulp.watch(['scss/*.scss','scss/partials/*.scss'], ['sass']);
 });
 
-gulp.task('default', ['browser-sync','babel','ts','sass','watch']);
+gulp.task('default', ['browser-sync','babel','ts','sass','watch'], function(){
+  console.log(!!gutil.env.prod);
+  console.log(!!gutil.env.port);
+});
