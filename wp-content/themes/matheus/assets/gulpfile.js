@@ -169,7 +169,8 @@ gulp.task('twentythirteen', function(){
     .pipe(autoprefixer({remove: true}))
     .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.write())
     .pipe(gulp.dest(paths.old+'/css'))
-    .pipe(!gutil.env.bs ? livereload() : gutil.noop());
+    .pipe(!gutil.env.bs ? livereload() : gutil.noop())
+    .pipe(gutil.env.bs ? browserSync.stream() : gutil.noop());
 });
 
 gulp.task('watch-old', function() {
@@ -199,4 +200,4 @@ gulp.task('watch', function() {
   gulp.watch(['scss/*.scss','scss/partials/*.scss'], ['sass']);
 });
 
-gulp.task('default', ['browser-sync','babel','ts','sass','watch']);
+gulp.task('default', ['browser-sync','babel','ts','sass','watch','watch-old']);
