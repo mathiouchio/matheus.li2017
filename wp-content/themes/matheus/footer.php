@@ -42,7 +42,7 @@
 	</aside><!-- end branding -->
 
   <div id="notice">
-    <p>This site is best viewed in landscape format.</p>  
+    <p>This site is best viewed in landscape view.</p>  
   </div>
 
 	<div class="preload">

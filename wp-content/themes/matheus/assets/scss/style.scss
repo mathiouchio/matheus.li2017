@@ -54,11 +54,8 @@ section,
 video { @extend %fullscreen; }
 
 aside {
-  width:90.5%;
-  height: 100%;
-  left:9.5%;
-  top: 0;
-  position:fixed; z-index: 11;
+  position:fixed;
+  z-index: 11;
   pointer-events:none;
   
   overflow: hidden;
@@ -552,6 +549,7 @@ section {
   .navigate { bottom:20px !important; top:initial; }
 }
 
+aside,
 #popup,
 section,
 #notice {
@@ -718,12 +716,62 @@ svg.navigate {
 #notice {
   position: fixed;
   top: 0;
-  @media (orientation: landscape) {
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  nav {
+    display: none;
+  }
+  main #logo .wrapper {
+    top: 20%;
+  }
+  .wrapper {
+    max-width: 300px;
+    top: 40%;
+  }
+  aside,
+  #popup,
+  section,
+  #notice {
+    width: 105.5vw;
+    height: 100vh;
+    left: -5.5vw;
+    top: 0;
+  }
+  #notice p {
+    width: 40%;
+    left: 45%;
+  }
+  .slides > div,
+  .slider .slides > div,
+  section {
+    height: 125vh;
+  }
+}
+
+@media (orientation: landscape) {
+  #notice {
     display: none;
   }
 }
 
 @media (orientation: portrait) {
+  nav {
+    display: none;
+  }
+  aside,
+  #popup,
+  section,
+  #notice {
+    width: 114.5vw;
+    height: 100vh;
+    left: -14.5vw;
+    top: 0;
+  }
+  #notice p {
+    width: 40%;
+    left: 45%;
+  }
   body,
   html {
     overflow: hidden;
