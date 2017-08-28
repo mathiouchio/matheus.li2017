@@ -1,13 +1,15 @@
 $font-stack: 'Simplifica', helvetica, arial, sans-serif;
 $font-stack-hero: 'Questrial', helvetica, arial, sans-serif;
 
-@include font-face( 'Simplifica',
-         font-files(
-          'simplifica_typeface.woff',
-          'simplifica_typeface.woff2',
-          'simplifica_typeface.ttf',
-          'simplifica_typeface.otf'
-         ),
-         'simplifica_typeface.eot',
-         normal,
-         normal );
+@font-face {
+    font-family: 'Simplifica';
+    src: url("../assets/fonts/simplifica_typeface.eot");
+    src: url("../assets/fonts/simplifica_typeface.eot?#iefix") format("embedded-opentype"),
+         url("../assets/fonts/simplifica_typeface.otf") format("opentype"),
+         url("../assets/fonts/simplifica_typeface.woff2") format("woff2"),
+         url("../assets/fonts/simplifica_typeface.woff") format("woff"),
+         url("../assets/fonts/simplifica_typeface.ttf") format("truetype"),
+         url("../assets/fonts/simplifica_typeface.svg#PlacardMT") format("svg");
+    font-weight: bold;
+    font-style: normal
+}
