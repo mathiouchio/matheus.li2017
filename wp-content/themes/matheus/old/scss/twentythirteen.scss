@@ -3,13 +3,17 @@
 @font-face {
   font-family: 'Strangelove';
   src: url('../fonts/strangelove-next-narrow-webfont.eot');
-  src: url('../fonts/strangelove-next-narrow-webfont.eot?#iefix') format("embedded-opentype"), url('../fonts/strangelove-next-narrow-webfont.woff') format("woff"), url('../fonts/strangelove-next-narrow-webfont.ttf') format("truetype"), url('../fonts/strangelove-next-narrow-webfont.svg#strangelove-next-narrow-webfont') format("svg");
+  src: url('../fonts/strangelove-next-narrow-webfont.eot?#iefix') format("embedded-opentype"),
+       url('../fonts/strangelove-next-narrow-webfont.woff') format("woff"),
+       url('../fonts/strangelove-next-narrow-webfont.ttf') format("truetype"),
+       url('../fonts/strangelove-next-narrow-webfont.svg#strangelove-next-narrow-webfont') format("svg");
   font-weight: normal;
   font-style: normal;
 }
 
 
-content, nav {
+content,
+nav {
   display: block;
 }
 
@@ -18,7 +22,6 @@ body {
   font-size: 10.5px;
   position: relative;
   height: 100%;
-  /*width: 100%;*/
   background: url('../images/bg.jpg') 0 50% repeat fixed;
 }
 
@@ -161,6 +164,19 @@ nav {
       right: 251px;
       top: 309px;
     }
+  }
+}
+
+#newribbon {
+  width: 100px;
+  height: 252px;
+  position: fixed;
+  top: 130px;
+  right: 0;
+  z-index: 102;
+  img {
+    max-width: 100%;
+    height: auto;
   }
 }
 

@@ -1,6 +1,7 @@
 <?php 
  /* Template Name: old
  */
+ $template_path = get_stylesheet_directory_uri();
 ?>
 <!DOCTYPE html>
 <html class="no-js" lang="en">
@@ -822,6 +823,8 @@
       </li>
 
     </ul>
+
+    <div id="newribbon"><a href="<?php echo get_home_url(); ?>"><img src="<?php echo $template_path; ?>/old/images/ribbon.png" /></a></div>
     
   </content>
 </body>
