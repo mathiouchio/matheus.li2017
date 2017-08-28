@@ -41,6 +41,10 @@
 	  </svg>
 	</aside><!-- end branding -->
 
+  <div id="notice">
+    <p>This site is best viewed in landscape format.</p>  
+  </div>
+
 	<div class="preload">
 	  <img src="<?php echo $template_url; ?>/assets/images/wood.jpg"/>
 	  <img src="<?php echo $template_url; ?>/assets/images/marble.jpg"/>

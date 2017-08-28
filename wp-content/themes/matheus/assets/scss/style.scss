@@ -186,9 +186,17 @@ nav {
 }
 
 .preload { height:0; width:0; overflow:hidden; }
+
 .wrapper {
-  top: 50%; left:28%; position:absolute;
-  max-width:370px; width:370px;
+  max-width:370px;
+  width:370px;
+}
+
+#notice p,
+.wrapper {
+  position:absolute;
+  top: 50%;
+  left:28%; 
 }
 
 .expand {
@@ -295,13 +303,8 @@ h2 {
   display: none;
   position: fixed;
   z-index: 10;
-  width: 90.5vw;
-  height: 100vh;
-  left: 9.5%;
-  top: 0;
 
   &[data-active="true"] { display: block; }
-
   &[data-fecthing] {
     .spinner {
       display:block;
@@ -546,8 +549,16 @@ main {
 section {
   overflow: hidden;
   position: relative;
-  width: 90.5%; left: 9.5%;
   .navigate { bottom:20px !important; top:initial; }
+}
+
+#popup,
+section,
+#notice {
+  width: 90.5vw;
+  height: 100vh;
+  left: 9.5vw;
+  top: 0;
 }
 
 .slider {
@@ -701,5 +712,23 @@ svg.navigate {
       margin-left: 50%;
       transform: translateX(-50%);
     }
+  }
+}
+
+#notice {
+  position: fixed;
+  top: 0;
+  @media (orientation: landscape) {
+    display: none;
+  }
+}
+
+@media (orientation: portrait) {
+  body,
+  html {
+    overflow: hidden;
+  }
+  main section {
+    opacity: .05;
   }
 }
