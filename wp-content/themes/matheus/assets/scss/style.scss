@@ -6,6 +6,10 @@
 @import "partials/keyframe";
 @import "partials/fontface";
 
+[data-hidden] {
+  display: none !important;
+}
+
 ::selection {
   background: #333;
   color: #efefef;
@@ -352,6 +356,10 @@ h2 {
       text-align:right;
       display: inline-block;
     }
+    *:last-child {
+      margin-right: 20px;
+    }
+    scroll,
     mute,
     t {
       font-family: $font-stack;

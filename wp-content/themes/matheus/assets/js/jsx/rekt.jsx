@@ -497,7 +497,6 @@ var popup = {
     }
   }),
   run: function(rektComp, index){
-
     let that    = this,
         post    = rektComp.state.posts[index],
         format  = post.format;
@@ -528,6 +527,7 @@ var popup = {
     var Component = React.createClass({
       getInitialState: function(){
         return {
+          portrait: null,
           currentslide: 0,
           previouslide: 0,
           fetching: null,
@@ -535,8 +535,20 @@ var popup = {
           datatype: type
         }
       },
-      componentDidMount: function() {
+      componentWillMount: function() {
+        let portraitCheck = this.portraitvslandscape(this.state.currentslide);
+        this.setState({ portrait: portraitCheck });
+      },
+      componentDidMount: function(){
         nav.static();
+      },
+      portraitvslandscape: function(i){
+        if (type!='video') {
+          let currentImg = obj[i];
+          return (currentImg.media_details.height > currentImg.media_details.width) ? true : false;
+        } else {
+          return false;
+        }
       },
       render: function(){
         var GalleryComponent = that.gallery(obj, this),
@@ -566,6 +578,8 @@ var popup = {
   },
   controller: {
     dom: function(that){
+      // console.log(that);
+
       return React.createClass({
         handleClick: function(e){
           var run = e.currentTarget.dataset.control;
@@ -581,7 +595,8 @@ var popup = {
             var i = that.state.currentslide;
             if (i > 0) {
               i--;
-              that.setState({currentslide: i, previouslide: that.state.currentslide});
+              let portraitCheck = that.portraitvslandscape(i);
+              that.setState({currentslide: i, previouslide: that.state.currentslide, portrait: portraitCheck});
             }
           },
           next: function(){
@@ -590,7 +605,8 @@ var popup = {
                 total--;
             if (i < total) {
               i++;
-              that.setState({currentslide: i, previouslide: that.state.currentslide});
+              let portraitCheck = that.portraitvslandscape(i);
+              that.setState({currentslide: i, previouslide: that.state.currentslide, portrait: portraitCheck});
             }
           },
           close: function(){
@@ -609,6 +625,7 @@ var popup = {
                     <span data-control="prev" onClick={this.handleClick} >prev</span>
                     <span data-control="next" onClick={this.handleClick} >next</span>
                     <mute data-control="mute" onClick={this.handleClick}>mute</mute>
+                    <scroll data-hidden={that.state.portrait==false ? '' : null}>scroll</scroll>
                  </div>          
         }
       });
