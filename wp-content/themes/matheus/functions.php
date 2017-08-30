@@ -49,6 +49,11 @@ require get_template_directory() . '/inc/fields.php';
 add_theme_support( 'post-thumbnails' );
 
 /**
+ * Media functions.
+ */
+require get_template_directory() . '/inc/media.php';
+
+/**
  * Redirect 404 to homepage:
  * https://wordpress.stackexchange.com/questions/44983/disable-single-post-page/44990
  */ 
