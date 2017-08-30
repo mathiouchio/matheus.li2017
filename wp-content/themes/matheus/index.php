@@ -84,10 +84,16 @@ $template_url = get_bloginfo( 'template_directory' );
     </div>
   </section>
   <section id="about" data="the history">
+    <div class="slider noslide">
+    <div class="slides">
+    <div class="slide">
     <div class="wrapper">
       <h1>Who is this guy</h1>
       <p>Having a huge passion in designing and breathing creative stuff, Matheus romanticizes a world filled with beauty.</p>
       <p style="margin-top:15px;"><span><a href="<?php echo $template_url; ?>/assets/files/MatheusLiResume2017.pdf" target="_blank">resume</a></span> <span><a href="https://www.linkedin.com/in/mathiouchio" target="_blank">linkedin</a></span></p>
+    </div>
+    </div>
+    </div>
     </div>
   </section>
   <section id="projects" class="slider noslide"></section>

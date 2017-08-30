@@ -189,15 +189,15 @@ nav {
 .preload { height:0; width:0; overflow:hidden; }
 
 .wrapper {
-  max-width:370px;
-  width:370px;
+  max-width: 370px;
+  width: 100%;
 }
 
 #notice p,
 .wrapper {
   position:absolute;
   top: 50%;
-  left:28%; 
+  left: 280px;
 }
 
 .expand {
@@ -392,14 +392,18 @@ main {
     .slides > div:nth-child(2) {
       .wrapper {
         margin-top: -90px;
-        h1 { margin-top:200px; }
+        h1 {
+          margin-top:200px;
+        }
       }
     }
   }
   #logo {
     svg { width:220px; height:auto; margin-bottom:20px; }
     .wrapper {
-      top: 35%; width: 220px; left:37%;
+      top: 35%;
+      left:37%;
+      width: 220px;
       text-align: center;
     }
   }
@@ -411,6 +415,7 @@ main {
     }
     .wrapper.controller {
       min-height: 0;
+      padding-left: 0;
 
       &[data-control] {
         .extend a { display: block; }
@@ -432,12 +437,12 @@ main {
         top: 65px;
       }
     }
-    .wrapper {
-      max-width: 430px;
-      width: 100%;
-      margin-left: -30px;
-      min-height: 200px;
-    }
+    // .wrapper {
+    //   max-width: 430px;
+    //   width: 100%;
+    //   margin-left: -20px;
+    //   min-height: 200px;
+    // }
     > .slides > div {
       padding-left: 25%; width: 80%;
     }
@@ -468,22 +473,27 @@ main {
         }
       }
       .excerpt {
-        margin: 0 -50px 0px 40px;
+        margin: 0 -15px 0px 20px;
       }
     }
   }
-
   .thumb {
-    width:180px; height:200px;
-    overflow:hidden;
-    position:relative;
-    margin:0 auto 20px auto;
+    width: 180px;
+    height: 160px;
+    overflow: hidden;
+    position: relative;
+    margin: 0 auto 25px auto;
 
-    &:hover span { opacity:1; margin: 51% 14px; }
+    &:hover span {
+      opacity:1;
+      margin: 51% 14px;
+    }
     svg {
       z-index: 4;
-      width: 180px;
-      height: 200px;
+      // width: 180px;
+      // height: 200px;
+      width: 145px;
+      height: 160px;
     }
     span {
       @extend .anim;
@@ -726,6 +736,17 @@ svg.navigate {
   top: 0;
 }
 
+@media (max-width: 768px) {
+  .wrapper,
+  #notice p {
+    width: 50%;
+    left: 32%;
+  }
+  main #blog .post {
+    width: 68px;
+  }
+}
+
 @media (max-width: 768px) and (orientation: landscape) {
   nav {
     display: none;
@@ -776,9 +797,9 @@ svg.navigate {
     left: -14.5vw;
     top: 0;
   }
+  .wrapper,
   #notice p {
     width: 40%;
-    left: 45%;
   }
   body,
   html {
