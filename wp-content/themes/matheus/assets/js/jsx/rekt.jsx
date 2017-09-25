@@ -440,27 +440,78 @@ var popup = {
           popup.plyr.destroy();
         } 
       },
+      imgAttr: function(obj){
+        let imagesets = {
+              sizes:       ['gallery-medium-large','gallery-medium','gallery-small'],
+              breakpoints: [1440,768,320],
+              imgSizes:    [2560,1400,768]
+            },
+            output = { srcset:[], sizes:[] };
+
+        /** Build srcset
+         *  Collecting assets
+         *  srcset="http://matheus.li/wp-content/uploads/2017/08/disney-jr-768x914.jpg 768w,
+                    http://matheus.li/wp-content/uploads/2017/08/disney-jr-1400x1666.jpg 1400w"
+         *
+         ** Build sizes
+         *  setting attribute for viewport sizes
+         *  sizes="(min-width: 1400px) 2560px,
+                   (min-width: 768px) 1400px,
+                   (min-width: 320px) 768px, 100vw"
+         *
+         */
+
+        // looking for imagesets.sizes matched key strings
+        for (var key in obj.sizes) {
+          // if matches, index is >= 0
+          let index = imagesets.sizes.indexOf(key);
+          if (index>=0){
+            let srcsetOut = `${obj.sizes[key].source_url} ${imagesets.imgSizes[index]}w`,
+                sizesOut  = `(min-width: ${imagesets.breakpoints[index]}px) ${imagesets.imgSizes[index]}px`;
+            output['srcset'].push(srcsetOut);
+            output['sizes'].push(sizesOut);
+          }
+        }
+        // if full size image bigger than 2560 in width then include in srcset
+        if(obj.sizes.full.width>2560) {
+          srcsetFull = `${obj.sizes.full.source_url} ${obj.sizes.full.width}w`;
+          output['srcset'].push(srcsetFull);
+          output['sizes'].push('100vw');
+        }
+        return output;
+      },
       slide: function(v,i){
         // console.log(v);
         // console.log(i);
 
-        var slidenum = that.state.currentslide;
-
         if (v.media_details) { 
-          var portrait = v.media_details.height > v.media_details.width; 
-
-          return <li data-show={i==slidenum ? '' : null} data-transitioning={i==that.state.previouslide ? "" : null} className={portrait ? 'portrait' : null} key={'popup'+i}>
-              <img src={v.source_url} width={v.media_details.width} height={v.media_details.height} />
-            </li>
+          const srcsetSizes = this.imgAttr(v.media_details),
+                imgSizes    = srcsetSizes.sizes.join(', '),
+                imgSrcset   = srcsetSizes.srcset.join(', ');
+          console.log(srcsetSizes);
+          return <li data-show={i==that.state.currentslide ? '' : null}
+                      data-transitioning={i==that.state.previouslide ? "" : null}
+                      className={that.state.portrait ? 'portrait' : null}
+                      key={'popup'+i}>
+                    <img src={v.source_url}
+                         width={v.media_details.width}
+                         height={v.media_details.height}
+                         srcSet={imgSrcset}
+                         sizes={imgSizes} />
+                  </li>
         } else if(v.youtube_id || v.vimeo_id){
           var youmeo = (v.youtube_id) ? 'youtube' : 'vimeo',
               vid    = (youmeo) ? v.youtube_id : v.vimeo_id;
 
-          return <li data-show={i==slidenum ? '' : null} data-transitioning={i==that.state.previouslide ? "" : null} key={'popup'+i}>
-              <div data-type={youmeo} data-video-id={vid}></div>
-            </li>
+          return <li data-show={i==that.state.currentslide ? '' : null}
+                      data-transitioning={i==that.state.previouslide ? "" : null}
+                      key={'popup'+i}>
+                    <div data-type={youmeo} data-video-id={vid}></div>
+                 </li>
         } else if(v.video_url){ 
-          return <li data-show={i==slidenum ? '' : null} data-transitioning={i==that.state.previouslide ? "" : null} key={'popup'+i}>
+          return <li data-show={i==that.state.currentslide ? '' : null}
+                     data-transitioning={i==that.state.previouslide ? "" : null}
+                     key={'popup'+i}>
                    <video controls>
                      <source src={v.video_url} type="video/mp4" />
                    </video>
