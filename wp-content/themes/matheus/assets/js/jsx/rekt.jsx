@@ -488,7 +488,7 @@ var popup = {
           const srcsetSizes = this.imgAttr(v.media_details),
                 imgSizes    = srcsetSizes.sizes.join(', '),
                 imgSrcset   = srcsetSizes.srcset.join(', ');
-          console.log(srcsetSizes);
+          // console.log(srcsetSizes);
           return <li data-show={i==that.state.currentslide ? '' : null}
                       data-transitioning={i==that.state.previouslide ? "" : null}
                       className={that.state.portrait ? 'portrait' : null}
