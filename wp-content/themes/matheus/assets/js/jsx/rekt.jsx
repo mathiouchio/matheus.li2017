@@ -476,8 +476,8 @@ var popup = {
         if(obj.sizes.full.width>2560) {
           srcsetFull = `${obj.sizes.full.source_url} ${obj.sizes.full.width}w`;
           output['srcset'].push(srcsetFull);
-          output['sizes'].push('100vw');
         }
+        output['sizes'].push('100vw');
         return output;
       },
       slide: function(v,i){
