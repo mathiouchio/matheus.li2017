@@ -466,7 +466,7 @@ var popup = {
         // console.log(obj);
         // looking for imagesets.sizes matched key strings
         for (var key in obj.sizes) {
-          console.log(key);
+          // console.log(key);
           // if matches, index is >= 0
           let index = imagesets.sizes.indexOf(key);
           if (index>=0){
@@ -482,7 +482,7 @@ var popup = {
 
             // populate
             output['srcset'].push(srcsetOut);
-            output['sizes'].push(sizesOut);
+            // output['sizes'].push(sizesOut);
           }
         }
         // populate the biggest srcset attr
