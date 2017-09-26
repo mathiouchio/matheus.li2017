@@ -443,10 +443,10 @@ var popup = {
       imgAttr: function(obj){
         let imagesets = {
               sizes:       ['gallery-medium-large','gallery-medium','gallery-small'],
-              breakpoints: [1440,768,320],
-              imgSizes:    [2560,1400,768]
+              breakpoints: [1440,768,320]
             },
-            output = { srcset:[], sizes:[] };
+            output = { srcset:[], sizes:[] },
+            once   = true;
 
         /** Build srcset
          *  Collecting assets
@@ -459,25 +459,39 @@ var popup = {
                    (min-width: 768px) 1400px,
                    (min-width: 320px) 768px, 100vw"
          *
+         ** Saving sizes for later, @TODO: can't get it to work,
+         *  Chrome is already smart enough to switch with 100vw
          */
 
+        // console.log(obj);
         // looking for imagesets.sizes matched key strings
         for (var key in obj.sizes) {
+          console.log(key);
           // if matches, index is >= 0
           let index = imagesets.sizes.indexOf(key);
           if (index>=0){
-            let srcsetOut = `${obj.sizes[key].source_url} ${imagesets.imgSizes[index]}w`,
-                sizesOut  = `(min-width: ${imagesets.breakpoints[index]}px) ${imagesets.imgSizes[index]}px`;
+            let srcsetOut = `${obj.sizes[key].source_url} ${obj.sizes[key].width}w`;
+                // sizesOut  = `(min-width: ${imagesets.breakpoints[index]}px) ${obj.sizes[key].width}px`;
+            
+            // determine the biggest size
+            if(obj.sizes.full.width > obj.sizes[key].width && once == true){
+              var biggestSrcset = `${obj.sizes.full.source_url} ${obj.sizes.full.width}w`;
+                  // biggestSize   = `${obj.sizes.full.width}px`;
+              once = false;
+            }
+
+            // populate
             output['srcset'].push(srcsetOut);
             output['sizes'].push(sizesOut);
           }
         }
-        // if full size image bigger than 2560 in width then include in srcset
-        if(obj.sizes.full.width>2560) {
-          srcsetFull = `${obj.sizes.full.source_url} ${obj.sizes.full.width}w`;
-          output['srcset'].push(srcsetFull);
-        }
-        output['sizes'].push('100vw');
+        // populate the biggest srcset attr
+        output['srcset'].push(biggestSrcset);
+        output.srcset.reverse();
+        // output.sizes.reverse();
+        // output['sizes'].push(biggestSize);
+        // output['sizes'].push('100vw');
+        output.sizes = ['100vw'];
         return output;
       },
       slide: function(v,i){
