@@ -495,8 +495,8 @@ var popup = {
         return output;
       },
       slide: function(v,i){
-        // console.log(v);
-        // console.log(i);
+        console.log(v);
+        console.log(i);
 
         if (v.media_details) { 
           const srcsetSizes = this.imgAttr(v.media_details),
@@ -505,7 +505,7 @@ var popup = {
           // console.log(srcsetSizes);
           return <li data-show={i==that.state.currentslide ? '' : null}
                       data-transitioning={i==that.state.previouslide ? "" : null}
-                      className={that.state.portrait ? 'portrait' : null}
+                      className={v.media_details.height > v.media_details.width ? 'portrait' : null}
                       key={'popup'+i}>
                     <img src={v.source_url}
                          width={v.media_details.width}
