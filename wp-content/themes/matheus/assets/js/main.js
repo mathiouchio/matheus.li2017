@@ -5,30 +5,19 @@ if(window.location.hostname != 'localhost')
 // interaction
 var nav = {
   init: function(){
-    // popup.init();
     this.anchor.init();
     this.travelOnRdy();
   },
   static: function(){
-    // console.log('static');
-    // console.log($body);
     $body.attr('static','');
   },
   fluid: function(){
-    // console.log('fluid');
     $body.attr('static', null);
   },
   travelOnRdy: function(){
-    // console.log('travelpants');
-    // console.log(window.location.origin);
-    // console.log(wplocal.basePathURL);
-
     var cleanBaseURL = window.location.href.replace(wplocal.basePathURL,''),
         paths        = cleanBaseURL.slice(1).split('/'),
         thePants;
-
-    // console.log(cleanBaseURL);
-    // console.log(paths);
 
     if(paths[0] && paths[0] !== '') {
       switch (paths[0]) {
@@ -41,8 +30,6 @@ var nav = {
         default:
           thePants = paths[0];
       }
-      // console.log(thePants);
-
       nav.anchor.travelingpants('#'+thePants);
     }
   },
@@ -54,15 +41,16 @@ var nav = {
     loop: function(arr){
       for (var n = 0; n < arr.length; ++n) {
         if (arr[n].hash !== "")
-        nav.anchor.bind(arr[n]);
+          nav.anchor.bind(arr[n]);
       }
     },
     travelingpants: function(target){
-      // console.log(target);
       if (popup)
         popup.close();
       target = document.getElementById(target.substring(1));
-      $body.animate({scrollTop: target.offsetTop}, 400);
+      $('body, html').animate({scrollTop: target.offsetTop}, 400);
+      console.log(target);
+      console.log($body);
     },
     bind: function(el){
       el.onclick = function(){
