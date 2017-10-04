@@ -1,7 +1,14 @@
-/*! react you wot */
-// if(window.location.hostname != 'localhost') {
-  // wplocal.basePathURL = window.location.origin;
-// }
+var route = {
+  init: function(){
+    let path = window.location.href.replace(wplocal.basePathURL,'');
+        path = path.split('/').filter(function(e) {
+          return String(e).trim();
+        });
+
+    if(path[0]=='blog')
+      console.log(path);
+  }
+}
 
 // global vars
 var $body    = jQuery('body'),
@@ -91,11 +98,9 @@ var rekt = {
       return React.createClass({
         getInitialState: function(){ return null },
         componentWillMount: function(){
-          // console.log('will mount');
           var that = this;
           REST.get(url)
               .done( function(data){
-                // console.log(data);
                 that.setState({ posts: data });
               });
         },
@@ -123,11 +128,10 @@ var rekt = {
         },
         handleClick: function(i,e){
           /* Preventing preventDefault on new tab click */
-          if (e.ctrlKey || e.shiftKey || e.metaKey || (e.button && e.button == 1)){
-            
-          } else {
+          if (!e.ctrlKey || !e.shiftKey || !e.metaKey || (e.button && e.button != 1)){
             // console.log(this.state.posts[i]); 
             var galleryJSON = this.state.posts[i].gallery;
+            
             // console.log(this);
             popup.run(this, i);
             // popup.populate(this.state.posts[i].gallery, this.state.posts[i].format);
@@ -181,7 +185,10 @@ var rekt = {
           var that = this;
           REST.get(url)
               .done( function(data){
-                that.setState({ posts: data, currentslide: 0 });
+                that.setState({
+                  posts: data,
+                  currentslide: 0
+                });
               });
         },
         remoteActivate: function(){
@@ -192,9 +199,8 @@ var rekt = {
         },
         handleClick: function(i,e){
           /* Preventing preventDefault on new tab click */
-          if (e.ctrlKey || e.shiftKey || e.metaKey || (e.button && e.button == 1)){
-            
-          } else {
+          if (!e.ctrlKey || !e.shiftKey || !e.metaKey || (e.button && e.button != 1)){
+            console.log(this);
             popup.run(this, i);
             e.preventDefault();
             e.stopPropagation();
@@ -495,8 +501,8 @@ var popup = {
         return output;
       },
       slide: function(v,i){
-        console.log(v);
-        console.log(i);
+        // console.log(v);
+        // console.log(i);
 
         if (v.media_details) { 
           const srcsetSizes = this.imgAttr(v.media_details),
@@ -851,6 +857,7 @@ var contact = {
 };
 
 (function(){
+  route.init();
   popup.init();
   rekt.render('projects', wplocal.basePathURL+'/wp-json/wp/v2/portfolio');
   rekt.render('blog',     wplocal.basePathURL+'/wp-json/wp/v2/posts?per_page=100');
