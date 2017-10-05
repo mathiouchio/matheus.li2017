@@ -373,6 +373,16 @@ h2 {
       margin-left: 5px;
     }
   }
+  li.article {
+    background: white;
+    .wrapper {
+      animation: slideenter 400ms ease-in;
+      margin-bottom: 20vh;
+    }
+    p {
+      margin-bottom: 30px;
+    }
+  }
 }
 main {
   #about {

@@ -49,8 +49,6 @@ var nav = {
         popup.close();
       target = document.getElementById(target.substring(1));
       $('body, html').animate({scrollTop: target.offsetTop}, 400);
-      console.log(target);
-      console.log($body);
     },
     bind: function(el){
       el.onclick = function(){

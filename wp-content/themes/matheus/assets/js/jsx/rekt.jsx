@@ -215,7 +215,6 @@ var rekt = {
           }
         },
         componentDidMount: function(){
-          // console.log('did mount');
           nav.travelOnRdy();
           // this.handleResponsive();
         },
@@ -294,7 +293,6 @@ var rekt = {
             uid_svg_off += 2;
 
             if(one_base%3==0) {
-              // console.log('divisible');
               output.push(
                   <div className="slide" data-show={that.metas.counter==that.state.currentslide ? "": null } key={"divider"+that.metas.counter}>
                     <div className="wrapper">{posts}</div>
@@ -309,7 +307,6 @@ var rekt = {
 
           if (this.state) {
             // console.log(this.state);
-            // console.log('render stuff');
             this.state.posts.map(slide);
             var print = (
               <div className="slider">
@@ -431,20 +428,17 @@ var popup = {
     $popup = document.getElementById('popup');
   },
   gallery: function(json_data, that){
-    // console.log(json_data);
-    // console.log(that);
-
     return React.createClass({
-      getInitialState: function(){ return null },
+      getInitialState: function(){
+        return null
+      },
       componentDidMount: function(){
-        if(that.state.datatype == 'video') {
+        if(that.state.datatype == 'video')
           popup.plyr.init(that);
-        }
       },
       componentWillUnmount: function() {
-        if(that.state.datatype == 'video') {
+        if(that.state.datatype == 'video')
           popup.plyr.destroy();
-        } 
       },
       imgAttr: function(obj){
         let imagesets = {
@@ -469,7 +463,6 @@ var popup = {
          *  Chrome is already smart enough to switch with 100vw
          */
 
-        // console.log(obj);
         // looking for imagesets.sizes matched key strings
         for (var key in obj.sizes) {
           // console.log(key);
@@ -501,9 +494,8 @@ var popup = {
         return output;
       },
       slide: function(v,i){
-        // console.log(v);
-        // console.log(i);
-
+        console.log(v);
+        console.log(i);
         if (v.media_details) { 
           const srcsetSizes = this.imgAttr(v.media_details),
                 imgSizes    = srcsetSizes.sizes.join(', '),
@@ -519,7 +511,7 @@ var popup = {
                          srcSet={imgSrcset}
                          sizes={imgSizes} />
                   </li>
-        } else if(v.youtube_id || v.vimeo_id){
+        } else if (v.youtube_id || v.vimeo_id){
           var youmeo = (v.youtube_id) ? 'youtube' : 'vimeo',
               vid    = (youmeo) ? v.youtube_id : v.vimeo_id;
 
@@ -528,7 +520,7 @@ var popup = {
                       key={'popup'+i}>
                     <div data-type={youmeo} data-video-id={vid}></div>
                  </li>
-        } else if(v.video_url){ 
+        } else if (v.video_url){ 
           return <li data-show={i==that.state.currentslide ? '' : null}
                      data-transitioning={i==that.state.previouslide ? "" : null}
                      key={'popup'+i}>
@@ -536,9 +528,14 @@ var popup = {
                      <source src={v.video_url} type="video/mp4" />
                    </video>
                  </li>
+        } else if (v.format=='standard'){
+          return <li className='article portrait' data-show key={'popup'+i}>
+                   <div className='wrapper' dangerouslySetInnerHTML={rekt.component.danger(v.content.rendered)} />
+                 </li>
         }
       },
       render: function(){
+        console.log(json_data);
         return <ul>{json_data.map(this.slide)}</ul>
       }
     });
@@ -583,18 +580,20 @@ var popup = {
       });
     } else if (format=='video'){
       that.populate(rektComp.state.posts[index].fields, 'video');
-    } else {
-      // article 
-      // that.populate(data, 'article');
+    } else { // article
+      let data    = [];
+          data[0] = rektComp.state.posts[index];
+      that.populate(data, 'article');
     }
     
   },
-  populate: function(obj, type){
-    if(type=='video') obj = obj.videos;
+  populate: function(data, type){
+    console.log(data);
+    if(type=='video')
+      data = data.videos;
 
-    var that = this,
-        Spinner = this.spinner;
-
+    var that      = this,
+        Spinner   = this.spinner;
     var Component = React.createClass({
       getInitialState: function(){
         return {
@@ -602,7 +601,7 @@ var popup = {
           currentslide: 0,
           previouslide: 0,
           fetching: null,
-          totalslide: obj.length,
+          totalslide: data.length,
           datatype: type
         }
       },
@@ -614,15 +613,14 @@ var popup = {
         nav.static();
       },
       portraitvslandscape: function(i){
-        if (type!='video') {
-          let currentImg = obj[i];
-          return (currentImg.media_details.height > currentImg.media_details.width) ? true : false;
+        if (type!='video' && data[i].media_details) {
+          return (data[i].media_details.height > data[i].media_details.width) ? true : false;
         } else {
           return false;
         }
       },
       render: function(){
-        var GalleryComponent = that.gallery(obj, this),
+        var GalleryComponent = that.gallery(data, this),
             Ctrldom = that.controller.dom(this);
 
         var popup = <div className="slider" data-fetching={this.state.fetching}>
