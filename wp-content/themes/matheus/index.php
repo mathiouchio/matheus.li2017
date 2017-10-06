@@ -7,11 +7,7 @@
  * It is used to display a page when nothing more specific matches a query.
  * E.g., it puts together the home page when no home.php file exists.
  *
- * @link http://codex.wordpress.org/Template_Hierarchy
  *
- * @package WordPress
- * @subpackage Twenty_Sixteen
- * @since Twenty Sixteen 1.0
  */
 
 get_header();
@@ -97,7 +93,7 @@ $template_url = get_bloginfo( 'template_directory' );
     </div>
   </section>
   <section id="projects" class="slider noslide"></section>
-  <section id="blog" class="slider"></section>
+  <section id="blog" class="slider noslide"></section>
   <section id="contact"></section>
 
 <?php get_footer(); ?>

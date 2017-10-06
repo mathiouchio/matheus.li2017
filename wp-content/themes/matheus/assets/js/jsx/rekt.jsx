@@ -200,7 +200,6 @@ var rekt = {
         handleClick: function(i,e){
           /* Preventing preventDefault on new tab click */
           if (!e.ctrlKey || !e.shiftKey || !e.metaKey || (e.button && e.button != 1)){
-            console.log(this);
             popup.run(this, i);
             e.preventDefault();
             e.stopPropagation();
@@ -218,20 +217,6 @@ var rekt = {
           nav.travelOnRdy();
           // this.handleResponsive();
         },
-        nextSlide: function(){
-          // console.log('this.state.totalslide'+this.state.totalslide);
-          // console.log('this.state.currentslide'+this.state.currentslide);
-          var num = this.state.currentslide;
-          num++;
-          if(this.state.totalslide > num) {
-            this.state.currentslide++;
-          }
-        },
-        prevSlide: function(){
-          if(this.state.currentslide > 0) {
-            this.state.currentslide--;
-          }
-        },
         metas: {
           counter: 0
         },
@@ -247,11 +232,8 @@ var rekt = {
           var monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
           
           var slide = function(v,i){
-            // console.log(v);
-            // console.log(i);
             var one_base = i;
                 one_base++;
-            // console.log(one_base);
             var date   = new Date(v.date),
                 month  = date.getMonth(),
                 year   = date.getFullYear();
@@ -292,15 +274,9 @@ var rekt = {
             uid_svg     += 2;
             uid_svg_off += 2;
 
-            if(one_base%3==0) {
-              output.push(
-                  <div className="slide" data-show={that.metas.counter==that.state.currentslide ? "": null } key={"divider"+that.metas.counter}>
-                    <div className="wrapper">{posts}</div>
-                  </div>
-                );
-              posts = [];
-              that.metas.counter++;
-            }
+            output.push(<li key={"divider"+that.metas.counter}>{posts}</li>);
+            posts = [];
+            that.metas.counter++;
             that.state.totalslide = that.metas.counter; 
             // console.log("that.state.totalslide: "+that.state.totalslide);
           };
@@ -309,36 +285,13 @@ var rekt = {
             // console.log(this.state);
             this.state.posts.map(slide);
             var print = (
-              <div className="slider">
+              <div className="slider noslide">
                 <div className="slides" ref="blogDOM">
-                  {output}
-                </div>
-
-                <div className="wrapper controller" data-control={this.state.remote}>
-                  <div className="expand" onClick={this.remoteActivate} onMouseLeave={this.remoteDeactivate}>
-                    <a>
-                    <svg x="0px" y="0px" viewBox="0 0 40 40">
-                      <line stroke="#484848" strokeWidth="1.8" strokeLinecap="round" x1="25.3" y1="20" x2="14.7" y2="20"/>
-                      <line stroke="#484848" strokeWidth="1.8" strokeLinecap="round" x1="20" y1="14.7" x2="20" y2="25.3"/>
-                      <circle fill="none" stroke="#484848" strokeWidth="1.8" strokeLinecap="round" cx="20" cy="20" r="12"/>
-                    </svg>
-                    <span className="hero smler">Navigate</span>
-                    </a>
-                    <div className="extend">
-                      <a onClick={this.prevSlide}>
-                        <svg className="navigate prev" version="1.1" x="0px" y="0px" viewBox="0 0 40 40" xmlSpace="preserve">
-                          <polyline className="round" points="21.6,25.3 16.4,20 21.6,14.7"/>
-                          <circle className="round" cx="20" cy="20" r="12"/>
-                        </svg>
-                        <span className="hero smler">Prev</span>
-                      </a>
-                      <a onClick={this.nextSlide}>
-                        <svg version="1.1" className="navigate next" x="0px" y="0px" viewBox="0 0 40 40" xmlSpace="preserve">
-                          <polyline className="round" points="18.4,14.7 23.6,20 18.4,25.3"/>
-                          <circle className="round" cx="20" cy="20" r="12"/>
-                        </svg>
-                        <span className="hero smler">Next</span>
-                      </a>
+                  <div className="slide">
+                    <div className="wrapper">
+                      <ul>
+                        {output}
+                      </ul>
                     </div>
                   </div>
                 </div>
