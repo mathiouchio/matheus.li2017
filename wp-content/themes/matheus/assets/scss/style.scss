@@ -147,8 +147,8 @@ nav {
     a {
       position: absolute;
       animation: slideout 300ms ease-in forwards;
-      top:20px;
-      opacity:0;
+      top: 20px;
+      opacity: 1;
     }
   }
   li:after,
@@ -156,7 +156,7 @@ nav {
     position: absolute;
   }
   li:before {
-    @extend .anim;
+    @extend %transition;
     left: 9px;
     z-index:12;
     opacity:0;
@@ -166,7 +166,7 @@ nav {
   }
   li:after {
     @include rotate(1deg);
-    @extend .anim;
+    @extend %transition;
     animation-delay: 0s;
     content: url('../assets/images/activenav.jpg');
     z-index: 11;
@@ -204,10 +204,10 @@ nav {
   left:105%;
   width: 60% !important;
 
-  * { float:left; @extend .anim; }
+  * { float:left; @extend %transition; }
   svg {
     height:40px;
-    circle { @extend .anim; }
+    circle { @extend %transition; }
   }
   a {
     &:hover {
@@ -376,7 +376,7 @@ h2 {
   li.article {
     background: white;
     .wrapper {
-      animation: slideenter 400ms ease-in;
+      animation: popupenter 400ms ease-in;
       margin-bottom: 20vh;
     }
     p {
@@ -523,7 +523,7 @@ main {
       height: 160px;
     }
     span {
-      @extend .anim;
+      @extend %transition;
       z-index: 5;
       font-size:15px;
       display: block;
@@ -704,7 +704,7 @@ svg.navigate {
     cursor:pointer;
   }
   span {
-    @extend .anim;
+    @extend %transition;
     font-size: 0.9em;
   }
   span.close {

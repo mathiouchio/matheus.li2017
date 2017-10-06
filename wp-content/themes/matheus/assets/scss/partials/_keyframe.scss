@@ -1,4 +1,4 @@
-@keyframes slideenter {
+@keyframes popupenter {
   from {
     opacity: 0;
     transform: perspective(400px)
@@ -7,7 +7,25 @@
                rotate3d(3,0,0,3deg);
   }
   to {
-    opacity:  1;
+    opacity: 1;
+    transform: perspective(400px)
+               translate3d(0px,0px,0px)
+               scale3d(1,1,1)
+               rotate3d(3,0,0,0deg);
+  }
+}
+@keyframes slideenter {
+  from {
+    top: 20px;
+    opacity: 0;
+    transform: perspective(400px)
+               translate3d(0px,0px,0px)
+               scale3d(1,1,1)
+               rotate3d(3,0,0,3deg);
+  }
+  to {
+    top: 0px;
+    opacity: 1;
     transform: perspective(400px)
                translate3d(0px,0px,0px)
                scale3d(1,1,1)
@@ -16,14 +34,15 @@
 }
 @keyframes slideout {
   from {
-    top: 0px;
-    opacity: 1;
+    top:0px;
+    opacity:1;
   }
   to {
-    top: 20px;
-    opacity: 0;
+    top:20px;
+    opacity:0;
   }
 }
+
 @keyframes menuenter {
   from {
     left: 20px;
@@ -35,7 +54,7 @@
   }
 }
 
-.anim {
+%transition {
   transition-duration: 300ms;
   transition-property: all;
   animation-timing-function: easein;
