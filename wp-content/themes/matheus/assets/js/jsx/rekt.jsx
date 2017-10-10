@@ -152,9 +152,9 @@ var rekt = {
                   <div className="expand">
                     <a href={v.link} onClick={boundClick}>
                     <svg x="0px" y="0px" viewBox="0 0 40 40">
-                      <line stroke="#484848" strokeWidth="1.8" strokeLinecap="round" x1="25.3" y1="20" x2="14.7" y2="20"></line>
-                      <line stroke="#484848" strokeWidth="1.8" strokeLinecap="round" x1="20" y1="14.7" x2="20" y2="25.3"></line>
-                      <circle fill="none" stroke="#484848" strokeWidth="1.8" strokeLinecap="round" cx="20" cy="20" r="12"></circle>
+                      <line x1="25.3" y1="20" x2="14.7" y2="20"></line>
+                      <line x1="20" y1="14.7" x2="20" y2="25.3"></line>
+                      <circle fill="none" cx="20" cy="20" r="12"></circle>
                     </svg>
                     <span className="hero smler">Learn more</span>
                     </a>
@@ -180,22 +180,18 @@ var rekt = {
     },
     blog: function(url){
       return React.createClass({
-        getInitialState: function(){ return null },
+        getInitialState: function(){
+          return null;
+        },
         componentWillMount: function(){
           var that = this;
           REST.get(url)
               .done( function(data){
                 that.setState({
                   posts: data,
-                  currentslide: 0
+                  expanded: null
                 });
               });
-        },
-        remoteActivate: function(){
-          this.setState({ remote: '' });
-        },
-        remoteDeactivate: function(){
-          this.setState({ remote: null });
         },
         handleClick: function(i,e){
           /* Preventing preventDefault on new tab click */
@@ -219,6 +215,9 @@ var rekt = {
         },
         metas: {
           counter: 0
+        },
+        expandSection: function(){
+          this.setState({ expanded: (this.state.expanded) ? false : true });
         },
         render: function(){
           var output      = [],
@@ -277,21 +276,25 @@ var rekt = {
             output.push(<li key={"divider"+that.metas.counter}>{posts}</li>);
             posts = [];
             that.metas.counter++;
-            that.state.totalslide = that.metas.counter; 
-            // console.log("that.state.totalslide: "+that.state.totalslide);
           };
 
           if (this.state) {
             // console.log(this.state);
             this.state.posts.map(slide);
             var print = (
-              <div className="slider noslide">
+              <div className="slider noslide" data-expanded={(this.state.expanded)}>
                 <div className="slides" ref="blogDOM">
                   <div className="slide">
                     <div className="wrapper">
                       <ul>
                         {output}
                       </ul>
+                      <div className="expand" onClick={this.expandSection}>
+                        <a>
+                          <svg x="0px" y="0px" viewBox="0 0 40 40"><line x1="25.3" y1="20" x2="14.7" y2="20"></line><line x1="20" y1="14.7" x2="20" y2="25.3"></line><circle fill="none" cx="20" cy="20" r="12"></circle></svg>
+                          <span className="hero smler">More posts</span>
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -688,9 +691,9 @@ var contact = {
         return <div className="expand" onClick={this.props.onSubmission}>
             <a id="formsubmit">
               <svg x="0px" y="0px" viewBox="0 0 40 40">
-                <line stroke="#484848" strokeWidth="1.8" strokeLinecap="round" x1="25.3" y1="20" x2="14.7" y2="20"/>
-                <line stroke="#484848" strokeWidth="1.8" strokeLinecap="round" x1="20" y1="14.7" x2="20" y2="25.3"/>
-                <circle fill="none" stroke="#484848" strokeWidth="1.8" strokeLinecap="round" cx="20" cy="20" r="12"/>
+                <line x1="25.3" y1="20" x2="14.7" y2="20"/>
+                <line x1="20" y1="14.7" x2="20" y2="25.3"/>
+                <circle fill="none" cx="20" cy="20" r="12"/>
               </svg>
               <span className="hero smler">Send</span>
             </a>  

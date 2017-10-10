@@ -201,7 +201,7 @@ nav {
   position: absolute !important;
   overflow:auto;
   top: 40%;
-  left:105%;
+  left: 105%;
   width: 60% !important;
 
   * { float:left; @extend %transition; }
@@ -471,6 +471,20 @@ main {
   }
 }
 #blog {
+  .slider.noslide {
+    @extend %transition;
+    max-height: 100vh;
+
+    &[data-expanded="true"] {
+      max-height: 999999px;
+      .slide li:nth-child(6n) {
+        margin-bottom: 80px;
+      }
+    }
+  }
+  .expand {
+    top: 100px;
+  }
   .thumb {
     margin-bottom: 0;
   }
@@ -485,7 +499,8 @@ main {
   }
   .wrapper {
     position: relative;
-    padding: 25% 0 20% 0;
+    top: 45vh;
+    padding-bottom: 45vh;
     ul {
       overflow: hidden;
       padding-bottom: 60px;
@@ -498,6 +513,7 @@ main {
     }
   }
   .slider li {
+    @extend %transition;
     width: 100px;
     text-align: center;
     margin: 0 20px -50px 0;
@@ -508,7 +524,7 @@ main {
     position: initial;
     float: left;
     &:nth-child(6n) {
-      margin-bottom: 60px;
+      margin-bottom: 200px;
     }
     a {
       font-size: 15px;
@@ -665,12 +681,12 @@ section,
     }
   }
 }
-svg.navigate {
+.expand svg {
   enable-background: new 0 0 40 40;
-  .round {
+  > * {
     fill: none;
     stroke: #484848;
-    stroke-width: 1.8;
+    stroke-width: 1.5;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
