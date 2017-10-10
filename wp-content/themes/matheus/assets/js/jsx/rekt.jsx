@@ -292,7 +292,7 @@ var rekt = {
                       <div className="expand" onClick={this.expandSection}>
                         <a>
                           <svg x="0px" y="0px" viewBox="0 0 40 40"><line x1="25.3" y1="20" x2="14.7" y2="20"></line><line x1="20" y1="14.7" x2="20" y2="25.3"></line><circle fill="none" cx="20" cy="20" r="12"></circle></svg>
-                          <span className="hero smler">More posts</span>
+                          <span className="hero smler">{(this.state.expanded) ? 'Hide posts' : 'More posts'}</span>
                         </a>
                       </div>
                     </div>
