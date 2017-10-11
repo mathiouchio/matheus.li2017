@@ -132,7 +132,7 @@ var rekt = {
       return {__html: raw};
     },
     projects: function(url){
-      return React.createClass({
+      let Project = React.createClass({
         getInitialState: function(){ return null },
         componentWillMount: function(){
           var that = this;
@@ -214,9 +214,10 @@ var rekt = {
           }
         }
       });
+      return Project;
     },
     blog: function(url){
-      return React.createClass({
+      let Blog = React.createClass({
         getInitialState: function(){
           return null;
         },
@@ -346,6 +347,7 @@ var rekt = {
           }
         }
       });
+      return Blog;
     }
   }
 };
@@ -583,7 +585,7 @@ var popup = {
 
     var that      = this,
         Spinner   = this.spinner;
-    var Component = React.createClass({
+    var Popup = React.createClass({
       getInitialState: function(){
         return {
           portrait: null,
@@ -624,7 +626,7 @@ var popup = {
       }
     });
 
-    ReactDOM.render(<Component />, $popup);
+    ReactDOM.render(<Popup />, $popup);
     this.show();
   },
   show: function(){
