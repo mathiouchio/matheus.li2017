@@ -205,7 +205,7 @@ var rekt = {
           /* Preventing preventDefault on new tab click */
           if (!e.ctrlKey || !e.shiftKey || !e.metaKey || (e.button && e.button != 1)){
             popup.run(this, i);
-            pathSlug    = `${v.type}/${v.slug}`;
+            pathSlug    = `blog/${v.slug}`;
             history.pushState(null, null, pathSlug);
             e.preventDefault();
             e.stopPropagation();
