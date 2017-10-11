@@ -40,6 +40,8 @@ var route = {
     window.onpopstate = function(e) {
       if(document.location.href == wplocal.basePathURL+'/') {
         popup.close();
+      } else {
+        route.detect();
       }
     };
   }
