@@ -5,8 +5,16 @@ var route = {
           return String(e).trim();
         });
 
+    this.bind();
     if(path[0]=='blog')
       console.log(path);
+  },
+  bind: function(){
+    window.onpopstate = function(e) {
+      if(document.location.href == wplocal.basePathURL+'/')
+        popup.close();
+      // console.log("location: " + document.location + ", state: " + JSON.stringify(e.state));
+    };
   }
 }
 
@@ -126,15 +134,15 @@ var rekt = {
             });
           }
         },
-        handleClick: function(i,e){
+        handleClick: function(i,v,e){
           /* Preventing preventDefault on new tab click */
           if (!e.ctrlKey || !e.shiftKey || !e.metaKey || (e.button && e.button != 1)){
             // console.log(this.state.posts[i]); 
-            var galleryJSON = this.state.posts[i].gallery;
+            let galleryJSON = this.state.posts[i].gallery,
+                pathSlug    = `${v.type}/${v.slug}`;
             
-            // console.log(this);
             popup.run(this, i);
-            // popup.populate(this.state.posts[i].gallery, this.state.posts[i].format);
+            history.pushState(null, null, pathSlug);
 
             e.preventDefault();
             e.stopPropagation();
@@ -143,7 +151,7 @@ var rekt = {
         render: function(){
           var that = this;
           var slide = function(v,i){
-            var boundClick = that.handleClick.bind(that, i);
+            var boundClick = that.handleClick.bind(that, i, v);
             return (
               <div className="slide" key={'project-'+i}>
                 <div className="wrapper">
@@ -193,10 +201,12 @@ var rekt = {
                 });
               });
         },
-        handleClick: function(i,e){
+        handleClick: function(i,v,e){
           /* Preventing preventDefault on new tab click */
           if (!e.ctrlKey || !e.shiftKey || !e.metaKey || (e.button && e.button != 1)){
             popup.run(this, i);
+            pathSlug    = `${v.type}/${v.slug}`;
+            history.pushState(null, null, pathSlug);
             e.preventDefault();
             e.stopPropagation();
           }
@@ -238,7 +248,6 @@ var rekt = {
                 year   = date.getFullYear();
                 year  -= 2000;
 
-
             var thumbnail = '';
             if(v.better_featured_image) {
               if (v.better_featured_image.media_details.sizes.thumbnail){
@@ -246,7 +255,7 @@ var rekt = {
               }
             }
 
-            var boundClick = that.handleClick.bind(that, i);
+            var boundClick = that.handleClick.bind(that, i, v);
             var post = (
               <div className="post" key={"blog"+i}>
                 <a href={v.link} onClick={boundClick}>
@@ -450,8 +459,6 @@ var popup = {
         return output;
       },
       slide: function(v,i){
-        console.log(v);
-        console.log(i);
         if (v.media_details) { 
           const srcsetSizes = this.imgAttr(v.media_details),
                 imgSizes    = srcsetSizes.sizes.join(', '),
@@ -491,7 +498,6 @@ var popup = {
         }
       },
       render: function(){
-        console.log(json_data);
         return <ul>{json_data.map(this.slide)}</ul>
       }
     });
@@ -541,10 +547,8 @@ var popup = {
           data[0] = rektComp.state.posts[index];
       that.populate(data, 'article');
     }
-    
   },
   populate: function(data, type){
-    console.log(data);
     if(type=='video')
       data = data.videos;
 
@@ -600,6 +604,7 @@ var popup = {
   close: function(){
     this.depopulate();
     $popup.dataset.active = false;
+    history.back();
   },
   controller: {
     dom: function(that){
