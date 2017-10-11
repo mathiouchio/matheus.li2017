@@ -29,9 +29,9 @@ var route = {
                     popup.populate(galleryData, 'gallery');
               });
             } else if (data.format=='video'){
-              popup.populate(rektComp.state.posts[index].fields, 'video');
+              popup.populate(data.fields, 'video');
             } else { // article
-              that.populate(data, 'article');
+              popup.populate(data, 'article');
             }
           });
     }
