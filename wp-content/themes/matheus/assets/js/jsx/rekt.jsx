@@ -1,19 +1,46 @@
 var route = {
   init: function(){
-    let path = window.location.href.replace(wplocal.basePathURL,'');
-        path = path.split('/').filter(function(e) {
-          return String(e).trim();
-        });
-
     this.bind();
+    this.detect();
+  },
+  go: function(url){
+    history.pushState(null, null, `${wplocal.basePathURL}/${url}/`);
+  },
+  detect: function(){
+    let path = window.location.href.replace(wplocal.basePathURL,'');
+    path     = path.split('/').filter(function(e) {
+      return String(e).trim();
+    });
     if(path[0]=='blog')
-      console.log(path);
+      path[0] = 'posts';
+    restPath = `${wplocal.basePathURL}/wp-json/wp/v2/${path[0]}?slug=${path[1]}`;
+
+    if(document.location.href != wplocal.basePathURL+'/') {
+      REST.get(restPath)
+          .done( function(json_data){
+            let data = json_data[0];
+
+            // Switching between postType
+            if (data.format=='gallery'){
+              var gallery_path = wplocal.basePathURL+'/wp-json/wp/v2/media?parent='+data.id;
+              
+              REST.get(gallery_path) // @TODO: yikes
+                  .done( function(galleryData){
+                    popup.populate(galleryData, 'gallery');
+              });
+            } else if (data.format=='video'){
+              popup.populate(rektComp.state.posts[index].fields, 'video');
+            } else { // article
+              that.populate(data, 'article');
+            }
+          });
+    }
   },
   bind: function(){
     window.onpopstate = function(e) {
-      if(document.location.href == wplocal.basePathURL+'/')
+      if(document.location.href == wplocal.basePathURL+'/') {
         popup.close();
-      // console.log("location: " + document.location + ", state: " + JSON.stringify(e.state));
+      }
     };
   }
 }
@@ -142,7 +169,7 @@ var rekt = {
                 pathSlug    = `${v.type}/${v.slug}`;
             
             popup.run(this, i);
-            history.pushState(null, null, pathSlug);
+            route.go(pathSlug);
 
             e.preventDefault();
             e.stopPropagation();
@@ -206,7 +233,7 @@ var rekt = {
           if (!e.ctrlKey || !e.shiftKey || !e.metaKey || (e.button && e.button != 1)){
             popup.run(this, i);
             pathSlug    = `blog/${v.slug}`;
-            history.pushState(null, null, pathSlug);
+            route.go(pathSlug);
             e.preventDefault();
             e.stopPropagation();
           }
@@ -605,7 +632,7 @@ var popup = {
     this.depopulate();
     $popup.dataset.active = false;
     if(document.location.href != wplocal.basePathURL+'/') 
-      history.back();
+      history.pushState(null, null, wplocal.basePathURL+'/');
   },
   controller: {
     dom: function(that){
