@@ -604,7 +604,8 @@ var popup = {
   close: function(){
     this.depopulate();
     $popup.dataset.active = false;
-    history.back();
+    if(document.location.href != wplocal.basePathURL+'/') 
+      history.back();
   },
   controller: {
     dom: function(that){
