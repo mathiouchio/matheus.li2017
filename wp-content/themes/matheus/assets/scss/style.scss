@@ -335,6 +335,7 @@ h2 {
   .controller {
     @extend %controllerbottom;
     padding: 4px 20px 0 20px;
+    [data-control="fullscreen"],
     [data-control="mute"] {
       display: none;
     }
