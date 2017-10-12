@@ -338,8 +338,11 @@ h2 {
     [data-control="mute"] {
       display: none;
     }
-    &[data-video] [data-control="mute"] {
-      display: inline-block;
+    &[data-video] {
+      [data-control="mute"],
+      [data-control="fullscreen"] {
+        display: inline-block;
+      }
     }
     &[data-single] {
       i,
@@ -367,6 +370,7 @@ h2 {
     }
     scroll,
     mute,
+    fs,
     t {
       font-family: $font-stack;
       text-transform: lowercase;
@@ -745,6 +749,9 @@ section,
 }
 .plyr {
   .plyr__controls {
+    display: none;
+  }
+  button[data-plyr="play"] {
     display: none;
   }
   .plyr__video-embed {

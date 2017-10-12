@@ -384,9 +384,6 @@ var popup = {
           targetplyr.play();
       });
     },
-    // ready: function(){
-    //   console.log();
-    // },
     destroy: function(){
       this.obj.map( function(target){ target.destroy() });
     },
@@ -651,15 +648,16 @@ var popup = {
         },
         handleClick: function(e){
           var run = e.currentTarget.dataset.control;
-          this.navigate[run]();
-
-          if(run=='mute')
-            this.setState({muted: (popup.plyr.obj[that.state.currentslide].isMuted()) ? true : false });
+          this.navigate[run](this);
         },
         navigate: {
-          mute: function(){
+          mute: function(popnavRoot){
             if (popup.plyr.obj.length)
               popup.plyr.obj[that.state.currentslide].toggleMute();
+              popnavRoot.setState({muted: (popup.plyr.obj[that.state.currentslide].isMuted()) ? true : false });
+          },
+          fullscreen: function(){
+            popup.plyr.obj[that.state.currentslide].toggleFullscreen();
           },
           prev: function(){
             var i = that.state.currentslide;
@@ -687,16 +685,17 @@ var popup = {
           var currentslide = that.state.currentslide;
           currentslide++;
           return <div className="controller" data-video={that.state.datatype=='video' ? '' : null} data-single={that.state.totalslide == 1 ? '' : null}>
-                    <span data-control="close" onClick={this.handleClick} >close</span>
-                    <i>{currentslide}</i>
-                    <divider> / </divider>
-                    <c>{that.state.totalslide}</c>
-                    <t>{that.state.datatype}</t>
-                    <span data-control="prev" onClick={this.handleClick} >prev</span>
-                    <span data-control="next" onClick={this.handleClick} >next</span>
-                    <mute data-control="mute" onClick={this.handleClick}>{(this.state.muted)?'unmute':'mute'}</mute>
-                    <scroll data-hidden={that.state.portrait==false ? '' : null}>scroll</scroll>
-                 </div>          
+            <span data-control="close" onClick={this.handleClick} >close</span>
+            <i>{currentslide}</i>
+            <divider> / </divider>
+            <c>{that.state.totalslide}</c>
+            <t>{that.state.datatype}</t>
+            <span data-control="prev" onClick={this.handleClick} >prev</span>
+            <span data-control="next" onClick={this.handleClick} >next</span>
+            <mute data-control="mute" onClick={this.handleClick}>{(this.state.muted)?'unmute':'mute'}</mute>
+            <fs data-control="fullscreen" onClick={this.handleClick}>fullscreen</fs>
+            <scroll data-hidden={that.state.portrait==false ? '' : null}>scroll</scroll>
+          </div>
         }
       });
       return PopupNav;
