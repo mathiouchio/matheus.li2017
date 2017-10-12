@@ -378,12 +378,15 @@ var popup = {
           targetplyr  = this.obj[targetslide];
 
       targetplyr.on('ready', function(e){
-        targetplyr.play();
+        console.log(targetplyr);
+        if(!targetplyr.isMuted())
+          targetplyr.toggleMute();
+          targetplyr.play();
       });
     },
-    ready: function(){
-
-    },
+    // ready: function(){
+    //   console.log();
+    // },
     destroy: function(){
       this.obj.map( function(target){ target.destroy() });
     },
@@ -640,18 +643,23 @@ var popup = {
   },
   controller: {
     dom: function(that){
-      // console.log(that);
-
-      return React.createClass({
+      var PopupNav = React.createClass({
+        getInitialState: function(){
+          return {
+            muted: true
+          }
+        },
         handleClick: function(e){
           var run = e.currentTarget.dataset.control;
           this.navigate[run]();
+
+          if(run=='mute')
+            this.setState({muted: (popup.plyr.obj[that.state.currentslide].isMuted()) ? true : false });
         },
         navigate: {
           mute: function(){
-            if(popup.plyr.obj.length){
-              popup.plyr.obj[that.state.currentslide].toggleMute(); 
-            }
+            if (popup.plyr.obj.length)
+              popup.plyr.obj[that.state.currentslide].toggleMute();
           },
           prev: function(){
             var i = that.state.currentslide;
@@ -686,11 +694,12 @@ var popup = {
                     <t>{that.state.datatype}</t>
                     <span data-control="prev" onClick={this.handleClick} >prev</span>
                     <span data-control="next" onClick={this.handleClick} >next</span>
-                    <mute data-control="mute" onClick={this.handleClick}>mute</mute>
+                    <mute data-control="mute" onClick={this.handleClick}>{(this.state.muted)?'unmute':'mute'}</mute>
                     <scroll data-hidden={that.state.portrait==false ? '' : null}>scroll</scroll>
                  </div>          
         }
       });
+      return PopupNav;
     }
   }
 };
