@@ -31,7 +31,7 @@ var route = {
             } else if (data.format=='video'){
               popup.populate(data.fields, 'video');
             } else { // article
-              popup.populate(data, 'article');
+              popup.populate([data], 'article');
             }
           });
     }
