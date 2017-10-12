@@ -610,10 +610,10 @@ var popup = {
         nav.static();
       },
       portraitvslandscape: function(i){
-        if (type!='video' && data[i].media_details) {
+        if (type=='gallery') {
           return (data[i].media_details.height > data[i].media_details.width) ? true : false;
         } else {
-          return false;
+          return true;
         }
       },
       render: function(){
