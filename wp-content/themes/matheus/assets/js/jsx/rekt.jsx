@@ -60,11 +60,14 @@ var scrollspy = {
   sectionOffsets : [],
   index: 0,
   init: function() {
+    this.calcPositions();
+    this.bind(); 
+  },
+  calcPositions: function(){
     var $section = jQuery(document).find('section');
     $section.each( function(i){
       scrollspy.sectionOffsets[i] = this.offsetTop;
     });
-    this.bind(); 
   },
   bind: function(){
     window.addEventListener('scroll', function() {
@@ -145,7 +148,7 @@ var rekt = {
           // adding gallery
           if(this.state.posts.length) {
             this.state.posts.map(this.gallery);
-            scrollspy.init();
+            scrollspy.calcPositions();
           }
           nav.travelOnRdy();
         },
@@ -251,13 +254,16 @@ var rekt = {
         },
         componentDidMount: function(){
           nav.travelOnRdy();
-          // this.handleResponsive();
+          scrollspy.calcPositions();
         },
         metas: {
           counter: 0
         },
         expandSection: function(){
           this.setState({ expanded: (this.state.expanded) ? false : true });
+          setTimeout( function(){
+            scrollspy.calcPositions();
+          }, 350);
         },
         render: function(){
           var output      = [],
@@ -858,6 +864,7 @@ var contact = {
 (function(){
   route.init();
   popup.init();
+  scrollspy.init();
   rekt.render('projects', wplocal.basePathURL+'/wp-json/wp/v2/portfolio');
   rekt.render('blog',     wplocal.basePathURL+'/wp-json/wp/v2/posts?per_page=100');
   contact.init();
