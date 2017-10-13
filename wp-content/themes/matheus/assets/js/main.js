@@ -45,14 +45,14 @@ var nav = {
       }
     },
     travelingpants: function(target){
-      // if (popup)
-      //   popup.close();
       target = document.getElementById(target.substring(1));
       $('body, html').animate({scrollTop: target.offsetTop}, 400);
     },
     bind: function(el){
       el.onclick = function(){
         nav.anchor.travelingpants(this.hash);
+        if (popup)
+          popup.close();
         return false;
       }; 
     }
