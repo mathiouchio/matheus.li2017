@@ -711,8 +711,8 @@ var popup = {
  
 var contact = {
   init: function(){
-    var that = this;
-    var contact = document.getElementById('contact');
+    var that = this,
+        contact = document.getElementById('contact');
 
     var Thanks = React.createClass({
       getInitialState: function(){
@@ -729,7 +729,7 @@ var contact = {
     var Online = React.createClass({
       render: function(){
         return <div>
-            <label>Online</label>
+            <label>Social</label>
             <span><a href="https://www.facebook.com/pages/matheusli/177957308894747" target="_blank">facebook</a></span>
             <span><a href="https://instagram.com/mathiouchio/" target="_blank">instagram</a></span>
             <span><a href="https://dribbble.com/mathiouchio" target="_blank">dribbble</a></span>
