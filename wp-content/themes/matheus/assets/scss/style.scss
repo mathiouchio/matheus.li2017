@@ -344,6 +344,9 @@ h2 {
       [data-control="fullscreen"] {
         display: inline-block;
       }
+      scroll {
+        display: none;
+      }
     }
     &[data-single] {
       i,
