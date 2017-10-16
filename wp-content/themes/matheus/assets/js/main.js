@@ -80,23 +80,22 @@ var nav = {
 };
 
 var ohSnap = {
-  counter: 0,
   loop: {
+    interval: [],
+    counter: 0,
     run: function(identifier){
-      id = identifier.substring(1);
-      var speed  = ohSnap.settings.speed[id],
-          i      = ohSnap.counter,
-          vCount = Object.keys(ohSnap.vectorPoints[id]).length;
-
-      ohSnap.go(id, i); i++;
-      looping = window.setInterval( function(){
-        i = (i >= vCount) ? 0 : i;
-        ohSnap.go(identifier, i);
-        i++;
-      }, speed);
+      this.interval = window.setInterval( function(){
+        // back to 0 on last loop
+        ohSnap.loop.counter = (ohSnap.loop.counter >= Object.keys(ohSnap.vectorPoints[id]).length) ? 0 : ohSnap.loop.counter;
+        // animate
+        ohSnap.go('#spinner', ohSnap.loop.counter);
+        // counter++
+        ohSnap.loop.counter++;
+        // speed
+      }, ohSnap.settings.speed[id]);
     },
     destroy: function(){
-      clearInterval(looping);
+      clearInterval(this.interval);
     }
   },
   go: function(identifier, target){
@@ -105,31 +104,28 @@ var ohSnap = {
     } else {
       id = identifier.className || identifier.id;
     }
-    // console.log(identifier);
+
     // count objects length
     // check if has multiple polygons
-    var points      = jQuery(identifier).find('polygon'),
-        speed       = this.settings.speed[id],
-        easing      = this.settings.easing[id],
+    var points = jQuery(identifier).find('polygon'),
+        speed  = this.settings.speed[id],
+        easing = this.settings.easing[id],
         point, vp, $el;
-
 
     if(points.length > 1) {
       // preparing loops
       for(i=0; i<points.length; i++){
-        point = jQuery(identifier).find('polygon').get(i);
-        vp = this.vectorPoints[id][target][i];
+        point  = jQuery(identifier).find('polygon').get(i);
+        vp     = this.vectorPoints[id][target][i];
 
-        $el = Snap(point);
+        $el    = Snap(point);
         $el.stop().animate({'points': vp}, speed, easing);
       }
     } else {
-      // console.log(jQuery(identifier).find('polygon'));      
-      point = jQuery(identifier).find('polygon').get(0);
-      vp = this.vectorPoints[id][target];
-      // console.log(vp);
+      point    = jQuery(identifier).find('polygon').get(0);
+      vp       = this.vectorPoints[id][target];
       
-      $el = Snap(point);
+      $el      = Snap(point);
       $el.stop().animate({'points': vp}, speed, easing);
     }
   },
@@ -137,13 +133,13 @@ var ohSnap = {
     speed : {
       branding : 800,
       logo     : 10000,
-      loader   : 800,
+      spinner   : 800,
       thumb    : 200
     },
     easing : {
       branding: mina.easout,
       logo: mina.easout,
-      loader: mina.easein,
+      spinner: mina.easein,
       thumb: mina.easeout
     }
   },
@@ -166,10 +162,10 @@ var ohSnap = {
       1: ['117,122 167.5,132 180,127.7 103.9,76.5 46.4,81.7 27.8,51.7 0,69.9 12.9,100.6 64.5,125.2', '170.7,32 81.5,0 73.2,24.4 27.8,51.7 46.4,81.7 103.9,76.5 180,127.7', '167.5,132 117,122 64.5,125.2 12.9,100.6 54.5,200'],
       2: ['122.26,71.85 167.5,132 180,127.7 163,77 82.85,48.25 27.8,51.7 0,69.9 12.9,100.6 67,74', '170.7,32 81.5,0 73.2,24.4 27.8,51.7 82.85,48.25 163,77 180,127.7', '167.5,132 122.26,71.85 67,74 12.9,100.6 54.5,200']
     },
-    loader: {
+    spinner: {
       0: '7.4,44 40.8,48.2 42.3,21.9 34.6,2.8 23.2,36.5',
       1: '17.9,43.8 24.8,30.2 42.3,21.9 34.6,2.8 7.2,18.5',
-      2: '26.3,45.3 45,13.5 29.2,15.1 23,1.2 9.4,19.9',
+      2: '26.3,45.3 45,13.5 29.2,15.1 23,1.2 9.4,19.9'
     },
     thumb: {
       0: '57,199 1,72 113,1 163,30 161,113',

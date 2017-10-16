@@ -437,6 +437,17 @@ var popup = {
       componentDidMount: function(){
         if(that.state.datatype == 'video')
           popup.plyr.init(that);
+
+        // @TODO: can't do it here
+        // let firstLoad = $(this.refs['slide0']).find('img');
+        // if(firstLoad.length) {
+        //   that.setState({ loading: true });
+        //   console.log(that);
+        //   firstLoad.on('load', function(){
+        //     console.log('loaded');
+        //     that.setState({ loading: false });
+        //   });
+        // }
       },
       componentWillUnmount: function() {
         if(that.state.datatype == 'video')
@@ -504,7 +515,8 @@ var popup = {
           return <li data-show={i==that.state.currentslide ? '' : null}
                       data-transitioning={i==that.state.previouslide ? "" : null}
                       className={v.media_details.height > v.media_details.width ? 'portrait' : null}
-                      key={'popup'+i}>
+                      key={'popup'+i}
+                      ref={'slide'+i}>
                     <img src={v.source_url}
                          width={v.media_details.width}
                          height={v.media_details.height}
@@ -517,19 +529,19 @@ var popup = {
 
           return <li data-show={i==that.state.currentslide ? '' : null}
                       data-transitioning={i==that.state.previouslide ? "" : null}
-                      key={'popup'+i}>
+                      key={'popup'+i} ref={'slide'+i}>
                     <div data-type={youmeo} data-video-id={vid}></div>
                  </li>
         } else if (v.video_url){ 
           return <li data-show={i==that.state.currentslide ? '' : null}
                      data-transitioning={i==that.state.previouslide ? "" : null}
-                     key={'popup'+i}>
+                     key={'popup'+i} ref={'slide'+i}>
                    <video controls>
                      <source src={v.video_url} type="video/mp4" />
                    </video>
                  </li>
         } else if (v.format=='standard'){
-          return <li className='article portrait' data-show key={'popup'+i}>
+          return <li className='article portrait' data-show key={'popup'+i} ref={'slide'+i}>
                    <div className='wrapper' dangerouslySetInnerHTML={rekt.component.danger(v.content.rendered)} />
                  </li>
         }
@@ -543,10 +555,10 @@ var popup = {
     ReactDOM.unmountComponentAtNode($popup);
     nav.fluid();
   },
-  spinner: React.createClass({
+  Spinner: React.createClass({
     render: function(){
       return (
-        <div className="spinner">
+        <div id="spinner">
           <svg x="0px" y="0px" viewBox="0 0 50 50" enableBackground="new 0 0 50 50">
             <defs>
               <polygon id="spinner1" points="11.8,2.8 16,30.5 31.7,45.3 41,35.8 43,23.3"/>
@@ -590,7 +602,7 @@ var popup = {
       data = data.videos;
 
     var that      = this,
-        Spinner   = this.spinner;
+        Spinner   = this.Spinner;
     var Popup = React.createClass({
       getInitialState: function(){
         return {
@@ -599,7 +611,8 @@ var popup = {
           previouslide: 0,
           fetching: null,
           totalslide: data.length,
-          datatype: type
+          datatype: type,
+          loading: false
         }
       },
       componentWillMount: function() {
@@ -620,7 +633,7 @@ var popup = {
         var GalleryComponent = that.gallery(data, this),
             Ctrldom = that.controller.dom(this);
 
-        var popup = <div className="slider" data-fetching={this.state.fetching}>
+        var popup = <div className="slider" data-fetching={this.state.fetching} data-loading={this.state.loading}>
           <div className="content">
             <GalleryComponent />
           </div>
