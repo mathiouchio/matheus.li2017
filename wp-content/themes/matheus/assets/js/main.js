@@ -84,17 +84,20 @@ var ohSnap = {
     interval: [],
     counter: 0,
     run: function(identifier){
+      console.log('run');
+      var id = identifier.substring(1);
       this.interval = window.setInterval( function(){
         // back to 0 on last loop
         ohSnap.loop.counter = (ohSnap.loop.counter >= Object.keys(ohSnap.vectorPoints[id]).length) ? 0 : ohSnap.loop.counter;
         // animate
-        ohSnap.go('#spinner', ohSnap.loop.counter);
+        ohSnap.go(identifier, ohSnap.loop.counter);
         // counter++
         ohSnap.loop.counter++;
         // speed
       }, ohSnap.settings.speed[id]);
     },
     destroy: function(){
+      console.log('destroy');
       clearInterval(this.interval);
     }
   },

@@ -434,24 +434,22 @@ var popup = {
       getInitialState: function(){
         return null
       },
+      componentWillMount: function() {
+        let states = [];
+        json_data.map(function(){
+          states.push(false);
+        });
+        this.setState({ loading: states });
+      },
       componentDidMount: function(){
         if(that.state.datatype == 'video')
           popup.plyr.init(that);
-
-        // @TODO: can't do it here
-        // let firstLoad = $(this.refs['slide0']).find('img');
-        // if(firstLoad.length) {
-        //   that.setState({ loading: true });
-        //   console.log(that);
-        //   firstLoad.on('load', function(){
-        //     console.log('loaded');
-        //     that.setState({ loading: false });
-        //   });
-        // }
+        ohSnap.loop.run('#spinner');
       },
       componentWillUnmount: function() {
         if(that.state.datatype == 'video')
           popup.plyr.destroy();
+        ohSnap.loop.destroy();
       },
       imgAttr: function(obj){
         let imagesets = {
@@ -506,6 +504,16 @@ var popup = {
         output.sizes = ['100vw'];
         return output;
       },
+      truthCheck: function(el){
+        return el === true;
+      },
+      setStatus: function(a,b){
+        this.state.loading[a] = true;
+        this.setState({ loading: this.state.loading });
+
+        if(this.state.loading.every(this.truthCheck))
+          ohSnap.loop.destroy();
+      },
       slide: function(v,i){
         if (v.media_details) { 
           const srcsetSizes = this.imgAttr(v.media_details),
@@ -516,12 +524,14 @@ var popup = {
                       data-transitioning={i==that.state.previouslide ? "" : null}
                       className={v.media_details.height > v.media_details.width ? 'portrait' : null}
                       key={'popup'+i}
-                      ref={'slide'+i}>
+                      ref={'slide'+i}
+                      data-loaded={(this.state.loading[i]) ? '' : null} >
                     <img src={v.source_url}
                          width={v.media_details.width}
                          height={v.media_details.height}
                          srcSet={imgSrcset}
-                         sizes={imgSizes} />
+                         sizes={imgSizes}
+                         onLoad={this.setStatus.bind(this, i)} />
                   </li>
         } else if (v.youtube_id || v.vimeo_id){
           var youmeo = (v.youtube_id) ? 'youtube' : 'vimeo',
@@ -611,8 +621,7 @@ var popup = {
           previouslide: 0,
           fetching: null,
           totalslide: data.length,
-          datatype: type,
-          loading: false
+          datatype: type
         }
       },
       componentWillMount: function() {
@@ -633,7 +642,7 @@ var popup = {
         var GalleryComponent = that.gallery(data, this),
             Ctrldom = that.controller.dom(this);
 
-        var popup = <div className="slider" data-fetching={this.state.fetching} data-loading={this.state.loading}>
+        var popup = <div className="slider" data-fetching={this.state.fetching} data-type={this.state.datatype}>
           <div className="content">
             <GalleryComponent />
           </div>

@@ -312,18 +312,20 @@ h2 {
       opacity: 1;
     }
   }
-  &[data-loading='true'] {
-    #spinner {
-      display: flex;
+  [data-type="gallery"] li {
+    display: none;
+    &[data-loaded] {
+      display: block;
     }
   }
   #spinner {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 20;
+    z-index: 1;
+    background: rgba(255,255,255,.9);
 
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
