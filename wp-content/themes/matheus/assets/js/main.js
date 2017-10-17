@@ -84,7 +84,7 @@ var ohSnap = {
     interval: [],
     counter: 0,
     run: function(identifier){
-      console.log('run');
+      // console.log('run');
       var id = identifier.substring(1);
       this.interval = window.setInterval( function(){
         // back to 0 on last loop
@@ -97,7 +97,7 @@ var ohSnap = {
       }, ohSnap.settings.speed[id]);
     },
     destroy: function(){
-      console.log('destroy');
+      // console.log('destroy');
       clearInterval(this.interval);
     }
   },

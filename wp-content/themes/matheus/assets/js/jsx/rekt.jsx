@@ -439,17 +439,16 @@ var popup = {
         json_data.map(function(){
           states.push(false);
         });
-        this.setState({ loading: states });
+        // this.setState({ loading: states });
       },
       componentDidMount: function(){
         if(that.state.datatype == 'video')
           popup.plyr.init(that);
-        ohSnap.loop.run('#spinner');
       },
       componentWillUnmount: function() {
         if(that.state.datatype == 'video')
           popup.plyr.destroy();
-        ohSnap.loop.destroy();
+        // ohSnap.loop.destroy();
       },
       imgAttr: function(obj){
         let imagesets = {
@@ -509,10 +508,10 @@ var popup = {
       },
       setStatus: function(a,b){
         this.state.loading[a] = true;
-        this.setState({ loading: this.state.loading });
+        // this.setState({ loading: this.state.loading });
 
-        if(this.state.loading.every(this.truthCheck))
-          ohSnap.loop.destroy();
+        // if(this.state.loading.every(this.truthCheck))
+          // ohSnap.loop.destroy();
       },
       slide: function(v,i){
         if (v.media_details) { 
@@ -524,8 +523,7 @@ var popup = {
                       data-transitioning={i==that.state.previouslide ? "" : null}
                       className={v.media_details.height > v.media_details.width ? 'portrait' : null}
                       key={'popup'+i}
-                      ref={'slide'+i}
-                      data-loaded={(this.state.loading[i]) ? '' : null} >
+                      ref={'slide'+i}>
                     <img src={v.source_url}
                          width={v.media_details.width}
                          height={v.media_details.height}
@@ -630,6 +628,7 @@ var popup = {
       },
       componentDidMount: function(){
         nav.static();
+        // ohSnap.loop.run('#spinner');
       },
       portraitvslandscape: function(i){
         if (type=='gallery') {
