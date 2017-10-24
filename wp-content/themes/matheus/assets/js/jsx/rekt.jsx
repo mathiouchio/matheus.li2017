@@ -432,14 +432,15 @@ var popup = {
   gallery: function(json_data, that){
     return React.createClass({
       getInitialState: function(){
-        return null
+        return { loading: null }
       },
       componentWillMount: function() {
         let states = [];
         json_data.map(function(){
           states.push(false);
         });
-        this.setState({ loading: states });
+        this.state.loading = states;
+        // this.setState({ loading: states });
       },
       componentDidMount: function(){
         if(that.state.datatype == 'video')
@@ -451,6 +452,9 @@ var popup = {
           if(this.refs[i].childNodes[0].tagName == 'IMG') {
             // console.log($(this.refs[i].childNodes[0]));
             $(this.refs[i].childNodes[0]).on('load', function(){
+              // @TODO: this is the source of the problem
+              // Flashing img because it doesn't have initial states of data-loaded
+              console.log('checking'); 
               $(this).attr('data-loaded', '');
             });
           }
