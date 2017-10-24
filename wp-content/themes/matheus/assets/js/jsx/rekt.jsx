@@ -439,11 +439,22 @@ var popup = {
         json_data.map(function(){
           states.push(false);
         });
-        // this.setState({ loading: states });
+        this.setState({ loading: states });
       },
       componentDidMount: function(){
         if(that.state.datatype == 'video')
           popup.plyr.init(that);
+        this.toggleDataLoaded();
+      },
+      toggleDataLoaded: function(){
+        for (let i in this.refs) {
+          if(this.refs[i].childNodes[0].tagName == 'IMG') {
+            // console.log($(this.refs[i].childNodes[0]));
+            $(this.refs[i].childNodes[0]).on('load', function(){
+              $(this).attr('data-loaded', '');
+            });
+          }
+        }
       },
       componentWillUnmount: function() {
         if(that.state.datatype == 'video')
@@ -507,11 +518,19 @@ var popup = {
         return el === true;
       },
       setStatus: function(a,b){
+        // console.log(this.state);
+        // console.log(a);
+        // console.log(b);
+        // console.log(this.refs[a]);
         this.state.loading[a] = true;
         // this.setState({ loading: this.state.loading });
 
-        // if(this.state.loading.every(this.truthCheck))
-          // ohSnap.loop.destroy();
+        // console.log(this.state.loading);
+
+        if(this.state.loading.every(this.truthCheck)) {
+          // console.log('all done');
+          ohSnap.loop.destroy();
+        }
       },
       slide: function(v,i){
         if (v.media_details) { 
@@ -628,7 +647,7 @@ var popup = {
       },
       componentDidMount: function(){
         nav.static();
-        // ohSnap.loop.run('#spinner');
+        ohSnap.loop.run('#spinner');
       },
       portraitvslandscape: function(i){
         if (type=='gallery') {
