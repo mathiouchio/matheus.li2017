@@ -826,7 +826,7 @@ var contact = {
       },
       render: function(){
         return <div className="copy"> 
-            <form id="contactform" action="http://matheus.li/blog/wp-content/themes/matheus/contact.php" method="post">
+            <form id="contactform" action={wplocal.templateURL+'/contact.php'} method="post">
               <div>
                 <label>email</label> 
                 <input type="email" name="email" required ref="emailInput" onBlur={this.validate} value={this.props.email} placeholder="type your email" onChange={this.handleChange} />
