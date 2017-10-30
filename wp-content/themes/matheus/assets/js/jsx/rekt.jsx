@@ -155,13 +155,9 @@ var rekt = {
         gallery: function(v, i){
           var that = this;
           if (!v.gallery){
-            // console.log(v);
-            // console.log(i);
             var gallery_path = wplocal.basePathURL+'/wp-json/wp/v2/media?parent='+v.id; 
             
-            // console.log(gallery_path);
             REST.get(gallery_path).done( function(data){
-              // console.log(data);
               that.state.posts[i].gallery = data;
             });
           }
@@ -169,7 +165,6 @@ var rekt = {
         handleClick: function(i,v,e){
           /* Preventing preventDefault on new tab click */
           if (!e.ctrlKey || !e.shiftKey || !e.metaKey || (e.button && e.button != 1)){
-            // console.log(this.state.posts[i]); 
             let galleryJSON = this.state.posts[i].gallery,
                 pathSlug    = `${v.type}/${v.slug}`;
             
@@ -324,7 +319,6 @@ var rekt = {
           };
 
           if (this.state) {
-            // console.log(this.state);
             this.state.posts.map(slide);
             var print = (
               <div className="slider noslide" data-expanded={(this.state.expanded)}>
@@ -345,10 +339,8 @@ var rekt = {
                 </div>
               </div>
             );
-            // console.log(output);
             return print;
           } else {
-            // console.log('render null');
             return null;
           }
         }
@@ -384,7 +376,7 @@ var popup = {
           targetplyr  = this.obj[targetslide];
 
       targetplyr.on('ready', function(e){
-        console.log(targetplyr);
+        // console.log(targetplyr);
         if(!targetplyr.isMuted())
           targetplyr.toggleMute();
           targetplyr.play();
@@ -416,7 +408,7 @@ var popup = {
             popup.plyr.mathematics(plyrObj);
           });
         } else {
-            popup.plyr.mathematics(plyrObj);
+          popup.plyr.mathematics(plyrObj);
         }
         
       });
@@ -436,26 +428,28 @@ var popup = {
       },
       componentWillMount: function() {
         let states = [];
+        // calculating how many data-loaded states
         json_data.map(function(){
           states.push(false);
         });
         this.state.loading = states;
-        // this.setState({ loading: states });
       },
       componentDidMount: function(){
-        // console.log('did mount');
         if(that.state.datatype == 'video')
           popup.plyr.init(that);
+        // toggle for data-loading attr
         this.toggleDataLoaded();
       },
       toggleDataLoaded: function(){
         for (let i in this.refs) {
           if(this.refs[i].childNodes[0].tagName == 'IMG') {
+            /* Check if img is loaded:
+             * Not all mount requires data-loading
+             * because next and previous image sliding requires re-mounting
+             */
             if(!this.refs[i].childNodes[0].complete) {
-              // console.log('incomplete');
-              $(this.refs[i].childNodes[0]).attr('data-loading', '');
-              $(this.refs[i].childNodes[0]).on('load', function(){
-                // console.log('completed');
+              $(this.refs[i].childNodes[0]).attr('data-loading', ''); // inject attr if image is loading
+              $(this.refs[i].childNodes[0]).on('load', function(){ // remove attr if image is done loading
                 $(this).removeAttr('data-loading');
               });
             }
@@ -466,7 +460,6 @@ var popup = {
       componentWillUnmount: function() {
         if(that.state.datatype == 'video')
           popup.plyr.destroy();
-        // ohSnap.loop.destroy();
       },
       imgAttr: function(obj){
         let imagesets = {
@@ -532,10 +525,8 @@ var popup = {
         this.state.loading[a] = true;
         // this.setState({ loading: this.state.loading });
 
-        // console.log(this.state.loading);
-
         if(this.state.loading.every(this.truthCheck)) {
-          // console.log('all done');
+          // unbind/remove looping spinner animation 
           ohSnap.loop.destroy();
         }
       },
@@ -618,6 +609,7 @@ var popup = {
     if (format=='gallery'){
       var gallery_path = wplocal.basePathURL+'/wp-json/wp/v2/media?parent='+rektComp.state.posts[index].id;
       
+      // Getting gallery datas for attached images in a post
       REST.get(gallery_path)
           .done( function(data){
             rektComp.state.posts[index].gallery = data;
@@ -820,7 +812,6 @@ var contact = {
         } else {
           obj.dataset.invalid="";
         }
-        // console.log(this.checker);
 
         this.props.onValidate(
           this.checker[0],
@@ -854,7 +845,6 @@ var contact = {
         };
       },
       handleValidate: function(validateEmail, validateMessage){
-        // console.log(validateEmail, validateMessage); 
         if(validateEmail && validateMessage) {
           this.setState({validate: true});
         }
@@ -867,16 +857,9 @@ var contact = {
       },
       handleSubmission: function(e){
         var that = this;
-        // console.log('click');
         if(this.state.validate==true) {
-          // var dataString = $(dom).find('form').serialize();
-          // var dom = ReactDOM.findDOMNode(this),
           var encodedEmail = jQuery.trim(encodeURIComponent(this.state.email)),
               dataString = 'email='+encodedEmail+'&message='+this.state.message;
-          
-          // console.log(dataString);
-          // console.log($(dom));
-          // console.log('validet');
 
           jQuery.ajax({
             type: "POST",
@@ -884,10 +867,8 @@ var contact = {
             url: "/blog/wp-content/themes/matheus/contact.php",
             data: dataString
           }).done( function(data){
-            // console.log(data);
             that.setState({ sent: "" });
           }).fail( function(data){
-            // console.log(data.status);
             that.setState({ response: data.status });
           });
         }
