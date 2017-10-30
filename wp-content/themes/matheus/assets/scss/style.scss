@@ -312,11 +312,11 @@ h2 {
       opacity: 1;
     }
   }
-  [data-type="gallery"] li img {
+  [data-type="gallery"] li img[data-loading] {
     display: none;
-    &[data-loaded] {
-      display: block;
-    }
+    // &[data-loaded] {
+    //   display: block;
+    // }
   }
   #spinner {
     position: absolute;

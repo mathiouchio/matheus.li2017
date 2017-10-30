@@ -443,6 +443,7 @@ var popup = {
         // this.setState({ loading: states });
       },
       componentDidMount: function(){
+        // console.log('did mount');
         if(that.state.datatype == 'video')
           popup.plyr.init(that);
         this.toggleDataLoaded();
@@ -450,13 +451,15 @@ var popup = {
       toggleDataLoaded: function(){
         for (let i in this.refs) {
           if(this.refs[i].childNodes[0].tagName == 'IMG') {
-            // console.log($(this.refs[i].childNodes[0]));
-            $(this.refs[i].childNodes[0]).on('load', function(){
-              // @TODO: this is the source of the problem
-              // Flashing img because it doesn't have initial states of data-loaded
-              console.log('checking'); 
-              $(this).attr('data-loaded', '');
-            });
+            if(!this.refs[i].childNodes[0].complete) {
+              // console.log('incomplete');
+              $(this.refs[i].childNodes[0]).attr('data-loading', '');
+              $(this.refs[i].childNodes[0]).on('load', function(){
+                // console.log('completed');
+                $(this).removeAttr('data-loading');
+              });
+            }
+
           }
         }
       },
