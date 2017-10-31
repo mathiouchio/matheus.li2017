@@ -395,8 +395,20 @@ h2 {
       animation: popupenter 400ms ease-in;
       margin-bottom: 20vh;
     }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+      line-height: 1.15em;
+      margin-bottom: 13px;
+    }
     p {
       margin-bottom: 30px;
+    }
+    p img,
+    img {
+      width: 130%;
     }
   }
 }
