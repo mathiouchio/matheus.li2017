@@ -1,15 +1,15 @@
-$font-stack: 'Simplifica', helvetica, arial, sans-serif;
+$font-stack: 'densia', helvetica, arial, sans-serif;
 $font-stack-hero: 'Questrial', helvetica, arial, sans-serif;
 
 @font-face {
-    font-family: 'Simplifica';
-    src: url("../assets/fonts/simplifica_typeface.eot");
-    src: url("../assets/fonts/simplifica_typeface.eot?#iefix") format("embedded-opentype"),
-         url("../assets/fonts/simplifica_typeface.otf") format("opentype"),
-         url("../assets/fonts/simplifica_typeface.woff2") format("woff2"),
-         url("../assets/fonts/simplifica_typeface.woff") format("woff"),
-         url("../assets/fonts/simplifica_typeface.ttf") format("truetype"),
-         url("../assets/fonts/simplifica_typeface.svg#PlacardMT") format("svg");
+    font-family: 'densia';
+    src: url("../assets/fonts/densiasans.eot");
+    src: url("../assets/fonts/densiasans.eot?#iefix") format("embedded-opentype"),
+         url("../assets/fonts/densiasans.otf") format("opentype"),
+         url("../assets/fonts/densiasans.woff") format("woff"),
+         url("../assets/fonts/densiasans.woff2") format("woff2"),
+         url("../assets/fonts/densiasans.ttf") format("truetype"),
+         url("../assets/fonts/densiasans.svg#PlacardMT") format("svg");
     font-weight: bold;
     font-style: normal
 }

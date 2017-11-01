@@ -28,8 +28,8 @@ body[static] {
 body,
 textarea,
 input {
-  font: 16.5px/1.7em $font-stack;
-  letter-spacing: 1.5px;
+  font: 15.5px/1.9em $font-stack;
+  letter-spacing: 1.2px;
   @extend %fontsmooth;
 }
 svg,
@@ -137,8 +137,8 @@ nav {
   }
   span {
     @extend .hero;
-    letter-spacing:1px;
-    margin-right:10px;
+    letter-spacing: 1px;
+    margin-right: 10px;
   }
   li {
     height: 32px;
@@ -236,7 +236,7 @@ label {
 h2 {
   @extend .hero;
   font-size: 16.5px;
-  letter-spacing: 2.8px;
+  letter-spacing: 3px;
   line-height: 1.3em;
 }
 %controllerbottom {
