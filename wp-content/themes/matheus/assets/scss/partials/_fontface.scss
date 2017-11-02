@@ -1,15 +1,14 @@
-$font-stack: 'densia', helvetica, arial, sans-serif;
+$font-stack: 'opensans-condensed', helvetica, arial, sans-serif;
 $font-stack-hero: 'Questrial', helvetica, arial, sans-serif;
 
 @font-face {
-    font-family: 'densia';
-    src: url("../assets/fonts/densiasans.eot");
-    src: url("../assets/fonts/densiasans.eot?#iefix") format("embedded-opentype"),
-         url("../assets/fonts/densiasans.otf") format("opentype"),
-         url("../assets/fonts/densiasans.woff") format("woff"),
-         url("../assets/fonts/densiasans.woff2") format("woff2"),
-         url("../assets/fonts/densiasans.ttf") format("truetype"),
-         url("../assets/fonts/densiasans.svg#PlacardMT") format("svg");
-    font-weight: bold;
-    font-style: normal
+  font-family: 'opensans-condensed';
+  src: url("../assets/fonts/OpenSans-CondLight-webfont.eot");
+  src: url("../assets/fonts/OpenSans-CondLight-webfont.eot?#iefix") format("embedded-opentype"),
+       url("../assets/fonts/OpenSans-CondLight-webfont.otf") format("opentype"),
+       url("../assets/fonts/OpenSans-CondLight-webfont.woff") format("woff"),
+       url("../assets/fonts/OpenSans-CondLight-webfont.ttf") format("truetype"),
+       url("../assets/fonts/OpenSans-CondLight-webfont.svg#PlacardMT") format("svg");
+  font-weight: bold;
+  font-style: normal
 }
