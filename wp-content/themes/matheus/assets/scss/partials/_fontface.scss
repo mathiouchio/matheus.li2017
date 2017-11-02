@@ -9,6 +9,18 @@ $font-stack-hero: 'Questrial', helvetica, arial, sans-serif;
        url("../assets/fonts/OpenSans-CondLight-webfont.woff") format("woff"),
        url("../assets/fonts/OpenSans-CondLight-webfont.ttf") format("truetype"),
        url("../assets/fonts/OpenSans-CondLight-webfont.svg#PlacardMT") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'opensans-condensed';
+  src: url("../assets/fonts/OpenSans-CondLightItalic-webfont.eot");
+  src: url("../assets/fonts/OpenSans-CondLightItalic-webfont.eot?#iefix") format("embedded-opentype"),
+       url("../assets/fonts/OpenSans-CondLightItalic-webfont.otf") format("opentype"),
+       url("../assets/fonts/OpenSans-CondLightItalic-webfont.woff") format("woff"),
+       url("../assets/fonts/OpenSans-CondLightItalic-webfont.ttf") format("truetype"),
+       url("../assets/fonts/OpenSans-CondLightItalic-webfont.svg#PlacardMT") format("svg");
   font-weight: bold;
-  font-style: normal
+  font-style: italic;
 }
