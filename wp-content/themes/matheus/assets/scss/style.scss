@@ -292,6 +292,7 @@ h2 {
     &.portrait {
       overflow-x: hidden;
       overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
 
       img {
         width: 100%;
