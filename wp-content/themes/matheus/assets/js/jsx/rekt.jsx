@@ -264,7 +264,7 @@ var rekt = {
           var output      = [],
               posts       = [],
               uid_svg     = 0,
-              uid_svg_off = 1,
+              uid_svg_off = uid_svg++,
               that        = this;
 
           this.metas.counter = 0;
@@ -272,43 +272,41 @@ var rekt = {
           var monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
           
           var slide = function(v,i){
-            var one_base = i;
-                one_base++;
             var date   = new Date(v.date),
                 month  = date.getMonth(),
                 year   = date.getFullYear();
-                year  -= 2000;
+                year  -= 2000,
+                thumbnail = '';
 
-            var thumbnail = '';
             if(v.better_featured_image) {
               if (v.better_featured_image.media_details.sizes.thumbnail){
                 thumbnail = v.better_featured_image.media_details.sizes.thumbnail.source_url;
               }
             }
 
-            var boundClick = that.handleClick.bind(that, i, v);
-            var post = (
-              <div className="post" key={"blog"+i}>
-                <a href={v.link} onClick={boundClick}>
-                  <div className="thumb" onMouseEnter={that.handleHover.enter} onMouseLeave={that.handleHover.leave}><svg x="0px" y="0px" viewBox="0 0 180 200">
-                    <g fillRule="evenodd" clipRule="evenodd">
-                      <defs>
-                        <polygon id={'SVGID_14'+uid_svg+'_'} points="57,199,1,72,113,1,163,30,161,113"></polygon>
-                      </defs> 
-                      <clipPath id={'SVGID_14'+uid_svg_off+'_'}>
-                        <use xlinkHref={'#SVGID_14'+uid_svg+'_'} overflow="visible"></use>
-                      }
-                      </clipPath>
-                      <g clipPath={'url(#SVGID_14'+uid_svg_off+'_)'}>
-                        <image overflow="visible" width="300" height="300" xlinkHref={thumbnail} transform="matrix(0.6666666666666666,0,0,0.6666666666666666,-10,0)"></image>
-                      </g>
-                    </g>
-                    </svg>
+            var boundClick = that.handleClick.bind(that, i, v),
+                post = (
+                  <div className="post" key={"blog"+i}>
+                    <a href={v.link} onClick={boundClick}>
+                      <div className="thumb" onMouseEnter={that.handleHover.enter} onMouseLeave={that.handleHover.leave}><svg x="0px" y="0px" viewBox="0 0 180 200">
+                        <g fillRule="evenodd" clipRule="evenodd">
+                          <defs>
+                            <polygon id={'SVGID_14'+uid_svg+'_'} points="57,199,1,72,113,1,163,30,161,113"></polygon>
+                          </defs> 
+                          <clipPath id={'SVGID_14'+uid_svg_off+'_'}>
+                            <use xlinkHref={'#SVGID_14'+uid_svg+'_'} overflow="visible"></use>
+                          }
+                          </clipPath>
+                          <g clipPath={'url(#SVGID_14'+uid_svg_off+'_)'}>
+                            <image overflow="visible" width="300" height="300" xlinkHref={thumbnail} transform="matrix(0.6666666666666666,0,0,0.6666666666666666,-10,0)"></image>
+                          </g>
+                        </g>
+                        </svg>
+                      </div>
+                      <div className="excerpt"><h2>{monthNames[month]} {year}<span>{v.title.rendered}</span></h2></div>
+                    </a>
                   </div>
-                  <div className="excerpt"><h2>{monthNames[month]} {year}<span>{v.title.rendered}</span></h2></div>
-                </a>
-              </div>
-            );
+                );
             posts.push(post);
             uid_svg     += 2;
             uid_svg_off += 2;

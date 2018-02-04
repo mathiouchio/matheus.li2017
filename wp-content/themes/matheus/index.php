@@ -100,4 +100,5 @@ $template_url = get_bloginfo( 'template_directory' );
   <section id="blog" class="slider noslide"></section>
   <section id="contact"></section>
 
-<?php get_footer(); ?>
+<?php
+get_footer();
