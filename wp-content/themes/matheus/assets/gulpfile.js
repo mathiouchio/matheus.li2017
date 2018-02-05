@@ -141,7 +141,7 @@ gulp.task('git-commit', function(cb){
         name:    'commit',
         message: 'Enter commit message ...'
       }, function(res){
-        exec('git commit -m "'+res.commit+'"', function (err, stdout, stderr) {
+        exec('git commit -m "' + res.commit + '"', function (err, stdout, stderr) {
           console.log(stdout);
           console.log(stderr);
           cb(err);
