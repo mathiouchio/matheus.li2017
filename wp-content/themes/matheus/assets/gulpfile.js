@@ -5,7 +5,8 @@ const autoprefixer = require('gulp-autoprefixer'),
       del          = require('del'),
       es           = require('event-stream'),
       fs           = require('fs'),
-      exec         = require('gulp-exec'),
+      // exec         = require('gulp-exec'),
+      exec         = require('child_process').exec,
       gulp         = require('gulp'),
       gutil        = require('gulp-util'),
       jshint       = require('gulp-jshint'),
@@ -133,18 +134,21 @@ gulp.task('git-add', function(){
     .pipe(exec('git add .', options.exec.options));
 });
 
-gulp.task('git-commit', function(){
+gulp.task('git-commit', function(cb){
   return gulp.src('commitmsg')
     .pipe(prompt.prompt({
         type:    'input',
         name:    'commit',
         message: 'Enter commit message ...'
-    }, function(res){
-      console.log(res.commit);
-      exec('git commit -m "test with prompt"', options.exec.options);
-    }))
+      }, function(res){
+        exec('git commit -m "<%= res.commit %>"', function (err, stdout, stderr) {
+          console.log(stdout);
+          console.log(stderr);
+          cb(err);
+        });
+      }));
     // .pipe(exec('git commit -m "automation"', options.exec.options))
-    .pipe(exec.reporter(options.exec.reportOptions));
+    // .pipe(exec.reporter(options.exec.reportOptions));
 });
 
 gulp.task('git', function (cb) {
