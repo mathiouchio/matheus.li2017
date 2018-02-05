@@ -135,8 +135,15 @@ gulp.task('git-add', function(){
 
 gulp.task('git-commit', function(){
   return gulp.src('commitmsg')
-    // .pipe(es.stringify())
-    .pipe(exec('git commit -m "automation"', options.exec.options))
+    .pipe(prompt.prompt({
+        type:    'input',
+        name:    'commit',
+        message: 'Enter commit message ...'
+    }, function(res){
+      console.log(res.commit);
+      exec('git commit -m "test with prompt"', options.exec.options);
+    }))
+    // .pipe(exec('git commit -m "automation"', options.exec.options))
     .pipe(exec.reporter(options.exec.reportOptions));
 });
 
