@@ -136,9 +136,11 @@ gulp.task('git-add', function(){
 });
 
 gulp.task('git-push', function(){
-  exec('git rev-parse --abbrev-ref HEAD', function(err, stdout, stderr){
-    console.log(stdout);
-    exec('git push origin ' + stdout);
+  exec('git rev-parse --abbrev-ref HEAD', function(){
+    exec('git push origin ' + stdout, function(err, stdout, stderr){
+      console.log(stdout);
+      console.log(stderr);
+    });
   });
 });
 
