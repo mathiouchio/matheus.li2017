@@ -118,25 +118,34 @@ gulp.task('clean-dist', function(cb){
 });
 
 gulp.task('git-reset', function(){
-  return gulp.src('commitmsg')
-    .pipe(exec('git reset', options.exec.options))
-    .pipe(exec.reporter(options.exec.reportOptions));
+  exec('git reset', function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+  });
+  // return gulp.src('commitmsg')
+  //   .pipe(exec('git reset', options.exec.options))
+  //   .pipe(exec.reporter(options.exec.reportOptions));
 });
 
 gulp.task('git-status', function(){
-  return gulp.src('commitmsg')
-    .pipe(exec('git status', options.exec.options))
-    .pipe(exec.reporter(options.exec.reportOptions));
+  exec('git status', function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+  });
+  // return gulp.src('commitmsg')
+  //   .pipe(exec('git status', options.exec.options))
+  //   .pipe(exec.reporter(options.exec.reportOptions));
 });
 
 gulp.task('git-add', function(){
-  return gulp.src('commitmsg')
-    .pipe(exec('git add .', options.exec.options));
+  exec('git add .');
+  // return gulp.src('commitmsg')
+  //   .pipe(exec('git add .', options.exec.options));
 });
 
-gulp.task('git-commit', function(cb){
+gulp.task('git-commit', function(){
   return gulp.src('commitmsg')
-    .pipe(prompt.prompt({
+    .pipe( prompt.prompt({
         type:    'input',
         name:    'commit',
         message: 'Enter commit message ...'
@@ -144,11 +153,8 @@ gulp.task('git-commit', function(cb){
         exec('git commit -m "' + res.commit + '"', function (err, stdout, stderr) {
           console.log(stdout);
           console.log(stderr);
-          cb(err);
         });
       }));
-    // .pipe(exec('git commit -m "automation"', options.exec.options))
-    // .pipe(exec.reporter(options.exec.reportOptions));
 });
 
 gulp.task('git', function (cb) {
