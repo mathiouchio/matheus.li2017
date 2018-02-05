@@ -135,6 +135,12 @@ gulp.task('git-add', function(){
   exec('git add .');
 });
 
+gulp.task('git-push', function(){
+  exec('git rev-parse --abbrev-ref HEAD', function(err, stdout, stderr){
+    exec('git push -u origin' + stdout);
+  });
+});
+
 gulp.task('git-commit', function(){
   return gulp.src('commitmsg')
     .pipe( prompt.prompt({
@@ -150,7 +156,7 @@ gulp.task('git-commit', function(){
 });
 
 gulp.task('git', function (cb) {
-  runSequence('git-reset', 'git-status', 'git-add', 'git-commit');
+  runSequence('git-reset', 'git-status', 'git-add', 'git-commit', 'git-push');
 });
 
 gulp.task('concat', function(){
