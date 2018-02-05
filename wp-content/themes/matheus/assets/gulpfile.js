@@ -122,9 +122,6 @@ gulp.task('git-reset', function(){
     console.log(stdout);
     console.log(stderr);
   });
-  // return gulp.src('commitmsg')
-  //   .pipe(exec('git reset', options.exec.options))
-  //   .pipe(exec.reporter(options.exec.reportOptions));
 });
 
 gulp.task('git-status', function(){
@@ -132,15 +129,10 @@ gulp.task('git-status', function(){
     console.log(stdout);
     console.log(stderr);
   });
-  // return gulp.src('commitmsg')
-  //   .pipe(exec('git status', options.exec.options))
-  //   .pipe(exec.reporter(options.exec.reportOptions));
 });
 
 gulp.task('git-add', function(){
   exec('git add .');
-  // return gulp.src('commitmsg')
-  //   .pipe(exec('git add .', options.exec.options));
 });
 
 gulp.task('git-commit', function(){
