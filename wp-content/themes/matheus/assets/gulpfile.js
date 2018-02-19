@@ -4,7 +4,6 @@ const autoprefixer = require('gulp-autoprefixer'),
       concat       = require('gulp-concat'),
       del          = require('del'),
       fs           = require('fs'),
-      es           = require('event-stream'),
       exec         = require('child_process').exec,
       execute      = require('gulp-exec'),
       gulp         = require('gulp'),
@@ -170,7 +169,7 @@ gulp.task('git-commit', function(){
 // gulp.task('git', function (cb) {
 //   runSequence('git-reset', 'git-status', 'git-branch', 'git-add', 'git-commit');
 // });
-gulp.task('git', gulp.parallel('git-reset','git-status'));
+gulp.task('git', gulp.parallel('git-reset', 'git-branch', 'git-status', 'git-add', 'git-commit'));
 
 gulp.task('concat', function(){
   // var stream = gulp.src(paths.jsConcat)
