@@ -3,10 +3,10 @@ const autoprefixer = require('gulp-autoprefixer'),
       browserSync  = require('browser-sync').create(),
       concat       = require('gulp-concat'),
       del          = require('del'),
-      es           = require('event-stream'),
       fs           = require('fs'),
-      // exec         = require('gulp-exec'),
+      es           = require('event-stream'),
       exec         = require('child_process').exec,
+      execute      = require('gulp-exec'),
       gulp         = require('gulp'),
       gutil        = require('gulp-util'),
       jshint       = require('gulp-jshint'),
@@ -46,17 +46,15 @@ const paths = {
         libs: ['react','react-dom', 'snapsvg', 'plyr', 'jquery'],
         old: '../old'
       },
-      options = {
-        exec: {
-          options : {
-            continueOnError: false,  // default = false, true means don't emit error event
-            pipeStdout:      false,  // default = false, true means stdout is written to file.contents
-          },
-          reportOptions : {
-            err:             true,   // default = true, false means don't write err
-            stderr:          true,   // default = true, false means don't write stderr
-            stdout:          true    // default = true, false means don't write stdout
-          }
+      execOpts = {
+        options : {
+          continueOnError: false,  // default = false, true means don't emit error event
+          pipeStdout:      true,   // default = false, true means stdout is written to file.contents
+        },
+        reportOptions : {
+          err:             true,   // default = true, false means don't write err
+          stderr:          true,   // default = true, false means don't write stderr
+          stdout:          true    // default = true, false means don't write stdout
         }
       };
 
@@ -86,7 +84,17 @@ gulp.task('browser-sync', function() {
     ],browserSyncProps.options);
 });
 
-gulp.task('copy-assets', ['clean-dist'], function(){
+gulp.task('clean-dist', function(cb){
+  return del(['js/libs',
+    'angular/**/*',
+    '!angular/systemJSConfig',
+    '!angular/systemJSConfig/systemjs.config.js',
+    'js/angular',
+    '../css/libs'
+  ], {force: true});
+});
+
+gulp.task('copy-assets', gulp.series('clean-dist'), function(){
   // angular
   gulp.src(paths.angularLibraries, {cwd: "node_modules/**"})
       .pipe(gulp.dest('angular'));
@@ -107,41 +115,42 @@ gulp.task('copy-assets', ['clean-dist'], function(){
   });
 });
 
-gulp.task('clean-dist', function(cb){
-  return del(['js/libs',
-    'angular/**/*',
-    '!angular/systemJSConfig',
-    '!angular/systemJSConfig/systemjs.config.js',
-    'js/angular',
-    '../css/libs'
-  ], {force: true});
-});
-
 gulp.task('git-reset', function(){
-  exec('git reset', function (err, stdout, stderr) {
-    console.log(stdout);
-    console.log(stderr);
-  });
+  return gulp.src('commitmsg')
+    .pipe( execute('git reset'))
+    .pipe( execute.reporter(execOpts.reportOptions));
 });
 
 gulp.task('git-status', function(){
-  exec('git status', function (err, stdout, stderr) {
-    console.log(stdout);
-    console.log(stderr);
-  });
+  return gulp.src('commitmsg')
+    .pipe( execute('git status', execOpts.options))
+    .pipe( execute.reporter(execOpts.reportOptions));
+});
+
+gulp.task('git-branch', function(){
+  return gulp.src('commitmsg')
+    .pipe( execute('git rev-parse --abbrev-ref HEAD', execOpts.options))
+    .pipe( execute.reporter(execOpts.reportOptions))
+    .pipe( prompt.prompt({
+        type:    'input',
+        name:    'branch',
+        message: 'Branch name ...'
+      }, function(res){
+        exec('git checkout ' + res.branch, function(err){
+          if(err)
+            exec('git checkout -b ' + res.branch);
+        });
+      }));
 });
 
 gulp.task('git-add', function(){
-  exec('git add .');
+  return gulp.src('commitmsg')
+    .pipe( execute('git add .'));
 });
 
-gulp.task('git-push', function(){
-  exec('git rev-parse --abbrev-ref HEAD', function(err, stdout){
-    exec('git push origin ' + stdout, function(pushErr, pushStdout, pushStderr){
-      console.log(pushStdout);
-      console.log(pushStderr);
-    });
-  });
+gulp.task('git-push', function(cb){
+  return gulp.src('commitmsg')
+    .pipe( execute.reporter(execOpts.reportOptions));
 });
 
 gulp.task('git-commit', function(){
@@ -158,9 +167,10 @@ gulp.task('git-commit', function(){
       }));
 });
 
-gulp.task('git', function (cb) {
-  runSequence('git-reset', 'git-status', 'git-add', 'git-commit', 'git-push');
-});
+// gulp.task('git', function (cb) {
+//   runSequence('git-reset', 'git-status', 'git-branch', 'git-add', 'git-commit');
+// });
+gulp.task('git', gulp.parallel('git-reset','git-status'));
 
 gulp.task('concat', function(){
   // var stream = gulp.src(paths.jsConcat)
@@ -264,5 +274,5 @@ gulp.task('watch', function() {
   gulp.watch(['scss/*.scss','scss/partials/*.scss'], ['sass']);
 });
 
-gulp.task('compile', ['babel','ts','sass']);
-gulp.task('default', ['browser-sync','babel','ts','sass','watch']);
+gulp.task('compile', gulp.series('babel','ts','sass'));
+gulp.task('default', gulp.series('browser-sync','babel','ts','sass','watch'));
