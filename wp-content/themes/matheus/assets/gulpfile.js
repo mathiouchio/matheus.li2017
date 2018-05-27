@@ -9,7 +9,7 @@ const autoprefixer = require('gulp-autoprefixer'),
       gulp         = require('gulp'),
       gutil        = require('gulp-util'),
       jshint       = require('gulp-jshint'),
-      livereload   = require('gulp-livereload'),
+      // livereload   = require('gulp-livereload'),
       minify       = require('gulp-minify'),
       rename       = require('gulp-rename'),
       runSequence  = require('run-sequence'),
@@ -31,8 +31,7 @@ const paths = {
         sass:     'scss/*.scss',
         jsConcat: ['js/libs/*.js',
           'js/main.js',
-          'js/rekt.js',
-          'js/wipeskript.js'],
+          'js/rekt.js'],
         angularLibraries: [
           '@angular/**/bundles/**',
           'angular-in-memory-web-api/bundles/in-memory-web-api.umd.js',
@@ -60,11 +59,11 @@ const paths = {
 
 const browserSyncProps = (function(){
   return {
-    bsPort: gutil.env.port ? gutil.env.port : 8080,
+    bsPort: gutil.env.port ? gutil.env.port : 8087,
     get options(){
       return {
         injectChanges: true,
-        proxy: 'localhost:'+this.bsPort+'/matheus.li',
+        proxy: 'localhost:'+this.bsPort,
         port: 3000,
         notify: false,
         ui: false,
@@ -93,7 +92,7 @@ gulp.task('clean-dist', function(cb){
   ], {force: true});
 });
 
-gulp.task('copy-assets', gulp.series('clean-dist'), function(){
+gulp.task('copy-assets', ['clean-dist'], function(){
   // angular
   gulp.src(paths.angularLibraries, {cwd: "node_modules/**"})
       .pipe(gulp.dest('angular'));
@@ -169,34 +168,25 @@ gulp.task('git-commit', function(){
 // gulp.task('git', function (cb) {
 //   runSequence('git-reset', 'git-status', 'git-branch', 'git-add', 'git-commit');
 // });
-gulp.task('git', gulp.parallel('git-reset', 'git-branch', 'git-status', 'git-add', 'git-commit'));
+gulp.task('git', ['git-reset', 'git-branch', 'git-status', 'git-add', 'git-commit']);
 
 gulp.task('concat', function(){
-  // var stream = gulp.src(paths.jsConcat)
-  //   .pipe( gutil.env.prod ? gutil.noop() : sourcemaps.init())
-  //   .pipe( concat('scripts.js'))
-  //   .pipe( uglify({ preserveComments: 'license' }))
-  //   .pipe( rename({ extname: '.min.js' }))
-  //   .pipe( gutil.env.prod ? gutil.noop() : sourcemaps.write())
-  //   .pipe( gulp.dest(paths.js))
-  //   .pipe( livereload());
-
   var stream = gulp.src(paths.jsConcat)
-    .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.init()) // @TODO: doesn't work
-    .pipe(concat('scripts.js'))
-    .pipe(minify({
-      ext:{
-        min: '.min.js'
-      },
-      output: {
-        beautify: gutil.env.prod ? false : true,
-        comments: gutil.env.prod ? false : true,
-      }
-    }))
-    .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.write()) // @TODO: doesn't work
+    // .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.init()) // @TODO: doesn't work
+    .pipe(concat('scripts.min.js'))
+    // .pipe(minify({
+    //   ext:{
+    //     min: '.min.js'
+    //   },
+    //   output: {
+    //     beautify: gutil.env.prod ? false : true,
+    //     comments: gutil.env.prod ? false : true,
+    //   }
+    // }))
+    // .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.write()) // @TODO: doesn't work
     .pipe(gulp.dest(paths.jsMin))
-    .pipe(!gutil.env.bs ? livereload() : gutil.noop())
-    .pipe(gutil.env.bs ? browserSync.stream() : gutil.noop());
+    // .pipe(!gutil.env.bs ? livereload() : gutil.noop())
+    .pipe(browserSync.stream());
 
   stream.on('end', function() {
     del('../js/scripts.js', {force: true});
@@ -208,8 +198,12 @@ gulp.task('babel', function() {
   gulp.src(paths.jsx)
       .pipe(babel({
           plugins: ['transform-react-jsx'],
-          presets: ['es2015','react']
+          presets: ['env','react']
       }))
+      .on('error', function(e) {
+        console.log('>>> ERROR', e);
+        this.emit('end');
+      })
       .pipe(gulp.dest('js'));
 });
 
@@ -229,8 +223,8 @@ gulp.task('sass', function() {
     .pipe(autoprefixer({remove: true}))
     .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.write())
     .pipe(gulp.dest(paths.cssMin))
-    .pipe(!gutil.env.bs ? livereload() : gutil.noop())
-    .pipe(gutil.env.bs ? browserSync.stream() : gutil.noop());
+    // .pipe(!gutil.env.bs ? livereload() : gutil.noop())
+    .pipe(browserSync.stream());
 });
 
 gulp.task('twentythirteen', function(){
@@ -242,25 +236,25 @@ gulp.task('twentythirteen', function(){
       }).on('error', sass.logError))
     .pipe(autoprefixer({remove: true}))
     .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.write())
-    .pipe(gulp.dest(paths.old+'/css'))
-    .pipe(!gutil.env.bs ? livereload() : gutil.noop());
+    .pipe(gulp.dest(paths.old+'/css'));
+    // .pipe(!gutil.env.bs ? livereload() : gutil.noop());
 });
 
 gulp.task('watch-old', function() {
-  if (!gutil.env.bs)
-    livereload.listen();
+  // if (!gutil.env.bs)
+  //   livereload.listen();
   gulp.watch(paths.old+'/scss/*', ['twentythirteen']);
 });
 
 gulp.task('watch', function() {
-  if (!gutil.env.bs) livereload.listen();
+  // if (!gutil.env.bs) livereload.listen();
 
   // detect php change
   gulp.watch(paths.php)
       .on('change', function(event){
         gulp.src(event.path)
-            .pipe(!gutil.env.bs ? livereload() : gutil.noop())
-            .pipe(gutil.env.bs ? browserSync.stream() : gutil.noop());
+            // .pipe(!gutil.env.bs ? livereload() : gutil.noop())
+            .pipe(browserSync.stream());
   });
 
   // detect when to babel
@@ -273,5 +267,5 @@ gulp.task('watch', function() {
   gulp.watch(['scss/*.scss','scss/partials/*.scss'], ['sass']);
 });
 
-gulp.task('compile', gulp.series('babel','ts','sass'));
-gulp.task('default', gulp.series('browser-sync','babel','ts','sass','watch'));
+gulp.task('compile', ['babel','ts','sass']);
+gulp.task('default', ['browser-sync','babel','sass','watch']);

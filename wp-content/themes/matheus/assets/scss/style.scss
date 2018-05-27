@@ -268,50 +268,6 @@ h2 {
     margin-left: 5px;
   }
 }
-.slider {
-  .slide,
-  li {
-    position: absolute;
-    overflow: hidden;
-    width: 100%;
-    height: 100%;
-    display: none;
-    &[data-show],
-    &[data-transitioning] {
-      display: block;
-    }
-    &[data-show] {
-      z-index: 3;
-      img {
-        animation: slideenter 400ms ease-in;
-      }
-    }
-    &[data-transitioning] {
-      z-index: 2;
-    }
-    &.portrait {
-      overflow-x: hidden;
-      overflow-y: scroll;
-
-      img {
-        width: 100%;
-        height: auto;
-        object-fit: initial;
-      }
-    }
-    img {
-      display: block;
-      object-fit: cover;
-      width: 100%;
-      height: 100%;
-      &.portrait {
-        width: 100%;
-        height: auto;
-        object-fit: initial;
-      }
-    }
-  }
-}
 #popup {
   display: none;
   position: fixed;
@@ -516,7 +472,7 @@ main {
     }
   }
 }
-#blog {
+#blogs {
   .slider.noslide {
     @extend %transition;
     max-height: 100vh;
@@ -547,6 +503,7 @@ main {
     position: relative;
     top: 45vh;
     padding-bottom: 45vh;
+    left: 0;
     ul {
       overflow: hidden;
       padding-bottom: 60px;
@@ -558,9 +515,10 @@ main {
       width: 80%;
     }
   }
-  .slider li {
+  li {
     @extend %transition;
     width: 100px;
+    height: 160px;
     text-align: center;
     margin: 0 20px -50px 0;
     position: relative;
@@ -574,6 +532,7 @@ main {
     }
     a {
       font-size: 15px;
+      display: block;
     }
     h2 {
       overflow: hidden;
@@ -592,6 +551,7 @@ main {
     }
   }
 }
+#rekt2,
 #projects {
   margin-left: 1px;
   height: auto;
@@ -667,29 +627,70 @@ section,
   top: 0;
 }
 .slider {
+  .slide,
+  li {
+    position: relative;
+    // overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    &[data-show],
+    &[data-transitioning] {
+      display: block;
+    }
+    &[data-show] {
+      z-index: 3;
+      img {
+        animation: slideenter 400ms ease-in;
+      }
+    }
+    &[data-transitioning] {
+      z-index: 2;
+    }
+    &.portrait {
+      overflow-x: hidden;
+      overflow-y: scroll;
+
+      img {
+        width: 100%;
+        height: auto;
+        object-fit: initial;
+      }
+    }
+    img {
+      display: block;
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      &.portrait {
+        width: 100%;
+        height: auto;
+        object-fit: initial;
+      }
+    }
+  }
   &.noslide {
     min-height: 100vh;
     height: auto;
     .slides {
-      position: initial;
-      > div {
-        position: relative;
-        display: block;
-      }
+      // position: initial;
+      // > div {
+      //   position: relative;
+      //   display: block;
+      // }
     }
   }
   .slides {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    overflow: hidden;
-    top: 0;
-    left: 0;
-    > div {
-      @extend %fullscreen;
-      position: absolute;
-      display: none;
-    }
+    // overflow: hidden;
+    // height: 100%;
+    // width: 100%;
+    // position: absolute;
+    // top: 0;
+    // left: 0;
+    // > div {
+    //   @extend %fullscreen;
+    //   position: absolute;
+    //   display: none;
+    // }
     > [data-show] { 
       animation: slideenter 400ms ease-in;
       display: block;
@@ -816,7 +817,7 @@ section,
     width: 50%;
     left: 32%;
   }
-  main #blog .post {
+  main #blogs .post {
     width: 68px;
   }
 }

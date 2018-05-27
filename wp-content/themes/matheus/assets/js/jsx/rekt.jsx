@@ -125,6 +125,125 @@ var REST = {
   }
 };
 
+var rekt2 = {
+  component: {
+    Blogs: class Blogs extends React.Component {
+      handleClick(e) {
+        // console.log(e);
+        // console.log('this is:', this);
+        e.stopPropagation();
+        e.preventDefault();
+      };
+      loop(handleClick) {
+        console.log(this.handleClick);
+        let Blog = [],
+            featured,
+            thumb,
+            thumbURL;
+        this.props.posts.map( (attr, index) => {
+          featured = attr.better_featured_image
+          if(featured) {
+            thumb = featured.media_details.sizes.thumbnail;
+            if(thumb) {
+              thumbURL = thumb.source_url;
+              Blog.push(
+                <li key={attr.id}>
+                  <div className="post">
+                    <a href={attr.link} onClick={this.handleClick}>
+                      <div className="thumb">
+                        <svg x="0px" y="0px" viewBox="0 0 180 200">
+                          <g fillRule="evenodd" clipRule="evenodd">
+                            <defs>
+                              <polygon id={'SVGID_thumb_'+attr.id+'_'} points="57,199,1,72,113,1,163,30,161,113"></polygon>
+                            </defs>
+                            <clipPath id={'SVGID_thumb_a_'+attr.id+'_'}>
+                              <use xlinkHref={'#SVGID_thumb_'+attr.id+'_'} overflow="visible"></use>
+                            </clipPath>
+                            <g clipPath={'url(#SVGID_thumb_a_'+attr.id+'_)'}>
+                              <image overflow="visible" width="300" height="300" xlinkHref={thumbURL} transform="matrix(0.6666666666666666,0,0,0.6666666666666666,-10,0)"></image>
+                            </g>
+                          </g>
+                        </svg>
+                      </div>
+                    </a>
+                  </div>
+                </li>
+              );
+            }
+          }
+        });
+        return Blog;
+      };
+      render() {
+        return (
+          <div className="slides">
+            <div className="slide">
+              <div className="wrapper">
+                <ul>{this.loop(this.handleClick)}</ul>
+              </div>
+            </div>
+          </div>
+        );
+      };
+    },
+    Projects: class Projects extends React.Component {
+      handleClick(e) {
+        console.log(e);
+        console.log('this is:', this);
+        e.stopPropagation();
+        e.preventDefault();
+      };
+      danger(raw) {
+        return {__html: raw};
+      };
+      link(url) {
+        return (
+          <a href={url}>
+            <svg x="0px" y="0px" viewBox="0 0 40 40">
+              <line x1="25.3" y1="20" x2="14.7" y2="20"></line>
+              <line x1="20" y1="14.7" x2="20" y2="25.3"></line>
+              <circle fill="none" cx="20" cy="20" r="12"></circle>
+            </svg>
+            <span className="hero smler">Learn more</span>
+          </a>
+        );
+      };
+      loop() {
+        let Project = [];
+        this.props.posts.map( (attr, index) => {
+          Project.push(
+            <li className="slide" key={attr.id}>
+              <div className="wrapper">
+                <h1>{attr.title.rendered}</h1>
+                <div className="copy" dangerouslySetInnerHTML={this.danger(attr.content.rendered)} />
+                <div className="expand" onClick={this.handleClick}>{this.link(attr.link)}</div>
+              </div>
+            </li>
+          );
+        });
+        return Project;
+      };
+      render() {
+        return (
+          <ul className="slides">{this.loop(this.handleClick)}</ul>
+        );
+      };
+    }
+  },
+  render: function(url, selector) {
+    if(url && selector) {
+      REST.get(url)
+          .done( (data) => {
+            let Component = this.component[selector];
+            ReactDOM.render(
+              <Component posts={data} />,
+              document.getElementById(selector.toLowerCase())
+            );
+          });
+    }
+  }
+};
+
 var rekt = {
   render: function(id, url){
     var Component = this.component[id](url);
@@ -907,10 +1026,16 @@ var contact = {
 };
 
 (function(){
-  route.init();
-  popup.init();
-  scrollspy.init();
-  rekt.render('projects', wplocal.basePathURL+'/wp-json/wp/v2/portfolio');
-  rekt.render('blog',     wplocal.basePathURL+'/wp-json/wp/v2/posts?per_page=100');
-  contact.init();
+  // route.init();
+  // popup.init();
+  // scrollspy.init();
+  // rekt.render('projects', wplocal.basePathURL+'/wp-json/wp/v2/portfolio');
+  // rekt.render('blog',     wplocal.basePathURL+'/wp-json/wp/v2/posts?per_page=100');
+  // contact.init();
+  window.onload = () => {
+    rekt2.render(wplocal.basePathURL+'/wp-json/wp/v2/portfolio', 'Projects');
+    rekt2.render(wplocal.basePathURL+'/wp-json/wp/v2/posts?per_page=100', 'Blogs');
+  };
 })();
+
+

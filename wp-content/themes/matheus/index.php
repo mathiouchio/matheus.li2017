@@ -24,7 +24,7 @@ $template_url = get_bloginfo( 'template_directory' );
 </nav>
 
 <main>
-  <section id="logo">
+  <section id="logo" hidden>
     <div class="wrapper">
       <svg x="0px" y="0px" viewBox="0 0 180 200" enable-background="new 0 0 180 200">
         <g>
@@ -79,7 +79,7 @@ $template_url = get_bloginfo( 'template_directory' );
       <span>scroll down to navigate</span>
     </div>
   </section>
-  <section id="about" data="the history">
+  <section id="about" data="the history" hidden>
     <div class="slider noslide">
     <div class="slides">
     <div class="slide">
@@ -97,8 +97,8 @@ $template_url = get_bloginfo( 'template_directory' );
     </div>
   </section>
   <section id="projects" class="slider noslide"></section>
-  <section id="blog" class="slider noslide"></section>
-  <section id="contact"></section>
+  <section id="blogs" class="slider noslide"></section>
+  <section id="contact" hidden></section>
 
 <?php
 get_footer();
