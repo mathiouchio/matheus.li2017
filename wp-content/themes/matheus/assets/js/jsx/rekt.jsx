@@ -126,17 +126,20 @@ var REST = {
 };
 
 var app = {
-  el: {
-    $popup: null
-  },
   requests: {
     Projects: 'https://matheus.li/wp-json/wp/v2/portfolio',
     Blogs: 'https://matheus.li/wp-json/wp/v2/posts',
   },
+  popup: {
+    el: null,
+    init: function() {
+      this.el = document.createElement('div');
+      this.el.id = 'popup';
+      document.body.appendChild(this.el);
+    }
+  },
   init: function(){
-    this.el = document.createElement('div');
-    this.el.id = 'popup';
-    document.body.appendChild(this.el);
+    this.popup.init();
 
     for (var key in this.requests) {
       if (this.requests.hasOwnProperty(key)) {
@@ -171,43 +174,89 @@ var app = {
         this.state = {
           portrait: (initFormat) ? initFormat : true,
           currentslide: 1,
-          previouslide: 0,
+          previouslide: 1,
           fetching: false,
           totalslide: props.data.length,
           muted: true,
           datatype: props.data.format
         };
+
+        this.actions = {
+          close: () => {
+            ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(this).parentNode);
+          },
+          next: () => {
+            let nextSlide = this.state.currentslide;
+                nextSlide++;
+            if(this.state.currentslide < this.state.totalslide) {
+              this.setState({
+                previouslide: this.state.currentslide,
+                currentslide: nextSlide
+              });
+            }
+          },
+          prev: () => {
+            let nextSlide = this.state.currentslide;
+                nextSlide--;
+            if(this.state.currentslide > 1) {
+              this.setState({
+                previouslide: this.state.currentslide,
+                currentslide: nextSlide
+              });
+            }
+          },
+          mute: () => {
+
+          },
+          fullscreen: () => {
+
+          }
+        }
+
+        this.markups = {
+          gallery: () => {
+            let Slides = [];
+            this.props.data.map( (attr, index) => {
+              let currentOffset = this.state.currentslide,
+                  previousOffset = this.state.previouslide;
+                  currentOffset--;
+                  previousOffset--;
+              Slides.push(
+                <li className="slide"
+                    key={attr.id}
+                    data-show={index==currentOffset ? '' : null}
+                    data-transitioning={index==previousOffset ? "" : null}>
+                  <img src={attr.source_url} />
+                </li>
+              );
+            });
+            return Slides;
+          },
+          video: () => {
+            return null;
+          },
+          article: () => {
+            return null;
+          }
+        }
       }
       componentDidMount() {
-        app.el.dataset.active = '';
+        app.popup.el.dataset.active = '';
       }
       componentWillUnmount() {
-        delete app.el.dataset.active;
+        delete app.popup.el.dataset.active;
       }
-      destroy() {
-        ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(this).parentNode);
-      }
-      gallery() {
-        let Slides = [];
-        this.props.data.map( (attr, index) => {
-          Slides.push(
-            <li className="slide" key={attr.id}>
-              <img src={attr.source_url} />
-            </li>
-          );
-        });
-        return Slides;
-      }
-      video() {
-        return null;
-      }
-      article() {
-        return null;
+      handleClick(e) {
+        let action = e.target.dataset.control;
+        if (action)
+          this.actions[action]();
       }
       Controller() {
+        let currentOffset = this.state.currentslide;
+            currentOffset++;
         return (
-          <div className="controller" data-video={this.state.datatype=='video' ? '' : null} data-single={this.state.totalslide > 1 ? '' : null}>
-            <span data-control="close" onClick={(e) => this.destroy(e)}>close</span>
+          <div className="controller" data-video={this.state.datatype=='video' ? '' : null} data-single={this.state.totalslide < 1 ? '' : null} onClick={(e) => this.handleClick(e)}>
+            <span data-control="close">close</span>
             <i>{this.state.currentslide}</i>
             <divider> / </divider>
             <c>{this.state.totalslide}</c>
@@ -221,17 +270,8 @@ var app = {
         );
       }
       render() {
-        let Slide;
-        switch(this.props.data.format) {
-          case 'gallery':
-            Slide = this.gallery();
-            break;
-          case 'video':
-            Slide = this.video();
-            break;
-          default:
-            Slide = this.article();
-        }
+        let format = this.props.data.format,
+            Slide  = this.markups[format](format);
         return (
           <ul>
             {Slide}
@@ -1132,7 +1172,6 @@ var contact = {
 
 (function(){
   route.init();
-  popup.init();
   scrollspy.init();
   contact.init();
   app.init();

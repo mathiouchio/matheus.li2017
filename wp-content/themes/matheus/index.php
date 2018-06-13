@@ -79,7 +79,7 @@ $template_url = get_bloginfo( 'template_directory' );
       <span>scroll down to navigate</span>
     </div>
   </section>
-  <section id="about" data="the history" hidden>
+  <section id="about" data="the history">
     <div class="slider noslide">
     <div class="slides">
     <div class="slide">
