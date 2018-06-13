@@ -125,22 +125,135 @@ var REST = {
   }
 };
 
-var rekt2 = {
+var app = {
+  el: {
+    $popup: null
+  },
+  requests: {
+    Projects: 'https://matheus.li/wp-json/wp/v2/portfolio',
+    Blogs: 'https://matheus.li/wp-json/wp/v2/posts',
+  },
+  init: function(){
+    this.el = document.createElement('div');
+    this.el.id = 'popup';
+    document.body.appendChild(this.el);
+
+    for (var key in this.requests) {
+      if (this.requests.hasOwnProperty(key)) {
+        let temp = key;
+        app.fetch(this.requests[key])
+           .then( data => {
+             let Component = this.component[temp];
+             ReactDOM.render(
+               <Component data={data}/>,
+               document.getElementById(temp.toLowerCase())
+             );
+           });
+      }
+    }
+  },
+  fetch: (url) => {
+    return fetch(url).then(response => response.json());
+  },
+  summon: function(data) {
+    let Popup = this.component.Popup;
+    ReactDOM.render(
+      <Popup data={data} />,
+      document.getElementById('popup')
+    );
+  },
   component: {
+    Popup: class Popup extends React.Component {
+      constructor(props) {
+        super(props);
+        let slideAttr = (props.data[0] && props.data[0].media_details) ? props.data[0].media_details : null,
+            initFormat = (slideAttr) ? slideAttr.height > slideAttr.width : null;
+        this.state = {
+          portrait: (initFormat) ? initFormat : true,
+          currentslide: 1,
+          previouslide: 0,
+          fetching: false,
+          totalslide: props.data.length,
+          muted: true,
+          datatype: props.data.format
+        };
+      }
+      componentDidMount() {
+        app.el.dataset.active = '';
+      }
+      componentWillUnmount() {
+        delete app.el.dataset.active;
+      }
+      destroy() {
+        ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(this).parentNode);
+      }
+      gallery() {
+        let Slides = [];
+        this.props.data.map( (attr, index) => {
+          Slides.push(
+            <li className="slide" key={attr.id}>
+              <img src={attr.source_url} />
+            </li>
+          );
+        });
+        return Slides;
+      }
+      video() {
+        return null;
+      }
+      article() {
+        return null;
+      }
+      Controller() {
+        return (
+          <div className="controller" data-video={this.state.datatype=='video' ? '' : null} data-single={this.state.totalslide > 1 ? '' : null}>
+            <span data-control="close" onClick={(e) => this.destroy(e)}>close</span>
+            <i>{this.state.currentslide}</i>
+            <divider> / </divider>
+            <c>{this.state.totalslide}</c>
+            <t>{this.state.datatype}</t>
+            <span data-control="prev">prev</span>
+            <span data-control="next">next</span>
+            <mute data-control="mute">{(this.state.muted)?'unmute':'mute'}</mute>
+            <fs data-control="fullscreen">fullscreen</fs>
+            <scroll data-hidden={!this.state.portrait ? '' : null}>scroll</scroll>
+          </div>
+        );
+      }
+      render() {
+        let Slide;
+        switch(this.props.data.format) {
+          case 'gallery':
+            Slide = this.gallery();
+            break;
+          case 'video':
+            Slide = this.video();
+            break;
+          default:
+            Slide = this.article();
+        }
+        return (
+          <ul>
+            {Slide}
+            {this.Controller()}
+          </ul>
+        );
+      }
+    },
     Blogs: class Blogs extends React.Component {
+      constructor(props) {
+        super(props);
+      }
       handleClick(e) {
-        // console.log(e);
-        // console.log('this is:', this);
         e.stopPropagation();
         e.preventDefault();
       };
       loop(handleClick) {
-        console.log(this.handleClick);
         let Blog = [],
             featured,
             thumb,
             thumbURL;
-        this.props.posts.map( (attr, index) => {
+        this.props.data.map( (attr, index) => {
           featured = attr.better_featured_image
           if(featured) {
             thumb = featured.media_details.sizes.thumbnail;
@@ -187,9 +300,15 @@ var rekt2 = {
       };
     },
     Projects: class Projects extends React.Component {
-      handleClick(e) {
-        console.log(e);
-        console.log('this is:', this);
+      constructor(props) {
+        super(props);
+      }
+      handleClick(e, target) {
+        app.fetch(wplocal.basePathURL+'/wp-json/wp/v2/media?parent='+target.id)
+           .then( data => {
+             data.format = target.format;
+             app.summon(data);
+           });
         e.stopPropagation();
         e.preventDefault();
       };
@@ -210,13 +329,13 @@ var rekt2 = {
       };
       loop() {
         let Project = [];
-        this.props.posts.map( (attr, index) => {
+        this.props.data.map( (attr, index) => {
           Project.push(
             <li className="slide" key={attr.id}>
               <div className="wrapper">
                 <h1>{attr.title.rendered}</h1>
                 <div className="copy" dangerouslySetInnerHTML={this.danger(attr.content.rendered)} />
-                <div className="expand" onClick={this.handleClick}>{this.link(attr.link)}</div>
+                <div className="expand" onClick={(e) => this.handleClick(e, attr)}>{this.link(attr.link)}</div>
               </div>
             </li>
           );
@@ -224,23 +343,9 @@ var rekt2 = {
         return Project;
       };
       render() {
-        return (
-          <ul className="slides">{this.loop(this.handleClick)}</ul>
-        );
+        return <ul className="slides">{this.loop(this.handleClick)}</ul>;
       };
-    }
-  },
-  render: function(url, selector) {
-    if(url && selector) {
-      REST.get(url)
-          .done( (data) => {
-            let Component = this.component[selector];
-            ReactDOM.render(
-              <Component posts={data} />,
-              document.getElementById(selector.toLowerCase())
-            );
-          });
-    }
+    },
   }
 };
 
@@ -1026,16 +1131,11 @@ var contact = {
 };
 
 (function(){
-  // route.init();
-  // popup.init();
-  // scrollspy.init();
-  // rekt.render('projects', wplocal.basePathURL+'/wp-json/wp/v2/portfolio');
-  // rekt.render('blog',     wplocal.basePathURL+'/wp-json/wp/v2/posts?per_page=100');
-  // contact.init();
-  window.onload = () => {
-    rekt2.render(wplocal.basePathURL+'/wp-json/wp/v2/portfolio', 'Projects');
-    rekt2.render(wplocal.basePathURL+'/wp-json/wp/v2/posts?per_page=100', 'Blogs');
-  };
+  route.init();
+  popup.init();
+  scrollspy.init();
+  contact.init();
+  app.init();
 })();
 
 

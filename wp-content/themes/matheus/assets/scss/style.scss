@@ -272,6 +272,7 @@ h2 {
   display: none;
   position: fixed;
   z-index: 10;
+  &[data-active],
   &[data-active="true"] {
     display: block;
   }
@@ -551,7 +552,7 @@ main {
     }
   }
 }
-#rekt2,
+#🌶,
 #projects {
   margin-left: 1px;
   height: auto;
@@ -810,6 +811,7 @@ section,
 #notice {
   position: fixed;
   top: 0;
+  display: none;
 }
 @media (max-width: 768px) {
   .wrapper,
@@ -857,30 +859,30 @@ section,
     display: none;
   }
 }
-@media (orientation: portrait) {
-  nav {
-    display: none;
-  }
-  #spinner,
-  aside,
-  #popup,
-  section,
-  #notice {
-    width: 114.5vw;
-    height: 100vh;
-    left: -14.5vw;
-    top: 0;
-  }
-  .wrapper,
-  #notice p {
-    width: 40%;
-    left: 45%;
-  }
-  body,
-  html {
-    overflow: hidden;
-  }
-  main section {
-    opacity: .05;
-  }
-}
+// @media (orientation: portrait) {
+//   nav {
+//     display: none;
+//   }
+//   #spinner,
+//   aside,
+//   #popup,
+//   section,
+//   #notice {
+//     width: 114.5vw;
+//     height: 100vh;
+//     left: -14.5vw;
+//     top: 0;
+//   }
+//   .wrapper,
+//   #notice p {
+//     width: 40%;
+//     left: 45%;
+//   }
+//   body,
+//   html {
+//     overflow: hidden;
+//   }
+//   main section {
+//     opacity: .05;
+//   }
+// }
