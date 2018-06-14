@@ -189,10 +189,10 @@ var app = {
       constructor(props) {
         super(props);
         let slideAttr = (props.data[0] && props.data[0].media_details) ? props.data[0].media_details : null,
-            initFormat = (slideAttr) ? slideAttr.height > slideAttr.width : null;
+            initFormat = (slideAttr) ? slideAttr.height>slideAttr.width : null;
 
         this.state = {
-          portrait: (initFormat) ? initFormat : true,
+          portrait: (initFormat) ? !initFormat : true,
           currentslide: 1,
           previouslide: 1,
           fetching: false,
@@ -253,7 +253,11 @@ var app = {
                     ref={attr.id}
                     data-show={index==currentOffset ? '' : null}
                     data-transitioning={index==previousOffset ? "" : null}>
-                  <img src={attr.source_url} />
+                  <img src={attr.source_url}
+                       width={attr.media_details.width}
+                       height={attr.media_details.height}
+                       srcSet={imgSrcset}
+                       sizes={imgSizes} />
                 </li>
               );
             });
@@ -332,6 +336,13 @@ var app = {
       componentWillUnmount() {
         delete app.popup.el.dataset.active;
       }
+      shouldComponentUpdate(nextProps, nextState) {
+        let offsetSlidePosition = nextState.currentslide;
+            offsetSlidePosition--;
+        let nextSlideDetail = this.props.data[offsetSlidePosition].media_details;;
+        nextState.portrait = !(nextSlideDetail.height>nextSlideDetail.width);
+        return true;
+      }
       handleClick(e) {
         let action = e.target.dataset.control;
         if (action)
@@ -351,7 +362,7 @@ var app = {
             <span data-control="next">next</span>
             <mute data-control="mute">{(this.state.muted)?'unmute':'mute'}</mute>
             <fs data-control="fullscreen">fullscreen</fs>
-            <scroll data-hidden={!this.state.portrait ? '' : null}>scroll</scroll>
+            <scroll data-hidden={this.state.portrait ? '' : null}>scroll</scroll>
           </div>
         );
       }
@@ -717,19 +728,6 @@ var rekt = {
     }
   }
 };
-
-// var responsive = {
-//   init: function(){
-//     console.log('initted');
-//     window.onresize = function(event) {
-//       console.log('hey');
-//       popup.plyr.mathematics();
-//     };
-//   },
-//   uninit: function(){
-//     window.onresize = null;
-//   }
-// };
 
 var popup = {
   plyr: {
