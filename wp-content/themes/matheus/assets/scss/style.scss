@@ -630,8 +630,8 @@ section,
 .slider {
   .slide,
   li {
-    position: relative;
-    // overflow: hidden;
+    position: absolute;
+    overflow: hidden;
     width: 100vw;
     height: 100vh;
     &[data-show],
@@ -672,12 +672,13 @@ section,
   &.noslide {
     min-height: 100vh;
     height: auto;
-    .slides {
-      // position: initial;
-      // > div {
-      //   position: relative;
-      //   display: block;
-      // }
+    .slides,
+    li {
+      position: initial;
+      > div {
+        position: relative;
+        display: block;
+      }
     }
   }
   .slides {

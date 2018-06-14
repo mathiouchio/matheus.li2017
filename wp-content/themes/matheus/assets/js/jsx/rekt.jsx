@@ -140,7 +140,6 @@ var app = {
   },
   init: function(){
     this.popup.init();
-
     for (var key in this.requests) {
       if (this.requests.hasOwnProperty(key)) {
         let temp = key;
@@ -158,12 +157,32 @@ var app = {
   fetch: (url) => {
     return fetch(url).then(response => response.json());
   },
-  summon: function(data) {
-    let Popup = this.component.Popup;
-    ReactDOM.render(
-      <Popup data={data} />,
-      document.getElementById('popup')
-    );
+  summon: {
+    fetch: {
+      gallery: (target, cb) => {
+        app.fetch(wplocal.basePathURL+'/wp-json/wp/v2/media?parent='+target.id)
+           .then( data => {
+             data.format = target.format;
+             cb(data);
+           });
+      },
+      video: (target, cb) => {
+        cb(target);
+      },
+      standard: (data, cb) => {
+        cb(data);
+      }
+    },
+    init: function(data){
+      this.fetch[data.format](data, this.render);
+    },
+    render: (data) => {
+      let Popup = app.component.Popup;
+      ReactDOM.render(
+        <Popup data={data} />,
+        document.getElementById('popup')
+      );
+    }
   },
   component: {
     Popup: class Popup extends React.Component {
@@ -171,6 +190,7 @@ var app = {
         super(props);
         let slideAttr = (props.data[0] && props.data[0].media_details) ? props.data[0].media_details : null,
             initFormat = (slideAttr) ? slideAttr.height > slideAttr.width : null;
+
         this.state = {
           portrait: (initFormat) ? initFormat : true,
           currentslide: 1,
@@ -218,12 +238,19 @@ var app = {
             let Slides = [];
             this.props.data.map( (attr, index) => {
               let currentOffset = this.state.currentslide,
-                  previousOffset = this.state.previouslide;
+                  previousOffset = this.state.previouslide,
+                  slideClassName = 'slide',
+                  srcsetSizes = this.imgAttr(attr.media_details),
+                  imgSizes    = srcsetSizes.sizes.join(', '),
+                  imgSrcset   = srcsetSizes.srcset.join(', ');
                   currentOffset--;
                   previousOffset--;
+                  slideClassName += attr.media_details.height>attr.media_details.width ? ' portrait' : '';
+
               Slides.push(
-                <li className="slide"
+                <li className={slideClassName}
                     key={attr.id}
+                    ref={attr.id}
                     data-show={index==currentOffset ? '' : null}
                     data-transitioning={index==previousOffset ? "" : null}>
                   <img src={attr.source_url} />
@@ -233,13 +260,72 @@ var app = {
             return Slides;
           },
           video: () => {
-            return null;
+            return (
+              <li className="article portrait">
+                <div className="wrapper">
+                  Hello, world!
+                </div>
+              </li>
+            );
           },
-          article: () => {
-            return null;
+          standard: () => {
+            return (
+              <li className="article portrait">
+                <div className="wrapper" dangerouslySetInnerHTML={this.danger(this.props.data.content.rendered)} />
+              </li>
+            );
           }
         }
       }
+      imgAttr(obj) {
+        let imagesets = {
+              sizes:       ['gallery-medium-large','gallery-medium','gallery-small'],
+              breakpoints: [1440,768,320]
+            },
+            output = { srcset:[], sizes:[] },
+            once   = true;
+
+        /** Build srcset
+         *  Collecting assets
+         *  srcset="http://matheus.li/wp-content/uploads/2017/08/disney-jr-768x914.jpg 768w,
+                    http://matheus.li/wp-content/uploads/2017/08/disney-jr-1400x1666.jpg 1400w"
+         *
+         ** Build sizes
+         *  setting attribute for viewport sizes
+         *  sizes="(min-width: 1400px) 2560px,
+                   (min-width: 768px) 1400px,
+                   (min-width: 320px) 768px, 100vw"
+         *
+         ** Saving sizes for later, @TODO: can't get it to work,
+         *  Chrome is already smart enough to switch with 100vw
+         */
+
+        // looking for imagesets.sizes matched key strings
+        for (var key in obj.sizes) {
+          // if matches, index is >= 0
+          let index = imagesets.sizes.indexOf(key);
+          if (index>=0){
+            let srcsetOut = `${obj.sizes[key].source_url} ${obj.sizes[key].width}w`;
+
+            // determine the biggest size
+            if(obj.sizes.full.width > obj.sizes[key].width && once == true){
+              var biggestSrcset = `${obj.sizes.full.source_url} ${obj.sizes.full.width}w`;
+              once = false;
+            }
+
+            // populate
+            output['srcset'].push(srcsetOut);
+          }
+        }
+        // populate the biggest srcset attr
+        output['srcset'].push(biggestSrcset);
+        output.srcset.reverse();
+        output.sizes = ['100vw'];
+        return output;
+      }
+      danger(raw) {
+        return {__html: raw};
+      };
       componentDidMount() {
         app.popup.el.dataset.active = '';
       }
@@ -255,7 +341,7 @@ var app = {
         let currentOffset = this.state.currentslide;
             currentOffset++;
         return (
-          <div className="controller" data-video={this.state.datatype=='video' ? '' : null} data-single={this.state.totalslide < 1 ? '' : null} onClick={(e) => this.handleClick(e)}>
+          <div className="controller" data-video={this.state.datatype=='video' ? '' : null} data-single={this.state.totalslide < 2 ? '' : null} onClick={(e) => this.handleClick(e)}>
             <span data-control="close">close</span>
             <i>{this.state.currentslide}</i>
             <divider> / </divider>
@@ -273,10 +359,14 @@ var app = {
         let format = this.props.data.format,
             Slide  = this.markups[format](format);
         return (
-          <ul>
-            {Slide}
-            {this.Controller()}
-          </ul>
+          <div className="slider">
+            <div className="content">
+              <ul>
+                {Slide}
+                {this.Controller()}
+              </ul>
+            </div>
+          </div>
         );
       }
     },
@@ -284,11 +374,12 @@ var app = {
       constructor(props) {
         super(props);
       }
-      handleClick(e) {
+      handleClick(e, target) {
+        app.summon.init(target);
         e.stopPropagation();
         e.preventDefault();
       };
-      loop(handleClick) {
+      loop() {
         let Blog = [],
             featured,
             thumb,
@@ -302,7 +393,7 @@ var app = {
               Blog.push(
                 <li key={attr.id}>
                   <div className="post">
-                    <a href={attr.link} onClick={this.handleClick}>
+                    <a href={attr.link} onClick={(e) => this.handleClick(e, attr)}>
                       <div className="thumb">
                         <svg x="0px" y="0px" viewBox="0 0 180 200">
                           <g fillRule="evenodd" clipRule="evenodd">
@@ -344,11 +435,7 @@ var app = {
         super(props);
       }
       handleClick(e, target) {
-        app.fetch(wplocal.basePathURL+'/wp-json/wp/v2/media?parent='+target.id)
-           .then( data => {
-             data.format = target.format;
-             app.summon(data);
-           });
+        app.summon.init(target);
         e.stopPropagation();
         e.preventDefault();
       };
