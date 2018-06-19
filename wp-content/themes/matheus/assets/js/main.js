@@ -51,8 +51,8 @@ var nav = {
     bind: function(el){
       el.onclick = function(){
         nav.anchor.travelingpants(this.hash);
-        if (popup)
-          popup.close();
+        // if (popup)
+        //   popup.close();
         return false;
       }; 
     }

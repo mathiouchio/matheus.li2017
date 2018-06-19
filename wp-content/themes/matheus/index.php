@@ -18,7 +18,7 @@ $template_url = get_bloginfo( 'template_directory' );
   <ul>
     <li><a href="#about"><span>01</span> about</a></li>
     <li><a href="#projects"><span>02</span> work</a></li>
-    <li><a href="#blog"><span>03</span> blog</a></li>
+    <li><a href="#blogs"><span>03</span> blog</a></li>
     <li><a href="#contact"><span>04</span> connect</a></li>
   </ul>
 </nav>
