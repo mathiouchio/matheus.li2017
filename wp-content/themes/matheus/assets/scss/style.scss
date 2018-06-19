@@ -518,11 +518,11 @@ main {
   }
 }
 #blogs {
-  .slider.noslide {
+  .slides {
     @extend %transition;
     max-height: 100vh;
 
-    &[data-expanded="true"] {
+    &[data-expanded] {
       max-height: 999999px;
       .slide li:nth-child(6n) {
         margin-bottom: 80px;

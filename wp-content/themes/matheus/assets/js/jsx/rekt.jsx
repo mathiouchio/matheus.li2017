@@ -133,10 +133,10 @@ var app = {
     };
     for (var key in this.requests) {
       if (this.requests.hasOwnProperty(key)) {
-        let temp = key;
+        let tempKey = key;
         app.fetch(this.requests[key])
            .then( data => {
-             let Component = this.component[temp];
+             let Component = this.component[tempKey];
              ReactDOM.render(
                <Component data={data}/>,
                document.getElementById(temp.toLowerCase())
@@ -146,7 +146,7 @@ var app = {
     }
   },
   plyr: {
-    state: {}, // poor man React.js
+    state: {}, // poor man React.js 🤘🏻
     setup: function(position){
       if(!this.state.once) {
         this.state.obj = plyr.setup();
@@ -164,10 +164,10 @@ var app = {
             if(!this.state.obj[target].isMuted()) {
               this.state.obj[target].toggleMute();
             }
-            // @BUG: ready doesn't always trigger
+            // @🐛: ready doesn't always trigger
             this.state.obj[target].play();
           });
-      this.state.obj[target].play(); // @BUG: double tap
+      this.state.obj[target].play(); // @🐛: double tap
     },
     videoEl: function(){
       return (this.state.obj[this.state.position].getEmbed()) ? this.state.obj[this.state.position].getEmbed().a : this.state.obj[this.state.position].getMedia();
@@ -534,6 +534,9 @@ var app = {
     Blogs: class Blogs extends React.Component {
       constructor(props) {
         super(props);
+        this.state = {
+          expanded: false
+        }
       }
       handleClick(e, target) {
         app.summon.init(target);
@@ -579,12 +582,31 @@ var app = {
         });
         return Blog;
       };
+      handleExpansion(e) {
+        this.setState({expanded: !this.state.expanded});
+      }
+      expandButton() {
+        return (
+          <a>
+            <svg x="0px" y="0px" viewBox="0 0 40 40">
+              <line x1="25.3" y1="20" x2="14.7" y2="20"></line>
+              <line x1="20" y1="14.7" x2="20" y2="25.3"></line>
+              <circle fill="none" cx="20" cy="20" r="12"></circle>
+            </svg>
+            <span className="hero smler">Show posts</span>
+          </a>
+        );
+      }
       render() {
         return (
-          <div className="slides">
+          <div className="slides" data-expanded={this.state.expanded ? '' : null}>
             <div className="slide">
               <div className="wrapper">
-                <ul>{this.loop(this.handleClick)}</ul>
+                <ul>{this.loop()}</ul>
+                <div className="expand"
+                     onClick={(e) => this.handleExpansion(e)}>
+                  {this.expandButton()}
+                </div>
               </div>
             </div>
           </div>
