@@ -139,7 +139,7 @@ var app = {
              let Component = this.component[tempKey];
              ReactDOM.render(
                <Component data={data}/>,
-               document.getElementById(temp.toLowerCase())
+               document.getElementById(tempKey.toLowerCase())
              );
            });
       }
