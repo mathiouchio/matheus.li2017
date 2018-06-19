@@ -758,8 +758,7 @@ var contact = {
           message: '',
           email: '',
           validate: false,
-          response: null,
-          muted: true
+          response: null
         };
       },
       handleValidate: function(validateEmail, validateMessage){
