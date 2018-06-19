@@ -597,6 +597,9 @@ var app = {
           </a>
         );
       }
+      componentDidMount() {
+        scrollspy.calcPositions();
+      }
       render() {
         return (
           <div className="slides" data-expanded={this.state.expanded ? '' : null}>
@@ -652,6 +655,9 @@ var app = {
         });
         return Project;
       };
+      componentDidMount() {
+        scrollspy.calcPositions();
+      }
       render() {
         return <ul className="slides">{this.loop(this.handleClick)}</ul>;
       };
