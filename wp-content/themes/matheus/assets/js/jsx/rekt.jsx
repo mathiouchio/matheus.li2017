@@ -129,7 +129,7 @@ var app = {
     this.popup.init();
     this.requests = {
       Projects: wplocal.basePathURL+'/wp-json/wp/v2/portfolio',
-      Blogs: wplocal.basePathURL+'/wp-json/wp/v2/posts?per_page=6',
+      Blogs: wplocal.basePathURL+'/wp-json/wp/v2/posts?per_page=100',
     };
     for (var key in this.requests) {
       if (this.requests.hasOwnProperty(key)) {
@@ -457,6 +457,7 @@ var app = {
         }
       }
       componentWillUnmount() {
+        document.onkeydown = null;
         delete app.popup.el.dataset.active;
       }
       componentDidUpdate(prevProps, prevState, snapshot) {
