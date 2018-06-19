@@ -207,7 +207,6 @@ var app = {
     responsive: function(target){
       let targetVid = (this.state.obj[target].getEmbed()) ? this.state.obj[target].getEmbed().a : this.state.obj[target].getMedia();
 
-
       if(targetVid.tagName == 'VIDEO') {
         // waiting for all the metadatas load to determine height x width
         this.eventcheck('loadedmetadata')
@@ -452,16 +451,16 @@ var app = {
         // kill popup with esc key
         this.bindEscKey();
         // bind plyr
-        if(this.state.datatype == 'video') {
+        if(this.state.datatype == 'video')
           app.plyr.init(0, true);
-        }
       }
       componentWillUnmount() {
         document.onkeydown = null;
         delete app.popup.el.dataset.active;
       }
       componentDidUpdate(prevProps, prevState, snapshot) {
-        app.plyr.init(this.state.currentslide);
+        if(this.state.datatype == 'video')
+          app.plyr.init(this.state.currentslide);
       }
       shouldComponentUpdate(nextProps, nextState, index) {
         let nextImgSlide = this.props.data.length ? this.props.data[nextState.currentslide] : null,
