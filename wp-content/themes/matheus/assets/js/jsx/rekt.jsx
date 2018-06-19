@@ -129,7 +129,7 @@ var app = {
     this.popup.init();
     this.requests = {
       Projects: wplocal.basePathURL+'/wp-json/wp/v2/portfolio',
-      Blogs: wplocal.basePathURL+'/wp-json/wp/v2/posts?per_page=100',
+      Blogs: wplocal.basePathURL+'/wp-json/wp/v2/posts?per_page=6',
     };
     for (var key in this.requests) {
       if (this.requests.hasOwnProperty(key)) {
@@ -146,21 +146,31 @@ var app = {
     }
   },
   plyr: {
-    state: {},
-    setup: function(){
-      if(!this.once) {
+    state: {}, // poor man React.js
+    setup: function(position){
+      if(!this.state.once) {
         this.state.obj = plyr.setup();
-        this.once = true;
+        this.state.once = true;
       }
+      this.state.position = position;
     },
     init: function(target=0, reset=false){
       if(reset)
-        this.once = false;
-      this.setup();
+        this.state.once = false;
+      this.setup(target);
       this.responsive(target);
-      if(!this.state.obj[target].isMuted())
-        this.state.obj[target].toggleMute();
-      this.state.obj[target].play();
+      this.eventcheck('ready')
+          .then( e => {
+            if(!this.state.obj[target].isMuted()) {
+              this.state.obj[target].toggleMute();
+            }
+            // @BUG: ready doesn't always trigger
+            this.state.obj[target].play();
+          });
+      this.state.obj[target].play(); // @BUG: double tap
+    },
+    videoEl: function(){
+      return (this.state.obj[this.state.position].getEmbed()) ? this.state.obj[this.state.position].getEmbed().a : this.state.obj[this.state.position].getMedia();
     },
     destroy: function(){
       this.state.obj.map( target => { target.destroy() });
@@ -171,16 +181,20 @@ var app = {
     unmute: function(){
       this.state.targetPlyr.toggleMute();
     },
-    metacheck: function(target){
+    eventcheck: function(type){
+      let target = this.videoEl();
       return new Promise( (resolve, reject) => {
-        function handleLoadedMetaData(e) {
-          target.removeEventListener('loadedmetadata', handleLoadedMetaData);
-          resolve(e); // works just fine
+        function handleEvents(e) {
+          target.removeEventListener(type, handleEvents);
+          resolve(e);
         }
-        target.addEventListener('loadedmetadata', handleLoadedMetaData);
+        target.addEventListener(type, handleEvents);
       });
     },
     mathematics: function(target){
+      if(target.tagName != 'IFRAME' && target.tagName != 'VIDEO')
+        target = target.childNodes[0];
+
       let vHeight = (target.height) ? target.height : target.videoHeight,
           vWidth  = (target.width) ? target.width : target.videoWidth,
           vRatio  = vWidth/vHeight,
@@ -192,12 +206,15 @@ var app = {
     },
     responsive: function(target){
       let targetVid = (this.state.obj[target].getEmbed()) ? this.state.obj[target].getEmbed().a : this.state.obj[target].getMedia();
+
+
       if(targetVid.tagName == 'VIDEO') {
         // waiting for all the metadatas load to determine height x width
-        this.metacheck(targetVid).then( e => {
-          this.mathematics(targetVid);
-          targetVid.style.display = 'block';
-        });
+        this.eventcheck('loadedmetadata')
+            .then( e => {
+              this.mathematics(targetVid);
+              this.videoEl().style.display = 'block';
+            });
       } else {
         this.mathematics(targetVid);
       }
@@ -435,8 +452,9 @@ var app = {
         // kill popup with esc key
         this.bindEscKey();
         // bind plyr
-        if(this.state.datatype == 'video')
+        if(this.state.datatype == 'video') {
           app.plyr.init(0, true);
+        }
       }
       componentWillUnmount() {
         delete app.popup.el.dataset.active;
