@@ -22,7 +22,7 @@ body,
 html {
   min-height:100%;
 }
-body[static] {
+body[data-static] {
   overflow:hidden;
 }
 body,
@@ -272,6 +272,7 @@ h2 {
   display: none;
   position: fixed;
   z-index: 10;
+
   &[data-active],
   &[data-active="true"] {
     display: block;
@@ -285,6 +286,49 @@ h2 {
   [data-type="gallery"] li img[data-loading] {
     display: none;
   }
+
+  video {
+    display: none;
+  }
+
+  .slide,
+  li {
+    &[data-show],
+    &[data-transitioning] {
+      display: block;
+    }
+    &[data-show] {
+      z-index: 3;
+      img {
+        animation: slideenter 400ms ease-in;
+      }
+    }
+    &[data-transitioning] {
+      z-index: 2;
+    }
+    &.portrait {
+      overflow-x: hidden;
+      overflow-y: scroll;
+
+      img {
+        width: 100%;
+        height: auto;
+        object-fit: initial;
+      }
+    }
+    img {
+      display: block;
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      &.portrait {
+        width: 100%;
+        height: auto;
+        object-fit: initial;
+      }
+    }
+  }
+
   #spinner {
     position: absolute;
     top: 0;
@@ -310,8 +354,8 @@ h2 {
   .controller {
     @extend %controllerbottom;
     padding: 4px 20px 0 20px;
-    [data-control="fullscreen"],
-    [data-control="mute"] {
+    [data-control="mute"],
+    [data-control="fullscreen"] {
       display: none;
     }
     &[data-video] {
@@ -634,40 +678,6 @@ section,
     overflow: hidden;
     width: 100vw;
     height: 100vh;
-    &[data-show],
-    &[data-transitioning] {
-      display: block;
-    }
-    &[data-show] {
-      z-index: 3;
-      img {
-        animation: slideenter 400ms ease-in;
-      }
-    }
-    &[data-transitioning] {
-      z-index: 2;
-    }
-    &.portrait {
-      overflow-x: hidden;
-      overflow-y: scroll;
-
-      img {
-        width: 100%;
-        height: auto;
-        object-fit: initial;
-      }
-    }
-    img {
-      display: block;
-      object-fit: cover;
-      width: 100%;
-      height: 100%;
-      &.portrait {
-        width: 100%;
-        height: auto;
-        object-fit: initial;
-      }
-    }
   }
   &.noslide {
     min-height: 100vh;
