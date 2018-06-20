@@ -1,11 +1,3 @@
-// global vars
-var $body    = jQuery('body'),
-    $section = $body.find('section'),
-    $blog    = $body.find('#blog'),
-    $project = $body.find('#projects'),
-    $thumbs  = $body.find('.thumb'),
-    $popup;  // = $body.find('#popup'); // hasn't been built by popup Class
-
 var app = {
   init: function(){
     this.scrollspy.init();

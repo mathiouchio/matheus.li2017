@@ -66,6 +66,7 @@ var nav = {
     }
   },
   slidetoSection: function(target){
+    console.log(target);
     target = target || 0;
     // where to scroll
     sectionYOffset = $sections.eq(target).offset().top;
