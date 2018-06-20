@@ -51,8 +51,7 @@ var nav = {
     bind: function(el){
       el.onclick = function(){
         nav.anchor.travelingpants(this.hash);
-        if(app.popup.el.hasChildNodes())
-          ReactDOM.unmountComponentAtNode(document.getElementById('popup'));
+        app.popup.destroy();
         return false;
       }; 
     }
@@ -178,5 +177,5 @@ var ohSnap = {
 };
 
 jQuery(function(){
-  nav.init();
+  // nav.init();
 });
