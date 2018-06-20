@@ -286,11 +286,9 @@ h2 {
   [data-type="gallery"] li img[data-loading] {
     display: none;
   }
-
   video {
     display: none;
   }
-
   .slide,
   li {
     &[data-show],
@@ -328,7 +326,6 @@ h2 {
       }
     }
   }
-
   #spinner {
     position: absolute;
     top: 0;
@@ -354,6 +351,9 @@ h2 {
   .controller {
     @extend %controllerbottom;
     padding: 4px 20px 0 20px;
+    &[data-video] {
+      padding-right: 60px;
+    }
     [data-control="mute"],
     [data-control="fullscreen"] {
       display: none;
