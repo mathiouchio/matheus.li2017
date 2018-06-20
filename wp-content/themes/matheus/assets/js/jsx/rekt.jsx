@@ -175,11 +175,14 @@ var app = {
     destroy: function(){
       this.state.obj.map( target => { target.destroy() });
     },
-    pause: function(target){
+    fullscreen: function(){
+      this.state.obj[this.state.position].toggleFullscreen();
+    },
+    pause: function(target = this.state.position){
       this.state.obj[target].pause();
     },
     unmute: function(){
-      this.state.targetPlyr.toggleMute();
+      this.state.obj[this.state.position].toggleMute();
     },
     eventcheck: function(type){
       let target = this.videoEl();
@@ -307,10 +310,10 @@ var app = {
             }
           },
           mute: () => {
-            // console.log(app.plyr.state);
+            app.plyr.unmute(this.state.currentslide);
           },
           fullscreen: () => {
-
+            app.plyr.fullscreen(this.state.currentslide);
           }
         }
 

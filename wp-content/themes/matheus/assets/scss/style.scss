@@ -362,6 +362,10 @@ h2 {
       scroll {
         display: none;
       }
+      fs,
+      mute {
+        display: block;
+      }
     }
     &[data-single] {
       i,
