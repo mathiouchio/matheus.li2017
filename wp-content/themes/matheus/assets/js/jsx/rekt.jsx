@@ -1,82 +1,14 @@
 // global vars
 var $body    = jQuery('body'),
     $section = $body.find('section'),
-    $nav     = $body.find('nav'),
     $blog    = $body.find('#blog'),
     $project = $body.find('#projects'),
     $thumbs  = $body.find('.thumb'),
     $popup;  // = $body.find('#popup'); // hasn't been built by popup Class
 
-var scrollspy = {
-  sectionOffsets : [],
-  index: 0,
-  init: function() {
-    this.calcPositions();
-    this.bind(); 
-  },
-  calcPositions: function(){
-    var $section = jQuery(document).find('section');
-    $section.each( function(i){
-      scrollspy.sectionOffsets[i] = this.offsetTop;
-    });
-  },
-  bind: function(){
-    window.addEventListener('scroll', function() {
-      var yPos            = this.pageYOffset,
-          yOffsets        = scrollspy.sectionOffsets,
-          index = 0;
-      
-      for (var i in yOffsets) {
-        if (yPos >= yOffsets[i]){
-          index = i;
-        }
-      }
-      
-      /* Only apply rules and styles in between sections:
-       * value of positions changed
-       */
-      if(index != scrollspy.index) {
-        scrollspy.index = index;
-        scrollspy.nav(scrollspy.index);
-        scrollspy.brand(scrollspy.index);
-      }
-    });
-  },
-  nav: function(i){
-    i--;
-    $nav.find('li').removeClass('active')
-    if (i >= 0) // only do it if needed
-      $nav.find('li').eq(i).addClass('active');
-  },
-  brand: function(i){
-    ohSnap.go('#branding', i);
-  }
-};
-
-var REST = {
-  json: {},
-  get: function(restURL){
-    return jQuery.ajax({
-      url: restURL,
-      context: document.body,
-      dataType: 'json'
-    });
-  },
-  store: function(data, type) {
-    REST.json[type] = [];
-    if(data.constructor === Array) {
-      data.map( function(currentValue, index){
-        // push data to parent object
-        REST.json[type].push(currentValue);
-      });
-    } else {
-      REST.json[type] = data;
-    }
-  }
-};
-
 var app = {
   init: function(){
+    this.scrollspy.init();
     this.route.init();
     this.popup.init();
     this.requests = {
@@ -95,6 +27,58 @@ var app = {
              );
            });
       }
+    }
+  },
+  scrollspy: {
+    state: {
+      triggerPos: 0,
+      sectionPositions: []
+    },
+    init: function() {
+      // Poor man React.js
+      this.state.sections = (!this.state.sections) ? document.body.getElementsByTagName('SECTION') : this.state.sections;
+      this.state.nav = (!this.state.navigations) ? document.body.getElementsByTagName('NAV') : this.state.nav;
+      this.state.navigations = (!this.state.navigations) ? this.state.nav[0].getElementsByTagName('LI') : this.state.navigations;
+
+      this.calcPositions();
+      this.bind(); 
+    },
+    calcPositions: function(){
+      let i = 0;
+      for(el of this.state.sections) {
+        this.state.sectionPositions[i] = el.offsetTop;
+        i++;
+      }
+    },
+    bind: function(){
+      window.addEventListener('scroll', () => {
+        let tempPos = 0;
+        for (var i in this.state.sectionPositions) {
+          if (window.pageYOffset >= this.state.sectionPositions[i]){
+            tempPos = i;
+          }
+        }
+        
+        /* Only apply rules and styles in between sections:
+         * value of positions changed
+         */
+        if(tempPos != this.state.triggerPos) {
+          this.state.triggerPos = tempPos;
+          this.nav(this.state.triggerPos);
+          this.brand(this.state.triggerPos);
+        }
+      });
+    },
+    nav: function(pos){
+      pos--;
+      for(el of this.state.navigations) {
+        el.classList.remove('active');
+      }
+      if(pos >= 0) // only do it if needed
+        this.state.navigations[pos].className = 'active';
+    },
+    brand: function(i){
+      ohSnap.go('#branding', i);
     }
   },
   route: {
@@ -598,7 +582,7 @@ var app = {
         );
       }
       componentDidMount() {
-        scrollspy.calcPositions();
+        app.scrollspy.calcPositions();
       }
       render() {
         return (
@@ -657,7 +641,7 @@ var app = {
         return Project;
       };
       componentDidMount() {
-        scrollspy.calcPositions();
+        app.scrollspy.calcPositions();
       }
       render() {
         return <ul className="slides">{this.loop(this.handleClick)}</ul>;
@@ -808,7 +792,6 @@ var contact = {
 };
 
 (function(){
-  scrollspy.init();
   contact.init();
   app.init();
 })();
