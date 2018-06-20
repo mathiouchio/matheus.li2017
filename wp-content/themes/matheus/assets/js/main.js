@@ -45,15 +45,14 @@ var nav = {
       }
     },
     travelingpants: function(target){
-      ReactDOM.unmountComponentAtNode(document.getElementById('popup'));
       target = document.getElementById(target.substring(1));
       $('body, html').animate({scrollTop: target.offsetTop}, 400);
     },
     bind: function(el){
       el.onclick = function(){
         nav.anchor.travelingpants(this.hash);
-        // if (popup)
-        //   popup.close();
+        if(app.popup.el.hasChildNodes())
+          ReactDOM.unmountComponentAtNode(document.getElementById('popup'));
         return false;
       }; 
     }
