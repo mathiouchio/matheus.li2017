@@ -753,10 +753,14 @@ var contact = {
         var that = this;
         if(this.state.validate==true) {
           var encodedEmail = jQuery.trim(encodeURIComponent(this.state.email)),
-              dataString = 'email='+encodedEmail+'&message='+this.state.message;
+              dataString = 'email='+encodedEmail+'&message='+this.state.message,
+              jsonData = {
+                email: encodedEmail,
+                message: this.state.message
+              };
 
           fetch(wplocal.templateURL+'/contact.php', {
-              body: dataString,
+              body: JSON.stringify(jsonData),
               headers: {
                 'Access-Control-Allow-Origin': '*',
                 'content-type': 'text/plain'

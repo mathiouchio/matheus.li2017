@@ -1,12 +1,14 @@
 <?php
 $body = file_get_contents('php://input');
-echo $body;
+$body = json_decode($json);
 
 // Only process POST reqeusts.
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get the form fields and remove whitespace.
-    $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
-    $message = trim($_POST["message"]);
+    $email = ($_POST['email']) ? $_POST['email'] : $body->email;
+    $message = ($_POST['message']) ? $_POST['message'] : $body->message;
+    $email = filter_var(trim($email), FILTER_SANITIZE_EMAIL);
+    $message = trim($message);
 
     // Check that data was sent to the mailer.
     if ( empty($message) OR !filter_var($email, FILTER_VALIDATE_EMAIL)) {
