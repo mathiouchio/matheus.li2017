@@ -755,16 +755,28 @@ var contact = {
           var encodedEmail = jQuery.trim(encodeURIComponent(this.state.email)),
               dataString = 'email='+encodedEmail+'&message='+this.state.message;
 
-          jQuery.ajax({
-            type: "POST",
-            dataType: "text",
-            url: "/blog/wp-content/themes/matheus/contact.php",
-            data: dataString
-          }).done( function(data){
-            that.setState({ sent: "" });
-          }).fail( function(data){
-            that.setState({ response: data.status });
-          });
+          fetch(wplocal.templateURL+'/contact.php', {
+              body: dataString,
+              headers: {
+                'Access-Control-Allow-Origin': '*',
+                'content-type': 'text/plain'
+              },
+              method: 'POST',
+              mode: 'no-cors',
+            })
+            .then(response => response.text())
+            .then(data => console.log(data));
+
+          // jQuery.ajax({
+          //   type: "POST",
+          //   dataType: "text",
+          //   url: "/blog/wp-content/themes/matheus/contact.php",
+          //   data: dataString
+          // }).done( function(data){
+          //   that.setState({ sent: "" });
+          // }).fail( function(data){
+          //   that.setState({ response: data.status });
+          // });
         }
         return false;
       },

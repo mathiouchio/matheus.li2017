@@ -1,4 +1,7 @@
 <?php
+$body = file_get_contents('php://input');
+echo $body;
+
 // Only process POST reqeusts.
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get the form fields and remove whitespace.
