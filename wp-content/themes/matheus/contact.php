@@ -2,6 +2,8 @@
 $body = file_get_contents('php://input');
 $body = json_decode($json);
 
+var_dump($body);
+
 // Only process POST reqeusts.
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get the form fields and remove whitespace.
