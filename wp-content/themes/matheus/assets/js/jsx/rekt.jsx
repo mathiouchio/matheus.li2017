@@ -759,28 +759,28 @@ var contact = {
                 message: this.state.message
               };
 
-          fetch(wplocal.templateURL+'/contact.php', {
-              body: JSON.stringify(jsonData),
-              headers: {
-                'Access-Control-Allow-Origin': '*',
-                'content-type': 'text/plain'
-              },
-              method: 'POST',
-              mode: 'no-cors',
-            })
-            .then(response => response.text())
-            .then(data => console.log(data));
+          // fetch(wplocal.templateURL+'/contact.php', {
+          //     body: JSON.stringify(jsonData),
+          //     headers: {
+          //       'Access-Control-Allow-Origin': '*',
+          //       'content-type': 'text/plain'
+          //     },
+          //     method: 'POST',
+          //     mode: 'no-cors',
+          //   })
+          //   .then(response => response.text())
+          //   .then(data => console.log(data));
 
-          // jQuery.ajax({
-          //   type: "POST",
-          //   dataType: "text",
-          //   url: "/blog/wp-content/themes/matheus/contact.php",
-          //   data: dataString
-          // }).done( function(data){
-          //   that.setState({ sent: "" });
-          // }).fail( function(data){
-          //   that.setState({ response: data.status });
-          // });
+          jQuery.ajax({
+            type: "POST",
+            dataType: "text",
+            url: "/blog/wp-content/themes/matheus/contact.php",
+            data: dataString
+          }).done( function(data){
+            that.setState({ sent: "" });
+          }).fail( function(data){
+            that.setState({ response: data.status });
+          });
         }
         return false;
       },
