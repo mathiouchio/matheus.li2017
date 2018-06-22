@@ -687,7 +687,9 @@ var contact = {
     var Submission = React.createClass({
       render: function(){
         return (
-          <div className="expand" onClick={this.props.onSubmission}>
+          <div className="expand"
+               onClick={this.props.onSubmission}
+               data-hidden={this.props.response ? "" : null}>
             <a id="formsubmit">
               <svg x="0px" y="0px" viewBox="0 0 40 40">
                 <line x1="25.3" y1="20" x2="14.7" y2="20"/>
@@ -802,7 +804,8 @@ var contact = {
                    response={this.state.response} />
             <Thanks response={this.state.response} />
             <Error response={this.state.response} />
-            <Submission onSubmission={this.handleSubmission} />
+            <Submission onSubmission={this.handleSubmission}
+                        response={this.state.response} />
           </div>
         );
       }
