@@ -750,38 +750,45 @@ var contact = {
         });
       },
       handleSubmission: function(e){
-        var that = this;
-        if(this.state.validate==true) {
-          var encodedEmail = jQuery.trim(encodeURIComponent(this.state.email)),
+        // if(this.state.validate==true) {
+          let encodedEmail = jQuery.trim(encodeURIComponent(this.state.email)),
               dataString = 'email='+encodedEmail+'&message='+this.state.message,
               jsonData = {
                 email: encodedEmail,
                 message: this.state.message
               };
+          // console.log(jsonData);
 
-          // fetch(wplocal.templateURL+'/contact.php', {
-          //     body: JSON.stringify(jsonData),
-          //     headers: {
-          //       'Access-Control-Allow-Origin': '*',
-          //       'content-type': 'text/plain'
-          //     },
-          //     method: 'POST',
-          //     mode: 'no-cors',
-          //   })
-          //   .then(response => response.text())
-          //   .then(data => console.log(data));
-
-          jQuery.ajax({
-            type: "POST",
-            dataType: "text",
-            url: "/blog/wp-content/themes/matheus/contact.php",
-            data: dataString
-          }).done( function(data){
-            that.setState({ sent: "" });
-          }).fail( function(data){
-            that.setState({ response: data.status });
+          fetch(wplocal.templateURL+'/contact.php', {
+            body: JSON.stringify(jsonData),
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+              'content-type': 'text/plain'
+            },
+            method: 'POST',
+            mode: 'no-cors',
+          })
+          .then(response => {
+            // console.log(response);
+            return response.text();
+          })
+          .then(data => {
+            console.log(data)
           });
-        }
+
+          // jQuery.ajax({
+          //   type: "POST",
+          //   dataType: "text",
+          //   url: wplocal.templateURL+'/contact.php',
+          //   data: dataString
+          // }).done( data => {
+          //   // this.setState({ sent: "" });
+          //   console.log(data);
+          // }).fail( data => {
+          //   console.log(data);
+          //   // this.setState({ response: data.status });
+          // });
+        // }
         return false;
       },
       render: function(){

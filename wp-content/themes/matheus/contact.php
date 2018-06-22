@@ -1,15 +1,13 @@
 <?php
 $body = file_get_contents('php://input');
-$body = json_decode($json);
-
-var_dump($body);
+$body = json_decode($body);
 
 // Only process POST reqeusts.
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get the form fields and remove whitespace.
     $email = ($_POST['email']) ? $_POST['email'] : $body->email;
-    $message = ($_POST['message']) ? $_POST['message'] : $body->message;
     $email = filter_var(trim($email), FILTER_SANITIZE_EMAIL);
+    $message = ($_POST['message']) ? $_POST['message'] : $body->message;
     $message = trim($message);
 
     // Check that data was sent to the mailer.
@@ -48,4 +46,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     http_response_code(403);
     echo "There was a problem with your submission, please try again.";
 }
-?>
