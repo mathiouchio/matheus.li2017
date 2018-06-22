@@ -614,9 +614,13 @@ main {
   }
 }
 #contact {
+  .error,
   .thanks {
     margin-top: 15px;
     display: none;
+    &[data-show] {
+      display: block;
+    }
     h2 {
       font-size: 16.5px;
     }

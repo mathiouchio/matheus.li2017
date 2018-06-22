@@ -648,14 +648,28 @@ var contact = {
         contact = document.getElementById('contact');
 
     var Thanks = React.createClass({
-      getInitialState: function(){
-        return { sent: "" }
-      },
       render: function(){
-        return <div className="thanks">
-              <h2>I receive your message</h2>
-              <p>Will get back to you shortly.</p>
-            </div>
+        return (
+          <div className="thanks" data-show={this.props.response == 200 ? "" : null}>
+            <h2>I receive your message</h2>
+            <p>Will get back to you shortly.</p>
+          </div>
+        );
+      }
+    });
+    var Error = React.createClass({
+      render: function(){
+        let errors = {
+          400: "There was a problem with your submission, please try again.",
+          500: "Oops! Something went wrong and we couldn't send your message.",
+          400: "Oops! There was a problem with your submission. Please complete the form and try again."
+        }
+        return (
+          <div className="error" data-show={(this.props.response !== null && this.props.response != 200) ? "" : null}>
+            <h2>Error</h2>
+            <p>{errors[this.props.response]}</p>
+          </div>
+        );
       }
     });
 
@@ -672,7 +686,8 @@ var contact = {
 
     var Submission = React.createClass({
       render: function(){
-        return <div className="expand" onClick={this.props.onSubmission}>
+        return (
+          <div className="expand" onClick={this.props.onSubmission}>
             <a id="formsubmit">
               <svg x="0px" y="0px" viewBox="0 0 40 40">
                 <line x1="25.3" y1="20" x2="14.7" y2="20"/>
@@ -682,6 +697,7 @@ var contact = {
               <span className="hero smler">Send</span>
             </a>  
           </div>
+        );
       }
     });
 
@@ -713,7 +729,8 @@ var contact = {
         );
       },
       render: function(){
-        return <div className="copy"> 
+        return (
+          <div className="copy" data-hidden={this.props.response ? "" : null}>
             <form id="contactform" action={wplocal.templateURL+'/contact.php'} method="post">
               <div>
                 <label>email</label> 
@@ -725,6 +742,7 @@ var contact = {
               </div>
             </form>
           </div>
+        );
       }
     });
 
@@ -749,42 +767,27 @@ var contact = {
           message: message
         });
       },
+      post: function(jsonData){
+        return fetch(wplocal.templateURL+'/contact.php', {
+          body: JSON.stringify(jsonData),
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'content-type': 'text/plain'
+          },
+          method: 'POST',
+          mode: 'no-cors',
+        }).then(response => response.text());
+      },
       handleSubmission: function(e){
         if(this.state.validate==true) {
-          let encodedEmail = jQuery.trim(this.state.email),
-              dataString = 'email='+encodedEmail+'&message='+this.state.message,
-              jsonData = {
-                email: encodedEmail,
-                message: this.state.message
-              };
-
-          fetch(wplocal.templateURL+'/contact.php', {
-            body: JSON.stringify(jsonData),
-            headers: {
-              'Access-Control-Allow-Origin': '*',
-              'content-type': 'text/plain'
-            },
-            method: 'POST',
-            mode: 'no-cors',
-          }).then(response => {
-            console.log(response);
-            return response.text();
-          }).then(data => {
-            console.log(data)
+          let jsonData = {
+            email: this.state.email.trim(),
+            message: this.state.message
+          };
+          this.post(jsonData).then(data => {
+            let responseCode = data.substring(0, 3);
+            this.setState({ response: responseCode });
           });
-
-          // jQuery.ajax({
-          //   type: "POST",
-          //   dataType: "text",
-          //   url: wplocal.templateURL+'/contact.php',
-          //   data: dataString
-          // }).done( data => {
-          //   // this.setState({ sent: "" });
-          //   console.log(data);
-          // }).fail( data => {
-          //   console.log(data);
-          //   // this.setState({ response: data.status });
-          // });
         }
         return false;
       },
@@ -792,8 +795,13 @@ var contact = {
         return (
           <div className="wrapper" data-sent={this.state.sent}>
             <Online />
-            <Forms email={this.state.email} message={this.state.message} onValidate={this.handleValidate} onUserInput={this.handleUserInput} />
+            <Forms email={this.state.email}
+                   message={this.state.message}
+                   onValidate={this.handleValidate}
+                   onUserInput={this.handleUserInput}
+                   response={this.state.response} />
             <Thanks response={this.state.response} />
+            <Error response={this.state.response} />
             <Submission onSubmission={this.handleSubmission} />
           </div>
         );
