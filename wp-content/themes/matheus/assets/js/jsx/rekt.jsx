@@ -776,18 +776,18 @@ var contact = {
             console.log(data)
           });
 
-          // jQuery.ajax({
-          //   type: "POST",
-          //   dataType: "text",
-          //   url: wplocal.templateURL+'/contact.php',
-          //   data: dataString
-          // }).done( data => {
-          //   // this.setState({ sent: "" });
-          //   console.log(data);
-          // }).fail( data => {
-          //   console.log(data);
-          //   // this.setState({ response: data.status });
-          // });
+          jQuery.ajax({
+            type: "POST",
+            dataType: "text",
+            url: wplocal.templateURL+'/contact.php',
+            data: dataString
+          }).done( data => {
+            // this.setState({ sent: "" });
+            console.log(data);
+          }).fail( data => {
+            console.log(data);
+            // this.setState({ response: data.status });
+          });
         // }
         return false;
       },
