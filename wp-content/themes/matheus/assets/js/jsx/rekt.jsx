@@ -751,7 +751,7 @@ var contact = {
       },
       handleSubmission: function(e){
         // if(this.state.validate==true) {
-          let encodedEmail = jQuery.trim(encodeURIComponent(this.state.email)),
+          let encodedEmail = jQuery.trim(this.state.email),
               dataString = 'email='+encodedEmail+'&message='+this.state.message,
               jsonData = {
                 email: encodedEmail,
