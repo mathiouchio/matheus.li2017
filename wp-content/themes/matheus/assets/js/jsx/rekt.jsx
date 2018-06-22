@@ -750,14 +750,13 @@ var contact = {
         });
       },
       handleSubmission: function(e){
-        // if(this.state.validate==true) {
+        if(this.state.validate==true) {
           let encodedEmail = jQuery.trim(this.state.email),
               dataString = 'email='+encodedEmail+'&message='+this.state.message,
               jsonData = {
                 email: encodedEmail,
                 message: this.state.message
               };
-          // console.log(jsonData);
 
           fetch(wplocal.templateURL+'/contact.php', {
             body: JSON.stringify(jsonData),
@@ -767,28 +766,26 @@ var contact = {
             },
             method: 'POST',
             mode: 'no-cors',
-          })
-          .then(response => {
-            // console.log(response);
+          }).then(response => {
+            console.log(response);
             return response.text();
-          })
-          .then(data => {
+          }).then(data => {
             console.log(data)
           });
 
-          jQuery.ajax({
-            type: "POST",
-            dataType: "text",
-            url: wplocal.templateURL+'/contact.php',
-            data: dataString
-          }).done( data => {
-            // this.setState({ sent: "" });
-            console.log(data);
-          }).fail( data => {
-            console.log(data);
-            // this.setState({ response: data.status });
-          });
-        // }
+          // jQuery.ajax({
+          //   type: "POST",
+          //   dataType: "text",
+          //   url: wplocal.templateURL+'/contact.php',
+          //   data: dataString
+          // }).done( data => {
+          //   // this.setState({ sent: "" });
+          //   console.log(data);
+          // }).fail( data => {
+          //   console.log(data);
+          //   // this.setState({ response: data.status });
+          // });
+        }
         return false;
       },
       render: function(){

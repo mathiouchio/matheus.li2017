@@ -6,12 +6,9 @@ $body = json_decode($body);
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get the form fields and remove whitespace.
     $email = ($_POST['email']) ? $_POST['email'] : $body->email;
-    print $email;
     $email = filter_var(trim($email), FILTER_SANITIZE_EMAIL);
     $message = ($_POST['message']) ? $_POST['message'] : $body->message;
-    print $message;
     $message = trim($message);
-
 
     // Check that data was sent to the mailer.
     if ( empty($message) OR !filter_var($email, FILTER_VALIDATE_EMAIL)) {
