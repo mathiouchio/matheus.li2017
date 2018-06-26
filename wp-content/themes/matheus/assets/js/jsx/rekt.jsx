@@ -519,22 +519,27 @@ var app = {
         e.stopPropagation();
         e.preventDefault();
       };
+      handleHover(e) {
+        if(e.type=='mouseenter')
+          ohSnap.go(e.currentTarget, 1);
+        else
+          ohSnap.go(e.currentTarget, 0);
+      }
       loop() {
-        let Blog = [],
-            featured,
-            thumb,
-            thumbURL;
+        let Blog = [];
         this.props.data.map( (attr, index) => {
-          featured = attr.better_featured_image
+          let featured = attr.better_featured_image
           if(featured) {
-            thumb = featured.media_details.sizes.thumbnail;
+            let thumb = featured.media_details.sizes.thumbnail;
             if(thumb) {
-              thumbURL = thumb.source_url;
+              let thumbURL = thumb.source_url;
               Blog.push(
                 <li key={attr.id}>
                   <div className="post">
                     <a href={attr.link} onClick={(e) => this.handleClick(e, attr)}>
-                      <div className="thumb">
+                      <div className="thumb"
+                           onMouseEnter={this.handleHover.bind(this)}
+                           onMouseLeave={this.handleHover.bind(this)}>
                         <svg x="0px" y="0px" viewBox="0 0 180 200">
                           <g fillRule="evenodd" clipRule="evenodd">
                             <defs>
