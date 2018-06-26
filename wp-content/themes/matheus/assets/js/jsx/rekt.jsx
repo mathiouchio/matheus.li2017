@@ -244,9 +244,6 @@ var app = {
             validated: newState
           });
         }
-        componentDidUpdate() {
-          // console.log(this.state.response);
-        }
         render() {
           let contactComponent = app.contact.component;
           return (
