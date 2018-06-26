@@ -3,6 +3,7 @@ var app = {
     this.scrollspy.init();
     this.route.init();
     this.popup.init();
+    this.contact.init();
     this.requests = {
       Projects: wplocal.basePathURL+'/wp-json/wp/v2/portfolio',
       Blogs: wplocal.basePathURL+'/wp-json/wp/v2/posts?per_page=100',
@@ -71,6 +72,205 @@ var app = {
     },
     brand: function(i){
       ohSnap.go('#branding', i);
+    }
+  },
+  contact: {
+    component: {
+      thanks: class Thanks extends React.PureComponent {
+        constructor(props) {
+          super(props);
+        }
+        render() {
+          return (
+            <div className="thanks">
+              <h2>I receive your message</h2>
+              <p>Will get back to you shortly.</p>
+            </div>
+          );
+        }
+      },
+      response: class Response extends React.PureComponent {
+        constructor(props) {
+          super(props);
+          this.messages = {
+            200: "Will get back to you shortly.",
+            400: "There was a problem with your submission, please try again.",
+            500: "Something went wrong and we couldn't send your message.",
+            403: "There was a problem with your submission. Please complete the form and try again."
+          }
+          this.headers = {
+            200: "I receive your message",
+            error: "Error"
+          }
+        }
+        render() {
+          return (
+            <div className="thanks error" data-show={this.props.response ? "" : null}>
+              <h2>{this.props.response == 200 ? this.headers[200] : this.headers['error']}</h2>
+              <p>{this.messages[this.props.response]}</p>
+            </div>
+          );
+        }
+      },
+      online: class Online extends React.PureComponent {
+        render() {
+          return <div>
+              <label>Social</label>
+              <span><a href="https://www.facebook.com/pages/matheusli/177957308894747" target="_blank">facebook</a></span>
+              <span><a href="https://instagram.com/mathiouchio/" target="_blank">instagram</a></span>
+              <span><a href="https://dribbble.com/mathiouchio" target="_blank">dribbble</a></span>
+            </div>
+        }
+      },
+      submit: class Submission extends React.PureComponent {
+        render() {
+          return (
+            <div className="expand"
+                 onClick={this.props.onSubmission}
+                 data-hidden={this.props.response ? "" : null}>
+              <a id="formsubmit">
+                <svg x="0px" y="0px" viewBox="0 0 40 40">
+                  <line x1="25.3" y1="20" x2="14.7" y2="20"/>
+                  <line x1="20" y1="14.7" x2="20" y2="25.3"/>
+                  <circle fill="none" cx="20" cy="20" r="12"/>
+                </svg>
+                <span className="hero smler">Send</span>
+              </a>
+            </div>
+          );
+        }
+      },
+      forms: class Forms extends React.Component {
+        constructor(props) {
+          super(props);
+        }
+        validate(e) {
+          let email_reg = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+
+          if (e.currentTarget.name=="email" && email_reg.test($.trim(e.currentTarget.value))) {
+            delete e.currentTarget.dataset.invalid;
+            this.props.onValidated(e.currentTarget.name, true);
+          } else if (e.currentTarget.name=="message" && $.trim(e.currentTarget.value)){
+            delete e.currentTarget.dataset.invalid;
+            this.props.onValidated(e.currentTarget.name, true);
+          } else {
+            e.currentTarget.dataset.invalid="";
+            this.props.onValidated(e.currentTarget.name, false);
+          }
+        }
+        render() {
+          return (
+            <div className="copy" data-hidden={this.props.response ? "" : null}>
+              <form id="contactform" action={wplocal.templateURL+'/contact.php'} method="post">
+                <div>
+                  <label>email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    onBlur={this.validate.bind(this)}
+                    value={this.props.email}
+                    placeholder="type your email"
+                    onChange={this.props.onUserInput.bind(this)}
+                    required />
+                </div>
+                <div>
+                  <label>message</label>
+                  <textarea
+                    type="text"
+                    name="message"
+                    onBlur={this.validate.bind(this)}
+                    value={this.props.message}
+                    placeholder="type message ..."
+                    onChange={this.props.onUserInput.bind(this)}
+                    required></textarea>
+                </div>
+              </form>
+            </div>
+          );
+        }
+      }
+    },
+    init: function(){
+      let Email = class Email extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            message: '',
+            email: '',
+            validated: {
+              email: false,
+              message: false
+            },
+            response: null
+          };
+        }
+        post(jsonData) {
+          return fetch(wplocal.templateURL+'/contact.php', {
+            body: JSON.stringify(jsonData),
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+              'content-type': 'text/plain'
+            },
+            method: 'POST',
+            mode: 'no-cors',
+          }).then(response => response.text());
+        }
+        handleUserInput(e) {
+          this.setState({
+            [e.target.name]: e.target.value
+          });
+        }
+        handleSubmission(e) {
+          for (let val in this.state.validated) {
+            if(!this.state.validated[val])
+              return false;
+          }
+          let jsonData = {
+            email: this.state.email.trim(),
+            message: this.state.message
+          };
+          this.post(jsonData).then(data => {
+            let responseCode = data.substring(0, 3);
+            console.log(responseCode);
+            this.setState({ response: responseCode });
+          });
+          return false;
+        }
+        handleValidation(stateName, checkValue) {
+          let newState = this.state.validated;
+          newState[stateName] = checkValue;
+
+          this.setState({
+            validated: newState
+          });
+        }
+        componentDidUpdate() {
+          // console.log(this.state.response);
+        }
+        render() {
+          let contactComponent = app.contact.component;
+          return (
+            <div className="wrapper" data-sent={this.state.sent}>
+              <contactComponent.online />
+              <contactComponent.forms
+                email={this.state.email}
+                message={this.state.message}
+                onUserInput={this.handleUserInput.bind(this)}
+                onValidated={this.handleValidation.bind(this)}
+                response={this.state.response} />
+              <contactComponent.submit
+                onSubmission={this.handleSubmission.bind(this)}
+                response={this.state.response} />
+              <contactComponent.response
+                response={this.state.response} />
+            </div>
+          );
+        }
+      }
+      ReactDOM.render(
+        <Email/>,
+        document.getElementById('contact')
+      );
     }
   },
   route: {
@@ -646,181 +846,8 @@ var app = {
     },
   }
 };
- 
-var contact = {
-  init: function(){
-    var that = this,
-        contact = document.getElementById('contact');
-
-    var Thanks = React.createClass({
-      render: function(){
-        return (
-          <div className="thanks" data-show={this.props.response == 200 ? "" : null}>
-            <h2>I receive your message</h2>
-            <p>Will get back to you shortly.</p>
-          </div>
-        );
-      }
-    });
-    var Error = React.createClass({
-      render: function(){
-        let errors = {
-          400: "There was a problem with your submission, please try again.",
-          500: "Oops! Something went wrong and we couldn't send your message.",
-          400: "Oops! There was a problem with your submission. Please complete the form and try again."
-        }
-        return (
-          <div className="error" data-show={(this.props.response !== null && this.props.response != 200) ? "" : null}>
-            <h2>Error</h2>
-            <p>{errors[this.props.response]}</p>
-          </div>
-        );
-      }
-    });
-
-    var Online = React.createClass({
-      render: function(){
-        return <div>
-            <label>Social</label>
-            <span><a href="https://www.facebook.com/pages/matheusli/177957308894747" target="_blank">facebook</a></span>
-            <span><a href="https://instagram.com/mathiouchio/" target="_blank">instagram</a></span>
-            <span><a href="https://dribbble.com/mathiouchio" target="_blank">dribbble</a></span>
-          </div>
-      }
-    });
-
-    var Submission = React.createClass({
-      render: function(){
-        return (
-          <div className="expand"
-               onClick={this.props.onSubmission}
-               data-hidden={this.props.response ? "" : null}>
-            <a id="formsubmit">
-              <svg x="0px" y="0px" viewBox="0 0 40 40">
-                <line x1="25.3" y1="20" x2="14.7" y2="20"/>
-                <line x1="20" y1="14.7" x2="20" y2="25.3"/>
-                <circle fill="none" cx="20" cy="20" r="12"/>
-              </svg>
-              <span className="hero smler">Send</span>
-            </a>  
-          </div>
-        );
-      }
-    });
-
-    var Forms = React.createClass({
-      handleChange: function() {
-        this.props.onUserInput(
-          this.refs.emailInput.value,
-          this.refs.messageInput.value
-        );
-      },
-      checker: [false, false],
-      validate: function(e){
-        var obj = e.currentTarget,
-            email_reg = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i; 
-        
-        if (obj.type=="email" && email_reg.test($.trim(obj.value))) {
-          this.checker[0] = true;
-          delete obj.dataset.invalid;
-        } else if (obj.type=="textarea" && $.trim(obj.value)){
-          this.checker[1] = true;
-          delete obj.dataset.invalid;
-        } else {
-          obj.dataset.invalid="";
-        }
-
-        this.props.onValidate(
-          this.checker[0],
-          this.checker[1]
-        );
-      },
-      render: function(){
-        return (
-          <div className="copy" data-hidden={this.props.response ? "" : null}>
-            <form id="contactform" action={wplocal.templateURL+'/contact.php'} method="post">
-              <div>
-                <label>email</label> 
-                <input type="email" name="email" required ref="emailInput" onBlur={this.validate} value={this.props.email} placeholder="type your email" onChange={this.handleChange} />
-              </div>
-              <div>
-                <label>message</label>
-                <textarea type="text" name="message" onBlur={this.validate} required ref="messageInput" value={this.props.message} placeholder="type message ..." onChange={this.handleChange}></textarea>
-              </div>
-            </form>
-          </div>
-        );
-      }
-    });
-
-    var Email = React.createClass({
-      getInitialState: function() {
-        return {
-          sent: null,
-          message: '',
-          email: '',
-          validate: false,
-          response: null
-        };
-      },
-      handleValidate: function(validateEmail, validateMessage){
-        if(validateEmail && validateMessage) {
-          this.setState({validate: true});
-        }
-      },
-      handleUserInput: function(email, message){
-        this.setState({
-          email: email,
-          message: message
-        });
-      },
-      post: function(jsonData){
-        return fetch(wplocal.templateURL+'/contact.php', {
-          body: JSON.stringify(jsonData),
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'content-type': 'text/plain'
-          },
-          method: 'POST',
-          mode: 'no-cors',
-        }).then(response => response.text());
-      },
-      handleSubmission: function(e){
-        if(this.state.validate==true) {
-          let jsonData = {
-            email: this.state.email.trim(),
-            message: this.state.message
-          };
-          this.post(jsonData).then(data => {
-            let responseCode = data.substring(0, 3);
-            this.setState({ response: responseCode });
-          });
-        }
-        return false;
-      },
-      render: function(){
-        return (
-          <div className="wrapper" data-sent={this.state.sent}>
-            <Online />
-            <Forms email={this.state.email}
-                   message={this.state.message}
-                   onValidate={this.handleValidate}
-                   onUserInput={this.handleUserInput}
-                   response={this.state.response} />
-            <Thanks response={this.state.response} />
-            <Error response={this.state.response} />
-            <Submission onSubmission={this.handleSubmission}
-                        response={this.state.response} />
-          </div>
-        );
-      }
-    });
-    ReactDOM.render(<Email/>, contact);
-  }
-};
 
 (function(){
-  contact.init();
   app.init();
 })();
 
