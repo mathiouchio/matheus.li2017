@@ -11,10 +11,10 @@ var app = {
     };
     for (let key in this.requests) {
       if (this.requests.hasOwnProperty(key)) {
-        let tempKey = key;
+        const tempKey = key;
         app.fetch(this.requests[key])
            .then( data => {
-             let Component = this.component[tempKey];
+             const Component = this.component[tempKey];
              ReactDOM.render(
                <Component data={data}/>,
                document.getElementById(tempKey.toLowerCase())
@@ -29,9 +29,9 @@ var app = {
       this.travelOnRdy();
     },
     travelOnRdy: function(){
-      let cleanBaseURL = window.location.href.replace(wplocal.basePathURL,''),
-          paths        = cleanBaseURL.slice(1).split('/'),
-          thePants     = (paths.length > 2) ? paths[0] : 'blogs';
+      const cleanBaseURL = window.location.href.replace(wplocal.basePathURL,''),
+            paths        = cleanBaseURL.slice(1).split('/'),
+            thePants     = (paths.length > 2) ? paths[0] : 'blogs';
 
       if(paths[0] && paths[0] !== '')
         app.nav.anchor.travelingpants('#'+thePants);
@@ -66,7 +66,7 @@ var app = {
       interval: [],
       counter: 0,
       run: function(identifier){
-        let id = identifier.substring(1);
+        const id = identifier.substring(1);
         this.interval = window.setInterval( () => {
           // back to 0 on last loop
           this.loop.counter = (this.loop.counter >= Object.keys(this.vectorPoints[id]).length) ? 0 : this.loop.counter;
@@ -90,10 +90,10 @@ var app = {
 
       // count objects length
       // check if has multiple polygons
-      let points = jQuery(identifier).find('polygon'),
-          speed  = this.settings.speed[id],
-          easing = this.settings.easing[id],
-          point, vp, $el;
+      const points = jQuery(identifier).find('polygon'),
+            speed  = this.settings.speed[id],
+            easing = this.settings.easing[id];
+      let point, vp, $el = null;
 
       if(points.length > 1) {
         // preparing loops
@@ -279,7 +279,7 @@ var app = {
           super(props);
         }
         validate(e) {
-          let email_reg = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+          const email_reg = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
 
           if (e.currentTarget.name=="email" && email_reg.test($.trim(e.currentTarget.value))) {
             delete e.currentTarget.dataset.invalid;
@@ -325,7 +325,7 @@ var app = {
       }
     },
     init: function(){
-      let Email = class Email extends React.Component {
+      const Email = class Email extends React.Component {
         constructor(props) {
           super(props);
           this.state = {
@@ -359,12 +359,12 @@ var app = {
             if(!this.state.validated[val])
               return false;
           }
-          let jsonData = {
+          const jsonData = {
             email: this.state.email.trim(),
             message: this.state.message
           };
           this.post(jsonData).then(data => {
-            let responseCode = data.substring(0, 3);
+            const responseCode = data.substring(0, 3);
             this.setState({ response: responseCode });
           });
           return false;
@@ -378,7 +378,7 @@ var app = {
           });
         }
         render() {
-          let contactComponent = app.contact.component;
+          const contactComponent = app.contact.component;
           return (
             <div className="wrapper" data-sent={this.state.sent}>
               <contactComponent.online />
@@ -409,8 +409,8 @@ var app = {
       this.detect();
     },
     go: function(url=""){
-      let path = (url) ? `${url}/` : "",
-          state = {state: path};
+      const path = (url) ? `${url}/` : "",
+            state = {state: path};
       history.pushState(state, null, `${wplocal.basePathURL}/${path}`);
     },
     detect: function(){
@@ -480,7 +480,7 @@ var app = {
       this.state.obj[this.state.position].toggleMute();
     },
     eventcheck: function(type){
-      let target = this.videoEl();
+      const target = this.videoEl();
       return new Promise( (resolve, reject) => {
         function handleEvents(e) {
           target.removeEventListener(type, handleEvents);
@@ -493,17 +493,17 @@ var app = {
       if(target.tagName != 'IFRAME' && target.tagName != 'VIDEO')
         target = target.childNodes[0];
 
-      let vHeight = (target.height) ? target.height : target.videoHeight,
-          vWidth  = (target.width) ? target.width : target.videoWidth,
-          vRatio  = vWidth/vHeight,
-          realHeight = window.innerHeight;
-          realWidth  = realHeight * vRatio;
+      const vHeight = (target.height) ? target.height : target.videoHeight,
+            vWidth  = (target.width) ? target.width : target.videoWidth,
+            vRatio  = vWidth/vHeight,
+            realHeight = window.innerHeight;
+            realWidth  = realHeight * vRatio;
 
       target.width = realWidth;
       target.style.width = realWidth+'px';
     },
     responsive: function(target){
-      let targetVid = (this.state.obj[target].getEmbed()) ? this.state.obj[target].getEmbed().a : this.state.obj[target].getMedia();
+      const targetVid = (this.state.obj[target].getEmbed()) ? this.state.obj[target].getEmbed().a : this.state.obj[target].getMedia();
 
       if(targetVid.tagName == 'VIDEO') {
         // waiting for all the metadatas load to determine height x width
@@ -555,7 +555,7 @@ var app = {
       this.fetch[data.format](data, this.render);
     },
     render: (data) => {
-      let Popup = app.component.Popup;
+      const Popup = app.component.Popup;
       ReactDOM.render(
         <Popup data={data} />,
         document.getElementById('popup')
@@ -567,9 +567,9 @@ var app = {
       constructor(props) {
         super(props);
         // console.log(props);
-        let slideAttr = (props.data[0] && props.data[0].media_details) ? props.data[0].media_details : null,
-            initFormat = (slideAttr) ? slideAttr.height>slideAttr.width : null,
-            totalslide = 1;
+        const slideAttr = (props.data[0] && props.data[0].media_details) ? props.data[0].media_details : null,
+              initFormat = (slideAttr) ? slideAttr.height>slideAttr.width : null;
+        let totalslide = 1;
 
         totalslide = (props.data.length) ? props.data.length : totalslide;
         totalslide = (props.data.format == 'video') ? props.data.fields.videos.length : totalslide;
@@ -623,11 +623,11 @@ var app = {
           gallery: () => {
             let Slides = [];
             this.props.data.map( (attr, index) => {
-              let slideClassName = 'gallery',
-                  srcsetSizes = this.imgAttr(attr.media_details),
-                  imgSizes    = srcsetSizes.sizes.join(', '),
-                  imgSrcset   = srcsetSizes.srcset.join(', ');
+              let slideClassName = 'gallery';
                   slideClassName += attr.media_details.height>attr.media_details.width ? ' portrait' : '';
+              const srcsetSizes = this.imgAttr(attr.media_details),
+                    imgSizes    = srcsetSizes.sizes.join(', '),
+                    imgSrcset   = srcsetSizes.srcset.join(', ');
 
               Slides.push(
                 <li className={slideClassName}
@@ -650,15 +650,15 @@ var app = {
           video: () => {
             let Videos = [];
             this.props.data.fields.videos.map( (video, index) => {
-              let youmeo = (video.youtube_id) ? 'youtube' : 'vimeo',
-                  vid = (youmeo) ? video.youtube_id : video.vimeo_id,
-                  videoEl = video.video_url ? (
-                    <video controls>
-                      <source src={video.video_url} type="video/mp4" />
-                    </video>
-                  ) : (
-                    <div data-type={youmeo} data-video-id={vid}></div>
-                  );
+              const youmeo = (video.youtube_id) ? 'youtube' : 'vimeo',
+                    vid = (youmeo) ? video.youtube_id : video.vimeo_id,
+                    videoEl = video.video_url ? (
+                      <video controls>
+                        <source src={video.video_url} type="video/mp4" />
+                      </video>
+                    ) : (
+                      <div data-type={youmeo} data-video-id={vid}></div>
+                    );
               Videos.push(
                 <li data-show={index==this.state.currentslide ? '' : null}
                     data-transitioning={index==this.state.previouslide ? "" : null}
@@ -685,12 +685,15 @@ var app = {
         this.setState({ loaded: tempLoadedState });
       }
       imgAttr(obj) {
-        let imagesets = {
-              sizes:       ['gallery-medium-large','gallery-medium','gallery-small'],
-              breakpoints: [1440,768,320]
+        const imagesets = {
+                sizes:       ['gallery-medium-large','gallery-medium','gallery-small'],
+                breakpoints: [1440,768,320]
+              };
+        let output = {
+              srcset:[],
+              sizes:[]
             },
-            output = { srcset:[], sizes:[] },
-            once   = true;
+            once = true;
 
         /** Build srcset
          *  Collecting assets
@@ -710,9 +713,9 @@ var app = {
         // looking for imagesets.sizes matched key strings
         for (let key in obj.sizes) {
           // if matches, index is >= 0
-          let index = imagesets.sizes.indexOf(key);
-          if (index>=0){
-            let srcsetOut = `${obj.sizes[key].source_url} ${obj.sizes[key].width}w`;
+          const index = imagesets.sizes.indexOf(key);
+          if (index >= 0){
+            const srcsetOut = `${obj.sizes[key].source_url} ${obj.sizes[key].width}w`;
 
             // determine the biggest size
             if(obj.sizes.full.width > obj.sizes[key].width && once == true){
@@ -770,8 +773,8 @@ var app = {
           app.plyr.init(this.state.currentslide);
       }
       shouldComponentUpdate(nextProps, nextState, index) {
-        let nextImgSlide = this.props.data.length ? this.props.data[nextState.currentslide] : null,
-            nextSlideDetail = nextImgSlide ? nextImgSlide.media_details : null;
+        const nextImgSlide = this.props.data.length ? this.props.data[nextState.currentslide] : null,
+              nextSlideDetail = nextImgSlide ? nextImgSlide.media_details : null;
 
         // get orientation
         nextState.portrait = nextSlideDetail ? !(nextSlideDetail.height>nextSlideDetail.width) : false;
@@ -782,7 +785,7 @@ var app = {
         return true;
       }
       handleClick(e) {
-        let action = e.target.dataset.control;
+        const action = e.target.dataset.control;
         if (action)
           this.actions[action]();
       }
@@ -860,11 +863,11 @@ var app = {
       loop() {
         let Blog = [];
         this.props.data.map( (attr, index) => {
-          let featured = attr.better_featured_image
+          const featured = attr.better_featured_image
           if(featured) {
-            let thumb = featured.media_details.sizes.thumbnail;
+            const thumb = featured.media_details.sizes.thumbnail;
             if(thumb) {
-              let thumbURL = thumb.source_url;
+              const thumbURL = thumb.source_url;
               Blog.push(
                 <li key={attr.id}>
                   <div className="post">
