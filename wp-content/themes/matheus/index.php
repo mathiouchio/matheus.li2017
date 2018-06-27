@@ -17,7 +17,7 @@ $template_url = get_bloginfo( 'template_directory' );
 <nav>
   <ul>
     <li><a href="#about"><span>01</span> about</a></li>
-    <li><a href="#projects"><span>02</span> work</a></li>
+    <li><a href="#portfolio"><span>02</span> work</a></li>
     <li><a href="#blogs"><span>03</span> blog</a></li>
     <li><a href="#contact"><span>04</span> connect</a></li>
   </ul>
@@ -96,7 +96,7 @@ $template_url = get_bloginfo( 'template_directory' );
     </div>
     </div>
   </section>
-  <section id="projects" class="slider noslide"></section>
+  <section id="portfolio" class="slider noslide"></section>
   <section id="blogs" class="slider noslide"></section>
   <section id="contact"></section>
 
