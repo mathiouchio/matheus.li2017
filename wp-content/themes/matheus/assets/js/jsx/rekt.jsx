@@ -394,6 +394,7 @@ var app = {
       if(this.el.hasChildNodes()) {
         ReactDOM.unmountComponentAtNode(document.getElementById('popup'));
         delete document.body.dataset.static;
+        app.route.go();
       }
     }
   },
@@ -598,6 +599,7 @@ var app = {
       destroy() {
         ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(this).parentNode);
         delete document.body.dataset.static;
+        app.route.go();
       }
       danger(raw) {
         return {__html: raw};
