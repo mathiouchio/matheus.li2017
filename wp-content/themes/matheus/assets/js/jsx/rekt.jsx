@@ -9,7 +9,7 @@ var app = {
       Portfolio: wplocal.basePathURL+'/wp-json/wp/v2/portfolio',
       Blogs: wplocal.basePathURL+'/wp-json/wp/v2/posts?per_page=100',
     };
-    for (var key in this.requests) {
+    for (let key in this.requests) {
       if (this.requests.hasOwnProperty(key)) {
         let tempKey = key;
         app.fetch(this.requests[key])
@@ -180,7 +180,7 @@ var app = {
     bind: function(){
       window.addEventListener('scroll', () => {
         let tempPos = 0;
-        for (var i in this.state.sectionPositions) {
+        for (let i in this.state.sectionPositions) {
           if (window.pageYOffset >= this.state.sectionPositions[i]){
             tempPos = i;
           }
@@ -708,7 +708,7 @@ var app = {
          */
 
         // looking for imagesets.sizes matched key strings
-        for (var key in obj.sizes) {
+        for (let key in obj.sizes) {
           // if matches, index is >= 0
           let index = imagesets.sizes.indexOf(key);
           if (index>=0){
