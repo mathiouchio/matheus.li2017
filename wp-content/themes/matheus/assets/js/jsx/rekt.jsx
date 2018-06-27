@@ -231,7 +231,6 @@ var app = {
           };
           this.post(jsonData).then(data => {
             let responseCode = data.substring(0, 3);
-            console.log(responseCode);
             this.setState({ response: responseCode });
           });
           return false;
@@ -276,8 +275,9 @@ var app = {
       this.detect();
     },
     go: function(url=""){
-      let path = (url) ? `${url}/` : "";
-      history.pushState(null, null, `${wplocal.basePathURL}/${path}`);
+      let path = (url) ? `${url}/` : "",
+          state = {state: path};
+      history.pushState(state, null, `${wplocal.basePathURL}/${path}`);
     },
     detect: function(){
       let path = window.location.pathname; // get paths
@@ -599,7 +599,6 @@ var app = {
       destroy() {
         ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(this).parentNode);
         delete document.body.dataset.static;
-        app.route.go();
       }
       danger(raw) {
         return {__html: raw};
