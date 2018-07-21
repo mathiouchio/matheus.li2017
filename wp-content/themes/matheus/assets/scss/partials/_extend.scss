@@ -2,19 +2,16 @@
   -webkit-font-smoothing: antialiased !important;
   -moz-osx-font-smoothing: grayscale !important;
   font-smoothing: antialised !important;
-
   -webkit-text-rendering: geometricPrecision !important;
   -moz-text-rendering: geometricPrecision !important;
   text-rendering: geometricPrecision !important;
 }
-
 %fullscreen {
   height: 100vh;
   width: 100vw;
 }
-
 %realestate {
   height: 100%;
-  width: 100%;
   overflow: hidden;
+  width: 100%;
 }

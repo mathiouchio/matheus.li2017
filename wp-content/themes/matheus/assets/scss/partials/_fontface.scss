@@ -1,26 +1,24 @@
-$font-stack: 'opensans-condensed', helvetica, arial, sans-serif;
-$font-stack-hero: 'Questrial', helvetica, arial, sans-serif;
-
+$font-stack: "opensans-condensed", helvetica, arial, sans-serif;
+$font-stack-hero: "Questrial", helvetica, arial, sans-serif;
 @font-face {
-  font-family: 'opensans-condensed';
+  font-family: "opensans-condensed";
+  font-style: normal;
+  font-weight: normal;
   src: url("../assets/fonts/OpenSans-CondLight-webfont.eot");
   src: url("../assets/fonts/OpenSans-CondLight-webfont.eot?#iefix") format("embedded-opentype"),
-       url("../assets/fonts/OpenSans-CondLight-webfont.otf") format("opentype"),
-       url("../assets/fonts/OpenSans-CondLight-webfont.woff") format("woff"),
-       url("../assets/fonts/OpenSans-CondLight-webfont.ttf") format("truetype"),
-       url("../assets/fonts/OpenSans-CondLight-webfont.svg#PlacardMT") format("svg");
-  font-weight: normal;
-  font-style: normal;
+    url("../assets/fonts/OpenSans-CondLight-webfont.otf") format("opentype"),
+    url("../assets/fonts/OpenSans-CondLight-webfont.woff") format("woff"),
+    url("../assets/fonts/OpenSans-CondLight-webfont.ttf") format("truetype"),
+    url("../assets/fonts/OpenSans-CondLight-webfont.svg#PlacardMT") format("svg");
 }
-
 @font-face {
-  font-family: 'opensans-condensed';
+  font-family: "opensans-condensed";
+  font-style: italic;
+  font-weight: bold;
   src: url("../assets/fonts/OpenSans-CondLightItalic-webfont.eot");
   src: url("../assets/fonts/OpenSans-CondLightItalic-webfont.eot?#iefix") format("embedded-opentype"),
-       url("../assets/fonts/OpenSans-CondLightItalic-webfont.otf") format("opentype"),
-       url("../assets/fonts/OpenSans-CondLightItalic-webfont.woff") format("woff"),
-       url("../assets/fonts/OpenSans-CondLightItalic-webfont.ttf") format("truetype"),
-       url("../assets/fonts/OpenSans-CondLightItalic-webfont.svg#PlacardMT") format("svg");
-  font-weight: bold;
-  font-style: italic;
+    url("../assets/fonts/OpenSans-CondLightItalic-webfont.otf") format("opentype"),
+    url("../assets/fonts/OpenSans-CondLightItalic-webfont.woff") format("woff"),
+    url("../assets/fonts/OpenSans-CondLightItalic-webfont.ttf") format("truetype"),
+    url("../assets/fonts/OpenSans-CondLightItalic-webfont.svg#PlacardMT") format("svg");
 }
