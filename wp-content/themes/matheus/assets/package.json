@@ -28,7 +28,57 @@
     "run-sequence": "^2.2.1"
   },
   "devDependencies": {
-    "babel-preset-env": "^1.7.0"
+    "babel-preset-env": "^1.7.0",
+    "stylelint": "^9.3.0",
+    "stylelint-config-standard": "^18.2.0",
+    "stylelint-order": "^0.8.1"
+  },
+  "stylelint": {
+    "extends": "stylelint-config-standard",
+    "plugins": [
+      "stylelint-order"
+    ],
+    "rules": {
+      "at-rule-empty-line-before": "never",
+      "at-rule-name-case": "lower",
+      "color-hex-case": "lower",
+      "color-hex-length": "short",
+      "comment-empty-line-before": "never",
+      "custom-property-empty-line-before": "never",
+      "declaration-colon-space-after": "always",
+      "declaration-empty-line-before": "never",
+      "font-family-name-quotes": "always-where-recommended",
+      "function-url-quotes": "always",
+      "indentation": 2,
+      "length-zero-no-unit": true,
+      "number-leading-zero": "never",
+      "order/order": [
+        "custom-properties",
+        "declarations",
+        "rules",
+        "at-rules"
+      ],
+      "order/properties-alphabetical-order": true,
+      "property-no-unknown": [
+        true,
+        {
+          "ignoreProperties": [
+            "composes"
+          ]
+        }
+      ],
+      "rule-empty-line-before": "never",
+      "selector-pseudo-class-no-unknown": [
+        true,
+        {
+          "ignorePseudoClasses": [
+            "global"
+          ]
+        }
+      ],
+      "shorthand-property-no-redundant-values": true,
+      "string-quotes": "double"
+    }
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
