@@ -216,6 +216,10 @@ gulp.task('ts', function(){
 gulp.task('sass', function() {
   return gulp.src(paths.sass)
     .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.init())
+    .pipe( execute('stylelint scss/*.scss --fix', {
+      continueOnError: true
+    }) )
+    .pipe( execute.reporter(execOpts.reportOptions))
     .pipe(sass({
         outputStyle: gutil.env.prod ? 'compressed' : 'expanded',
         sourceComments: 'map'
@@ -223,7 +227,6 @@ gulp.task('sass', function() {
     .pipe(autoprefixer({remove: true}))
     .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.write())
     .pipe(gulp.dest(paths.cssMin))
-    // .pipe(!gutil.env.bs ? livereload() : gutil.noop())
     .pipe(browserSync.stream());
 });
 
