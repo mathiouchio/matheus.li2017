@@ -546,6 +546,7 @@ const app = {
       path = path
         .substring(1, path.length - 1) // kill first and last char
         .split("/"); // make an array
+
       if (path.length < 2) path = [...["posts"], ...path]; // add posts for first path
       path = path.filter(e => {
         // kill empty string
@@ -734,6 +735,7 @@ const app = {
 
         this.actions = {
           close: () => {
+            app.route.go();
             this.destroy();
           },
           next: () => {
@@ -1053,7 +1055,7 @@ const app = {
       }
       handleClick(e, target) {
         app.summon.init(target);
-        app.route.go(`posts/${target.slug}`);
+        app.route.go(target.slug);
         e.stopPropagation();
         e.preventDefault();
       }
