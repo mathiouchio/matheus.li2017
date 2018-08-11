@@ -554,7 +554,9 @@ const app = {
 
       if (path.length) {
         app
-          .fetch(`${wplocal.basePathURL}/wp-json/wp/v2/posts?slug=${path[1]}`)
+          .fetch(
+            `${wplocal.basePathURL}/wp-json/wp/v2/${path[0]}?slug=${path[1]}`
+          )
           .then(data => {
             app.summon.init(data[0]);
           });
@@ -1051,7 +1053,7 @@ const app = {
       }
       handleClick(e, target) {
         app.summon.init(target);
-        app.route.go(`blog/${target.slug}`);
+        app.route.go(`posts/${target.slug}`);
         e.stopPropagation();
         e.preventDefault();
       }
