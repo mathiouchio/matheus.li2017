@@ -53,30 +53,29 @@ const execOpts = {
     stdout: true // default = true, false means don't write stdout
   }
 };
-const browserSyncProps = (function() {
-  return {
-    bsPort: gutil.env.port ? gutil.env.port : 8087,
-    get options() {
-      return {
-        injectChanges: true,
-        proxy: "localhost:" + this.bsPort,
-        port: 3000,
-        notify: false,
-        ui: false,
-        ghost: false,
-        open: "local"
-      };
-    }
-  };
-})();
+const browserSyncProps = (() => ({
+  bsPort: gutil.env.port ? gutil.env.port : 8087,
+  get options() {
+    return {
+      injectChanges: true,
+      proxy: "localhost:" + this.bsPort,
+      port: 3000,
+      notify: false,
+      ui: false,
+      ghost: false,
+      open: "local"
+    };
+  }
+}))();
 
-gulp.task("browser-sync", function() {
+gulp.task("browser-sync", () =>
   browserSync.init(
     [paths.jsMin + "*.js", paths.cssMin + "*.css", paths.php],
     browserSyncProps.options
-  );
-});
-gulp.task("clean-dist", function(cb) {
+  )
+);
+
+gulp.task("clean-dist", cb => {
   return del(
     [
       "js/libs",
@@ -89,13 +88,14 @@ gulp.task("clean-dist", function(cb) {
     { force: true }
   );
 });
-gulp.task("copy-assets", ["clean-dist"], function() {
+
+gulp.task("copy-assets", ["clean-dist"], () => {
   // angular
   gulp
     .src(paths.angularLibraries, { cwd: "node_modules/**" })
     .pipe(gulp.dest("angular"));
   // everything else
-  paths.libs.map(function(a) {
+  paths.libs.map(a => {
     gulp
       .src([
         paths.node + a + "/" + a + ".js",
@@ -118,19 +118,19 @@ gulp.task("copy-assets", ["clean-dist"], function() {
       .pipe(gulp.dest(paths.cssMin + "/libs"));
   });
 });
-gulp.task("git-reset", function() {
+gulp.task("git-reset", () => {
   return gulp
     .src("commitmsg")
     .pipe(execute("git reset"))
     .pipe(execute.reporter(execOpts.reportOptions));
 });
-gulp.task("git-status", function() {
+gulp.task("git-status", () => {
   return gulp
     .src("commitmsg")
     .pipe(execute("git status", execOpts.options))
     .pipe(execute.reporter(execOpts.reportOptions));
 });
-gulp.task("git-branch", function() {
+gulp.task("git-branch", () => {
   return gulp
     .src("commitmsg")
     .pipe(execute("git rev-parse --abbrev-ref HEAD", execOpts.options))
@@ -142,21 +142,21 @@ gulp.task("git-branch", function() {
           name: "branch",
           message: "Branch name ..."
         },
-        function(res) {
-          exec(`git checkout ${res.branch}`, function(err) {
+        res => {
+          exec(`git checkout ${res.branch}`, err => {
             if (err) exec("git checkout -b " + res.branch);
           });
         }
       )
     );
 });
-gulp.task("git-add", function() {
+gulp.task("git-add", () => {
   return gulp.src("commitmsg").pipe(execute("git add ."));
 });
-gulp.task("git-push", function(cb) {
+gulp.task("git-push", cb => {
   return gulp.src("commitmsg").pipe(execute.reporter(execOpts.reportOptions));
 });
-gulp.task("git-commit", function() {
+gulp.task("git-commit", () => {
   return gulp.src("commitmsg").pipe(
     prompt.prompt(
       {
@@ -164,8 +164,8 @@ gulp.task("git-commit", function() {
         name: "commit",
         message: "Enter commit message ..."
       },
-      function(res) {
-        exec(`git commit -m ${res.commit}`, function(err, stdout, stderr) {
+      res => {
+        exec(`git commit -m ${res.commit}`, (err, stdout, stderr) => {
           console.log(stdout);
           console.error(stderr);
         });
@@ -183,7 +183,7 @@ gulp.task("git", [
   "git-add",
   "git-commit"
 ]);
-gulp.task("concat", function() {
+gulp.task("concat", () => {
   // const processEnv = `process.env.NODE_ENV = "development"`;
   const stream = gulp
     .src(paths.jsConcat)
@@ -203,7 +203,7 @@ gulp.task("concat", function() {
     .pipe(gulp.dest(paths.jsMin))
     // .pipe(!gutil.env.bs ? livereload() : gutil.noop())
     .pipe(browserSync.stream());
-  stream.on("end", function() {
+  stream.on("end", () => {
     del("../js/scripts.js", { force: true });
   });
   return stream;
@@ -218,7 +218,7 @@ gulp.task("eslint", () => {
     )
     .pipe(execute.reporter(execOpts.reportOptions));
 });
-gulp.task("babel", ["eslint"], function() {
+gulp.task("babel", ["eslint"], () => {
   gulp
     .src(paths.jsx)
     .pipe(execute.reporter(execOpts.reportOptions))
@@ -230,14 +230,14 @@ gulp.task("babel", ["eslint"], function() {
     )
     .pipe(gulp.dest("js"));
 });
-gulp.task("ts", function() {
+gulp.task("ts", () => {
   gulp
     .src(paths.ts)
     .pipe(ts(tscConfig.compilerOptions))
     .pipe(gulp.dest("angular/main"));
 });
 
-gulp.task("stylelint", function() {
+gulp.task("stylelint", () => {
   return gulp
     .src(paths.sass)
     .pipe(
@@ -247,7 +247,7 @@ gulp.task("stylelint", function() {
     )
     .pipe(execute.reporter(execOpts.reportOptions));
 });
-gulp.task("sass", function() {
+gulp.task("sass", () => {
   return gulp
     .src(paths.sass)
     .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.init())
@@ -262,7 +262,7 @@ gulp.task("sass", function() {
     .pipe(gulp.dest(paths.cssMin))
     .pipe(browserSync.stream());
 });
-gulp.task("twentythirteen", function() {
+gulp.task("twentythirteen", () => {
   return gulp
     .src(paths.old + "/scss/*.scss")
     .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.init())
@@ -277,15 +277,15 @@ gulp.task("twentythirteen", function() {
     .pipe(gulp.dest(paths.old + "/css"));
   // .pipe(!gutil.env.bs ? livereload() : gutil.noop());
 });
-gulp.task("watch-old", function() {
+gulp.task("watch-old", () => {
   // if (!gutil.env.bs)
   //   livereload.listen();
   gulp.watch(paths.old + "/scss/*", ["twentythirteen"]);
 });
-gulp.task("watch", function() {
+gulp.task("watch", () => {
   // if (!gutil.env.bs) livereload.listen();
   // detect php change
-  gulp.watch(paths.php).on("change", function(event) {
+  gulp.watch(paths.php).on("change", event => {
     gulp
       .src(event.path)
       // .pipe(!gutil.env.bs ? livereload() : gutil.noop())

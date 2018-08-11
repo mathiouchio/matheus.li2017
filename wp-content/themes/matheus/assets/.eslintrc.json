@@ -59,6 +59,7 @@
     }],
     "valid-jsdoc": 2,
     "strict": 0,
+    "prefer-arrow-callback": "error",
     "prettier/prettier": "error"
   }
 }
