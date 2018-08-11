@@ -3,23 +3,16 @@ const babel = require("gulp-babel");
 const browserSync = require("browser-sync").create();
 const concat = require("gulp-concat");
 const del = require("del");
-// const fs = require("fs");
 const exec = require("child_process").exec;
 const execute = require("gulp-exec");
 const gulp = require("gulp");
 const gutil = require("gulp-util");
-// const jshint = require("gulp-jshint");
-// livereload   = require('gulp-livereload'),
-// const minify = require("gulp-minify");
 const rename = require("gulp-rename");
-// const runSequence = require("run-sequence");
 const sass = require("gulp-sass");
 const sourcemaps = require("gulp-sourcemaps");
-// const stylish = require("jshint-stylish");
 const ts = require("gulp-typescript");
 const tscConfig = require("./tsconfig.json");
 const prompt = require("gulp-prompt");
-// const uglify = require("gulp-uglify");
 const paths = {
   node: "./node_modules/",
   php: ["../*.php", "../**/*.php"],
@@ -68,13 +61,12 @@ const browserSyncProps = (() => ({
   }
 }))();
 
-gulp.task("browser-sync", () =>
-  browserSync.init(
+gulp.task("browser-sync", () => {
+  return browserSync.init(
     [paths.jsMin + "*.js", paths.cssMin + "*.css", paths.php],
     browserSyncProps.options
-  )
-);
-
+  );
+});
 gulp.task("clean-dist", cb => {
   return del(
     [
@@ -88,7 +80,6 @@ gulp.task("clean-dist", cb => {
     { force: true }
   );
 });
-
 gulp.task("copy-assets", ["clean-dist"], () => {
   // angular
   gulp
@@ -206,11 +197,12 @@ gulp.task("concat", () => {
   stream.on("end", () => {
     del("../js/scripts.js", { force: true });
   });
+
   return stream;
 });
 gulp.task("eslint", () => {
   return gulp
-    .src(paths.jsx)
+    .src(paths.js)
     .pipe(
       execute("eslint js/jsx/* --fix", {
         continueOnError: true
