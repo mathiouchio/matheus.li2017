@@ -57,7 +57,7 @@ var app = {
           app.popup.destroy();
           e.stopPropagation();
           e.preventDefault();
-        }; 
+        };
       }
     }
   },
@@ -107,7 +107,7 @@ var app = {
       } else {
         point    = jQuery(identifier).find('polygon').get(0);
         vp       = this.vectorPoints[id][target];
-        
+
         $el      = Snap(point);
         $el.stop().animate({'points': vp}, speed, easing);
       }
@@ -168,7 +168,7 @@ var app = {
       this.state.navigations = (!this.state.navigations) ? this.state.nav[0].getElementsByTagName('LI') : this.state.navigations;
 
       this.calcPositions();
-      this.bind(); 
+      this.bind();
     },
     calcPositions: function(){
       let i = 0;
@@ -185,7 +185,7 @@ var app = {
             tempPos = i;
           }
         }
-        
+
         /* Only apply rules and styles in between sections:
          * value of positions changed
          */
@@ -424,7 +424,7 @@ var app = {
           });
 
       if(path.length) {
-        app.fetch(`${wplocal.basePathURL}/wp-json/wp/v2/${path[0]}?slug=${path[1]}`)
+        app.fetch(`${wplocal.basePathURL}/wp-json/wp/v2/posts?slug=${path[1]}`)
            .then( data => {
              app.summon.init(data[0]);
            });
@@ -985,5 +985,3 @@ var app = {
 (function(){
   app.init();
 })();
-
-
