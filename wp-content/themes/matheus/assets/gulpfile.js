@@ -3,7 +3,6 @@ const babel = require("gulp-babel");
 const browserSync = require("browser-sync").create();
 const concat = require("gulp-concat");
 const del = require("del");
-const exec = require("child_process").exec;
 const execute = require("gulp-exec");
 const gulp = require("gulp");
 const gutil = require("gulp-util");
@@ -12,7 +11,6 @@ const sass = require("gulp-sass");
 const sourcemaps = require("gulp-sourcemaps");
 const ts = require("gulp-typescript");
 const tscConfig = require("./tsconfig.json");
-const prompt = require("gulp-prompt");
 const paths = {
   node: "./node_modules/",
   php: ["../*.php", "../**/*.php"],
@@ -80,7 +78,9 @@ gulp.task("clean-dist", cb => {
     { force: true }
   );
 });
-gulp.task("copy-assets", ["clean-dist"], () => {
+
+// do these every package upgrade
+gulp.task("copy-assets", gulp.series("clean-dist"), () => {
   // angular
   gulp
     .src(paths.angularLibraries, { cwd: "node_modules/**" })
@@ -109,71 +109,7 @@ gulp.task("copy-assets", ["clean-dist"], () => {
       .pipe(gulp.dest(paths.cssMin + "/libs"));
   });
 });
-gulp.task("git-reset", () => {
-  return gulp
-    .src("commitmsg")
-    .pipe(execute("git reset"))
-    .pipe(execute.reporter(execOpts.reportOptions));
-});
-gulp.task("git-status", () => {
-  return gulp
-    .src("commitmsg")
-    .pipe(execute("git status", execOpts.options))
-    .pipe(execute.reporter(execOpts.reportOptions));
-});
-gulp.task("git-branch", () => {
-  return gulp
-    .src("commitmsg")
-    .pipe(execute("git rev-parse --abbrev-ref HEAD", execOpts.options))
-    .pipe(execute.reporter(execOpts.reportOptions))
-    .pipe(
-      prompt.prompt(
-        {
-          type: "input",
-          name: "branch",
-          message: "Branch name ..."
-        },
-        res => {
-          exec(`git checkout ${res.branch}`, err => {
-            if (err) exec("git checkout -b " + res.branch);
-          });
-        }
-      )
-    );
-});
-gulp.task("git-add", () => {
-  return gulp.src("commitmsg").pipe(execute("git add ."));
-});
-gulp.task("git-push", cb => {
-  return gulp.src("commitmsg").pipe(execute.reporter(execOpts.reportOptions));
-});
-gulp.task("git-commit", () => {
-  return gulp.src("commitmsg").pipe(
-    prompt.prompt(
-      {
-        type: "input",
-        name: "commit",
-        message: "Enter commit message ..."
-      },
-      res => {
-        exec(`git commit -m ${res.commit}`, (err, stdout, stderr) => {
-          console.log(stdout);
-          console.error(stderr);
-        });
-      }
-    )
-  );
-});
-// gulp.task('git', function (cb) {
-//   runSequence('git-reset', 'git-status', 'git-branch', 'git-add', 'git-commit');
-// });
-gulp.task("git", [
-  "git-reset",
-  "git-branch",
-  "git-status",
-  "git-add",
-  "git-commit"
-]);
+
 gulp.task("concat", () => {
   // const processEnv = `process.env.NODE_ENV = "development"`;
   const stream = gulp
@@ -200,6 +136,8 @@ gulp.task("concat", () => {
 
   return stream;
 });
+
+// autofix
 gulp.task("eslint", () => {
   return gulp
     .src(paths.js)
@@ -210,7 +148,9 @@ gulp.task("eslint", () => {
     )
     .pipe(execute.reporter(execOpts.reportOptions));
 });
-gulp.task("babel", ["eslint"], () => {
+
+// jsx transpiler
+gulp.task("babel", () => {
   gulp
     .src(paths.jsx)
     .pipe(execute.reporter(execOpts.reportOptions))
@@ -222,6 +162,8 @@ gulp.task("babel", ["eslint"], () => {
     )
     .pipe(gulp.dest("js"));
 });
+
+// the other transpiler
 gulp.task("ts", () => {
   gulp
     .src(paths.ts)
@@ -229,6 +171,7 @@ gulp.task("ts", () => {
     .pipe(gulp.dest("angular/main"));
 });
 
+// scss autofix
 gulp.task("stylelint", () => {
   return gulp
     .src(paths.sass)
@@ -239,6 +182,7 @@ gulp.task("stylelint", () => {
     )
     .pipe(execute.reporter(execOpts.reportOptions));
 });
+
 gulp.task("sass", () => {
   return gulp
     .src(paths.sass)
@@ -254,6 +198,7 @@ gulp.task("sass", () => {
     .pipe(gulp.dest(paths.cssMin))
     .pipe(browserSync.stream());
 });
+
 gulp.task("twentythirteen", () => {
   return gulp
     .src(paths.old + "/scss/*.scss")
@@ -269,6 +214,7 @@ gulp.task("twentythirteen", () => {
     .pipe(gulp.dest(paths.old + "/css"));
   // .pipe(!gutil.env.bs ? livereload() : gutil.noop());
 });
+
 gulp.task("watch-old", () => {
   // if (!gutil.env.bs)
   //   livereload.listen();
@@ -284,13 +230,18 @@ gulp.task("watch", () => {
       .pipe(browserSync.stream());
   });
   // detect when to babel
-  gulp.watch(paths.jsx, ["babel"]);
+  gulp.watch(paths.jsx, gulp.series("babel"));
   // detect when to transpile ts
-  gulp.watch(paths.ts, ["ts"]);
+  gulp.watch(paths.ts, gulp.series("ts"));
   // detect when to concat
-  gulp.watch(paths.jsConcat, ["concat"]);
+  gulp.watch(paths.jsConcat, gulp.series("concat"));
   // detect when to sass
-  gulp.watch(["scss/*.scss", "scss/partials/*.scss"], ["sass"]);
+  gulp.watch(["scss/*.scss", "scss/partials/*.scss"], gulp.series("sass"));
 });
-gulp.task("compile", ["babel", "ts", "sass"]);
-gulp.task("default", ["browser-sync", "babel", "sass", "watch"]);
+gulp.task("compile", gulp.series("babel", "ts", "sass"));
+gulp.task(
+  "default",
+  gulp.series("browser-sync", "babel", "sass", "watch", done => {
+    done();
+  })
+);

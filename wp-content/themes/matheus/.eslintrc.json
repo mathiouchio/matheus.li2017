@@ -1,0 +1,72 @@
+{
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
+  "globals": {
+    "$": false,
+    "React": false,
+    "ReactDOM": false,
+    "Snap": false,
+    "plyr": false,
+    "PropTypes": false,
+    "wplocal": false,
+    "jQuery": false,
+    "mina": false
+  },
+  "extends": [
+    "google",
+    "prettier",
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
+  "overrides": [{
+    "files": ["js/scripts.min.js"]
+  }],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": [
+    "babel",
+    "prettier",
+    "require-jsdoc",
+    "require-jsdoc-except",
+    "react"
+  ],
+  "rules": {
+    "no-console": [
+      "error", {
+        "allow": [
+          "log",
+          "warn",
+          "error"
+        ]
+      }
+    ],
+    "newline-before-return": "error",
+    "newline-per-chained-call": "error",
+    "no-else-return": "error",
+    "no-useless-return": "error",
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
+    "react/react-in-jsx-scope": "off",
+    "require-jsdoc": ["error", {
+      "require": {
+        "FunctionDeclaration": false,
+        "MethodDefinition": false,
+        "ClassDeclaration": false,
+        "ArrowFunctionExpression": false,
+        "FunctionExpression": false
+      }
+    }],
+    "valid-jsdoc": 2,
+    "strict": 0,
+    "prefer-arrow-callback": "error",
+    "prettier/prettier": "error"
+  }
+}
