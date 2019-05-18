@@ -128,7 +128,6 @@ gulp.task("concat", () => {
     // }))
     // .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.write()) // @TODO: doesn't work
     .pipe(gulp.dest(paths.jsMin))
-    // .pipe(!gutil.env.bs ? livereload() : gutil.noop())
     .pipe(browserSync.stream());
   stream.on("end", () => {
     del("../js/scripts.js", { force: true });
@@ -212,22 +211,15 @@ gulp.task("twentythirteen", () => {
     .pipe(autoprefixer({ remove: true }))
     .pipe(gutil.env.prod ? gutil.noop() : sourcemaps.write())
     .pipe(gulp.dest(paths.old + "/css"));
-  // .pipe(!gutil.env.bs ? livereload() : gutil.noop());
 });
 
 gulp.task("watch-old", () => {
-  // if (!gutil.env.bs)
-  //   livereload.listen();
   gulp.watch(paths.old + "/scss/*", ["twentythirteen"]);
 });
 gulp.task("watch", () => {
-  // if (!gutil.env.bs) livereload.listen();
   // detect php change
   gulp.watch(paths.php).on("change", event => {
-    gulp
-      .src(event.path)
-      // .pipe(!gutil.env.bs ? livereload() : gutil.noop())
-      .pipe(browserSync.stream());
+    gulp.src(event.path).pipe(browserSync.stream());
   });
   // detect when to babel
   gulp.watch(paths.jsx, gulp.series("babel"));
