@@ -9,6 +9,7 @@ const app = {
       Portfolio: wplocal.basePathURL + "/wp-json/wp/v2/portfolio",
       Blogs: wplocal.basePathURL + "/wp-json/wp/v2/posts?per_page=100"
     };
+
     for (const key in this.requests) {
       if (this.requests.hasOwnProperty(key)) {
         const tempKey = key;
@@ -34,7 +35,6 @@ const app = {
       );
 
       const paths = cleanBaseURL.slice(1).split("/");
-
       const thePants = paths.length > 2 ? paths[0] : "blogs";
 
       if (paths[0] && paths[0] !== "")
@@ -506,23 +506,26 @@ const app = {
           });
         }
         render() {
-          const contactComponent = app.contact.component;
+          const OnlineReach = app.contact.component.online;
+          const ContactForm = app.contact.component.forms;
+          const SubmitBtn = app.contact.component.submit;
+          const FormResponse = app.contact.component.submit;
 
           return (
             <div className="wrapper" data-sent={this.state.sent}>
-              <contactComponent.online />
-              <contactComponent.forms
+              <OnlineReach />
+              <ContactForm
                 email={this.state.email}
                 message={this.state.message}
                 onUserInput={this.handleUserInput.bind(this)}
                 onValidated={this.handleValidation.bind(this)}
                 response={this.state.response}
               />
-              <contactComponent.submit
+              <SubmitBtn
                 onSubmission={this.handleSubmission.bind(this)}
                 response={this.state.response}
               />
-              <contactComponent.response response={this.state.response} />
+              <FormResponse response={this.state.response} />
             </div>
           );
         }
