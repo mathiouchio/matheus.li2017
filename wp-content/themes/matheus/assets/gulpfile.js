@@ -9,8 +9,8 @@ const gutil = require("gulp-util");
 const rename = require("gulp-rename");
 const sass = require("gulp-sass");
 const sourcemaps = require("gulp-sourcemaps");
-const ts = require("gulp-typescript");
-const tscConfig = require("./tsconfig.json");
+
+// paths
 const paths = {
   node: "./node_modules/",
   php: ["../*.php", "../**/*.php"],
@@ -21,18 +21,11 @@ const paths = {
   cssMin: "../css",
   sass: "scss/*.scss",
   jsConcat: ["js/settings.js", "js/libs/*.js", "js/main.js", "js/rekt.js"],
-  angularLibraries: [
-    "@angular/**/bundles/**",
-    "angular-in-memory-web-api/bundles/in-memory-web-api.umd.js",
-    "core-js/client/shim.min.js",
-    "reflect-metadata/Reflect.js",
-    "systemjs/dist/system.src.js",
-    "rxjs/**/*.js",
-    "zone.js/dist/**"
-  ],
   libs: ["react", "react-dom", "prop-types", "snapsvg", "plyr", "jquery"],
   old: "../old"
 };
+
+// options
 const execOpts = {
   options: {
     continueOnError: false, // default = false, true means don't emit error event
@@ -44,47 +37,30 @@ const execOpts = {
     stdout: true // default = true, false means don't write stdout
   }
 };
-const browserSyncProps = (() => ({
-  bsPort: gutil.env.port ? gutil.env.port : 8087,
-  get options() {
-    return {
-      injectChanges: true,
-      proxy: "localhost:" + this.bsPort,
-      port: 3000,
-      notify: false,
-      ui: false,
-      ghost: false,
-      open: "local"
-    };
-  }
-}))();
 
+// browsersync
 gulp.task("browser-sync", () => {
+  const options = {
+    injectChanges: true,
+    proxy: "localhost:8087",
+    port: 3000,
+    notify: false,
+    ui: false,
+    ghost: false,
+    open: "local"
+  };
+
   return browserSync.init(
     [paths.jsMin + "*.js", paths.cssMin + "*.css", paths.php],
-    browserSyncProps.options
+    options
   );
 });
-gulp.task("clean-dist", cb => {
-  return del(
-    [
-      "js/libs",
-      "angular/**/*",
-      "!angular/systemJSConfig",
-      "!angular/systemJSConfig/systemjs.config.js",
-      "js/angular",
-      "../css/libs"
-    ],
-    { force: true }
-  );
-});
+
+// remove old assets
+gulp.task("clean-dist", cb => del(["js/libs", "../css/libs"], { force: true }));
 
 // do these every package upgrade
 gulp.task("copy-assets", gulp.series("clean-dist"), () => {
-  // angular
-  gulp
-    .src(paths.angularLibraries, { cwd: "node_modules/**" })
-    .pipe(gulp.dest("angular"));
   // everything else
   paths.libs.map(a => {
     gulp
@@ -160,14 +136,6 @@ gulp.task("babel", () => {
       })
     )
     .pipe(gulp.dest("js"));
-});
-
-// the other transpiler
-gulp.task("ts", () => {
-  gulp
-    .src(paths.ts)
-    .pipe(ts(tscConfig.compilerOptions))
-    .pipe(gulp.dest("angular/main"));
 });
 
 // scss autofix

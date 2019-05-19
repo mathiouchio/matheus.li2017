@@ -19,7 +19,6 @@
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.1",
     "gulp-sourcemaps": "^2.6.4",
-    "gulp-typescript": "^4.0.2",
     "gulp-uglify": "^3.0.1",
     "loose-envify": "^1.4.0",
     "object-assign": "^4.1.1",
