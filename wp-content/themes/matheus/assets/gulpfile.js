@@ -184,6 +184,8 @@ gulp.task("twentythirteen", () => {
 gulp.task("watch-old", () => {
   gulp.watch(paths.old + "/scss/*", ["twentythirteen"]);
 });
+
+// watcher
 gulp.task("watch", () => {
   // detect php change
   gulp.watch(paths.php).on("change", event => {
@@ -191,14 +193,12 @@ gulp.task("watch", () => {
   });
   // detect when to babel
   gulp.watch(paths.jsx, gulp.series("babel"));
-  // detect when to transpile ts
-  gulp.watch(paths.ts, gulp.series("ts"));
   // detect when to concat
   gulp.watch(paths.jsConcat, gulp.series("concat"));
   // detect when to sass
   gulp.watch(["scss/*.scss", "scss/partials/*.scss"], gulp.series("sass"));
 });
-gulp.task("compile", gulp.series("babel", "ts", "sass"));
+
 gulp.task(
   "default",
   gulp.series("browser-sync", "babel", "sass", "watch", done => {
